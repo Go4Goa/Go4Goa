@@ -1,0 +1,44 @@
+/* The composer uses the shared app theme; poster artwork keeps its own palette. */
+.event-create { max-width:1120px; margin:auto; padding:var(--page-padding-top) var(--page-gutter) 40px; }
+.event-create-top { display:flex; justify-content:space-between; align-items:center; margin-bottom:32px; color:var(--text-secondary); font-size:13px; }
+.event-create-top .back-link { margin:0; }
+.event-composer-layout { display:grid; grid-template-columns:minmax(0,1.35fr) minmax(0,1fr); gap:48px; align-items:start; }
+.event-composer { display:grid; gap:32px; min-width:0; }
+.event-name-editor { --text-xl:clamp(2rem,3.4vw,3rem); padding:0 0 20px; border-bottom:1px solid var(--line); }
+.event-fieldset { min-width:0; margin:0; padding:0; border:0; }
+.event-fieldset legend { margin-bottom:12px; font-size:14px; font-weight:500; }
+.event-activity-options { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:8px; }
+.event-activity-options button { width:100%; }
+.event-section { display:grid; gap:16px; min-width:0; }
+.event-section-heading { display:flex; align-items:baseline; justify-content:space-between; gap:12px; }
+.event-section h2 { font-family:var(--font-body); font-size:17px; font-weight:600; letter-spacing:-.02em; }
+.event-section-heading>span { font-size:12px; color:var(--text-secondary); }
+.event-date-row { display:grid; grid-template-columns:minmax(0,1.2fr) minmax(0,1fr); gap:12px; }
+.event-link-note { display:flex; gap:10px; font-size:13px; color:var(--text-secondary); }
+.event-selected-place { display:flex; align-items:center; gap:10px; font-size:14px; }
+.event-selected-place>span { flex:1; }
+.event-map-toggle { margin-top:-8px; }
+.event-location-details { display:grid; gap:16px; }
+.event-location-details .location-field .section-heading h2 { font-size:14px; }
+.event-location-details .field-map { height:250px; border-radius:var(--radius-panel); isolation:isolate; }
+.event-meetup-editor { padding-bottom:12px; border-bottom:1px solid var(--line); }
+.event-bring { margin-top:8px; }
+.event-bring legend>span { margin-left:7px; color:var(--text-secondary); font-size:12px; font-weight:400; }
+.event-bring-options { display:flex; flex-wrap:wrap; gap:8px; margin-bottom:12px; }
+.event-description-editor { min-height:125px; padding-bottom:24px; border-bottom:1px solid var(--line); }
+.event-description-editor>div { --text-sm:1rem; }
+.event-create-footer { display:grid; justify-items:start; gap:14px; margin-top:40px; padding-top:28px; border-top:1px solid var(--line); }
+.event-create-footer>p { max-width:42ch; color:var(--text-secondary); font-size:13px; line-height:1.6; }
+.event-create-footer>button { width:min(100%,440px); }
+.event-live-preview { position:sticky; top:32px; min-width:0; }
+.event-preview-heading { display:flex; justify-content:space-between; margin-bottom:16px; color:var(--text-secondary); font-size:13px; }
+.event-repeat-toggle { display:flex; justify-content:space-between; align-items:center; gap:16px; min-height:44px; font-size:14px; }
+.event-repeat-toggle>span { display:flex; align-items:center; gap:9px; }
+.event-recurrence { display:grid; gap:16px; }
+.event-frequency-options { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:8px; }
+.event-repeat-fields { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:12px; }
+.event-preview-dates { margin-top:20px; font-size:13px; }
+.event-preview-dates ol { padding-left:20px; line-height:1.8; }
+@media(max-width:900px){.event-composer-layout{gap:36px}}
+@media(max-width:700px){.event-create{padding:var(--page-padding-top) var(--page-gutter) 30px}.event-create-top{margin-bottom:24px}.event-composer-layout{grid-template-columns:minmax(0,1fr);gap:40px}.event-composer{gap:28px}.event-name-editor{--text-xl:2.25rem}.event-live-preview{position:static;max-width:440px;width:100%}.event-section-heading>span{font-size:11px}.event-create-footer>button{width:100%}}
+@media(max-width:380px){.event-name-editor{--text-xl:2rem}.event-date-row{grid-template-columns:minmax(0,1fr)}.event-section-heading{flex-wrap:wrap;gap:4px}.event-activity-options{gap:6px}}

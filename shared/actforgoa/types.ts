@@ -1,0 +1,1 @@
+export interface DirectoryDetails { tags:string[]; sources:string[]; checkedAt?:string; links?:{label:string;url:string}[]; description?:string; address?:string; locality?:string; photo?:{src:string;source:string;sourcePage:string;credit:string;alt:string;position?:string}; }

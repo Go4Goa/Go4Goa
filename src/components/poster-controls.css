@@ -1,0 +1,23 @@
+.poster-customizer { margin-bottom:16px; }
+.poster-customizer>summary { display:flex; align-items:center; gap:8px; cursor:pointer; min-height:44px; font-size:14px; font-weight:500; }
+.poster-customizer-chevron { margin-left:auto; }
+.poster-customizer[open] .poster-customizer-chevron { transform:rotate(180deg); }
+.poster-customizer>summary:focus-visible { outline:2px solid var(--green); outline-offset:4px; }
+.poster-controls { display:grid; gap:20px; padding-block:12px 20px; }
+.poster-controls fieldset { border:0; min-width:0; padding:0; margin:0; }
+.poster-controls legend { font-size:13px; font-weight:500; margin-bottom:10px; }
+.poster-color-options { display:grid; grid-template-columns:repeat(6,minmax(0,1fr)); gap:4px; }
+.poster-color-options button { height:auto; min-height:64px; padding:6px 2px; }
+.poster-color-options [data-arc-label] { display:flex; flex-direction:column; align-items:center; gap:6px; font-size:12px; }
+.poster-color-swatch { display:grid; place-items:center; width:28px; height:28px; border-radius:50%; background:var(--poster-background); color:var(--poster-foreground); }
+.poster-color-options button[aria-pressed=true] { background:var(--pale); }
+.poster-background-options { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:8px; }
+.poster-background-options button { justify-content:flex-start; padding:8px 10px; min-height:44px; font-size:12px; }
+.poster-background-options button[aria-pressed=true] { outline:1px solid var(--green); outline-offset:1px; }
+.poster-pattern-swatch { flex:none; width:28px; height:24px; border-radius:4px; background-color:var(--poster-background); }
+.poster-graphic-actions { display:flex; flex-wrap:wrap; gap:8px; margin-top:12px; }
+.meetup-graphic-editor { margin-top:20px; }
+
+@media(max-width:380px){.poster-color-options{grid-template-columns:repeat(3,minmax(0,1fr))}}
+
+.poster-customizer>summary::after,.poster-customizer[open]>summary::after { content:none; }

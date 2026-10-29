@@ -98,11 +98,17 @@ test('RSVP locking prevents oversubscription; check-in and bookmarks appear on t
   await call('/api/events/'+id+'/rsvp','DELETE',undefined,winner);
   const loser=winner===resident?other:resident;
   assert.equal((await call('/api/events/'+id+'/rsvp','POST',{email:false,sms:false},loser)).status,200);
-  const pending=await call('/api/events','POST',input,resident);
-  const pendingId=(await pending.json() as {id:string}).id;
-  assert.equal((await call('/api/events/'+pendingId)).status,404);
-  assert.equal((await call('/api/admin/events/'+pendingId+'/approve','POST',{reason:'Reviewed fictional event safety'},moderator)).status,200);
-  assert.equal((await call('/api/events/'+pendingId)).status,200);
+  const published=await call('/api/events','POST',input,resident);
+  assert.equal(published.status,201);
+  const meetup=await published.json() as {id:string;status:string};
+  assert.equal(meetup.status,'published');
+  assert.equal((await call('/api/events/'+meetup.id)).status,200,'signed-out guests can open the share link');
+  assert.equal((await call('/api/events/'+meetup.id+'/calendar.ics')).status,200);
+  assert.equal((await call('/api/events/'+meetup.id+'/rsvp','POST',{email:false,sms:false},other)).status,200);
+  assert.equal((await call('/api/events/'+meetup.id+'/check-in','POST',{userId:other.id},resident)).status,200,'resident creators can manage their own meetup');
+  assert.equal((await call('/api/events/'+meetup.id+'/updates','POST',{message:'Fictional meetup update',requestId:randomUUID()},resident)).status,200);
+  assert.equal((await call('/api/events/'+meetup.id+'/updates','POST',{message:'Unauthorized update',requestId:randomUUID()},other)).status,403);
+  assert.equal((await call('/api/events/'+meetup.id+'/check-in','POST',{userId:other.id},organizer)).status,403);
 });
 
 test('source sync keeps the last good snapshot after upstream schema failure',async()=>{
@@ -115,4 +121,43 @@ test('source sync keeps the last good snapshot after upstream schema failure',as
   await syncResources((async()=>new Response('{"bad":"shape"}',{status:200})) as typeof fetch);
   assert.equal((await pool.query('SELECT count(*)::int AS n FROM resources WHERE active')).rows[0].n,count);
   assert.ok((await pool.query('SELECT * FROM sync_state')).rows.every(r=>r.last_error==='Upstream schema changed'));
+});
+
+test('recurring events submitted from the 4312 dev origin persist as one bounded series',async()=>{
+ const creator=await actor('resident');
+ const day=new Date();day.setUTCDate(day.getUTCDate()+2);
+ const date=day.toISOString().slice(0,10);
+ const input={title:'Recurring QA cleanup',description:'Fictional meetup to verify series creation.',activity:'beach_cleanup',point:{lat:15.48,lng:73.81},locationLabel:'Miramar beach',meetup:'Meet at the public entrance',capacity:20,materials:'Water, Gloves',poster:{color:'plum',pattern:'grid'},startsAt:date+'T09:00:00+05:30',endsAt:date+'T11:00:00+05:30',recurrence:{frequency:'weekly',interval:1,occurrences:4}};
+ const response=await call('/api/events','POST',input,creator,{origin:'http://127.0.0.1:4312'});
+ assert.equal(response.status,201,await response.clone().text());
+ const result=await response.json() as {id:string;ids:string[];seriesId:string};
+ assert.equal(result.ids.length,4);
+ const rows=(await pool.query('SELECT * FROM events WHERE series_id=$1 ORDER BY series_index',[result.seriesId])).rows;
+ assert.equal(rows.length,4);
+ assert.ok(rows.every(row=>row.poster.color==='plum'&&row.poster.pattern==='grid'));
+ assert.ok(rows.every(row=>row.status==='published'&&row.materials==='Water, Gloves'&&row.title===input.title));
+ assert.deepEqual(rows.map(row=>row.series_index),[0,1,2,3]);
+ assert.equal(rows[1].starts_at.getTime()-rows[0].starts_at.getTime(),7*86400000);
+ const own=await (await call('/api/events/'+result.id,'GET',undefined,creator)).json() as any;
+ assert.deepEqual(own.event.recurrence,input.recurrence);
+ for(const id of result.ids)assert.equal((await call('/api/events/'+id)).status,200);
+ const invalid=await call('/api/events','POST',{...input,recurrence:{...input.recurrence,occurrences:13}},creator);
+ assert.equal(invalid.status,400);
+ assert.equal((await pool.query('SELECT count(*)::int AS count FROM events WHERE organizer_id=$1',[creator.id])).rows[0].count,4);
+});
+
+test('meetup graphics persist publicly and only their owner or moderator can update them',async()=>{
+ const creator=await actor('resident');
+ const input={title:'Graphic QA meetup',description:'A fictional meetup for poster persistence checks.',activity:'cleanup_walk',point:{lat:15.49,lng:73.82},locationLabel:'Panaji',meetup:'Meet beside the public gate',startsAt:new Date(Date.now()+86400000).toISOString(),endsAt:new Date(Date.now()+90000000).toISOString(),capacity:20,poster:{color:'ocean',pattern:'waves'}};
+ const response=await call('/api/events','POST',input,creator);assert.equal(response.status,201,await response.clone().text());
+ const {id}=await response.json() as {id:string};
+ const initial=await (await call('/api/events/'+id)).json() as any;assert.deepEqual(initial.event.poster,input.poster);
+ const update={version:initial.event.version,poster:{color:'sand',pattern:'dots'}};
+ assert.equal((await call('/api/events/'+id+'/graphic','PATCH',update)).status,401);
+ assert.equal((await call('/api/events/'+id+'/graphic','PATCH',update,other)).status,403);
+ assert.equal((await call('/api/events/'+id+'/graphic','PATCH',{...update,poster:{color:'url(untrusted)',pattern:'dots'}},creator)).status,400);
+ assert.equal((await call('/api/events/'+id+'/graphic','PATCH',update,creator)).status,200);
+ const saved=await (await call('/api/events/'+id)).json() as any;assert.deepEqual(saved.event.poster,update.poster);assert.equal(saved.event.version,initial.event.version+1);
+ assert.equal((await call('/api/events/'+id+'/graphic','PATCH',update,creator)).status,409);
+ const legacy=(await pool.query('SELECT poster FROM events WHERE organizer_id=$1 LIMIT 1',[resident.id])).rows[0];assert.deepEqual(legacy.poster,{color:'forest',pattern:'solid'});
 });

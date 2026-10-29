@@ -1,72 +1,72 @@
-/* Navigation material is deliberately distinct from the opaque content layer.
-   Reference: developer.apple.com/design/human-interface-guidelines/tab-bars */
-.tab-bar {
+/* Local design reference: Dizko EventChat's BottomNav.tsx,
+   bottomNavMetrics.ts and .bottom-nav-bar in web/src/index.css.
+   Same 46px icon/label rhythm; GO-GOA retains its own palette and routes. */
+:root {
+  --bottom-nav-safe-area: max(env(safe-area-inset-bottom, 0px), 6px);
+  --bottom-nav-height: calc(47px + var(--bottom-nav-safe-area));
+}
+
+.bottom-nav {
   position: fixed;
   z-index: 1100;
-  bottom: calc(10px + env(safe-area-inset-bottom, 0px));
-  left: 50%;
-  transform: translateX(-50%);
-  display: grid;
-  grid-template-columns: repeat(4, minmax(0, 1fr));
-  width: min(352px, calc(100% - 32px));
-  min-height: 64px;
-  padding: 5px;
-  border: 1px solid rgb(255 255 255 / 65%);
-  border-radius: 34px;
-  background: rgb(248 249 246 / 72%);
-  -webkit-backdrop-filter: blur(24px) saturate(150%);
-  backdrop-filter: blur(24px) saturate(150%);
-  box-shadow: 0 4px 20px rgb(18 36 27 / 12%), inset 0 1px 0 rgb(255 255 255 / 70%);
-  font-family: -apple-system, BlinkMacSystemFont, system-ui, sans-serif;
+  inset-inline: 0;
+  bottom: 0;
+  padding: 0 env(safe-area-inset-right, 0px) var(--bottom-nav-safe-area) env(safe-area-inset-left, 0px);
+  border-top: 1px solid var(--line);
+  background: var(--white);
+  font-family: var(--font-sans);
+  font-style: normal;
 }
 
-.tab-bar-item {
+.bottom-nav-items {
   display: flex;
+  width: 100%;
+  max-width: 560px;
+  margin-inline: auto;
+}
+
+.bottom-nav-item {
+  display: flex;
+  flex: 1;
+  min-width: 0;
+  height: 46px;
   flex-direction: column;
   align-items: center;
-  justify-content: center;
   gap: 3px;
-  min-width: 0;
-  min-height: 52px;
-  padding: 3px 6px;
-  border-radius: 28px;
-  color: #505651;
+  padding: 8px 4px 1px;
+  color: var(--muted);
   font-size: 11px;
-  line-height: 13px;
-  font-weight: 600;
-  letter-spacing: 0;
+  line-height: 12px;
+  font-weight: 500;
   text-decoration: none;
   -webkit-tap-highlight-color: transparent;
-  transition: background-color 160ms ease-out, color 160ms ease-out;
+  touch-action: manipulation;
+  transition: color 150ms ease-out, background-color 150ms ease-out;
 }
 
-.tab-bar-icon { flex: none; }
-.tab-bar-item[aria-current="page"] {
-  color: var(--green);
-  background: rgb(30 55 43 / 9%);
-}
-.tab-bar-item:active { background: rgb(30 55 43 / 14%); }
-.tab-bar-item:focus-visible { outline: 2px solid var(--green); outline-offset: -2px; }
+.bottom-nav-icon { flex: none; width: 22px; height: 22px; }
+.bottom-nav-item[aria-current="page"] { color: var(--green); font-weight: 700; }
+.bottom-nav-item:active { background: var(--pale); }
+.bottom-nav-item:focus-visible { outline: 2px solid var(--green); outline-offset: -3px; }
 
 @media (hover: hover) {
-  .tab-bar-item:hover { background: rgb(30 55 43 / 7%); }
-  .tab-bar-item[aria-current="page"]:hover { background: rgb(30 55 43 / 12%); }
+  .bottom-nav-item:hover { color: var(--green); background: var(--pale); }
 }
 
-@media (min-width: 761px), (orientation: landscape) and (max-height: 500px) {
-  .tab-bar { width: 424px; min-height: 52px; padding: 3px; bottom: 16px; }
-  .tab-bar-item { flex-direction: row; gap: 7px; min-height: 44px; font-size: 13px; line-height: 18px; }
-  .tab-bar-icon { width: 20px; height: 20px; }
-}
+/* Keep the map's source attribution above the full-width dock. */
+body:has(.bottom-nav) .radar-canvas .leaflet-bottom { bottom: var(--bottom-nav-height); }
 
 @media (prefers-reduced-motion: reduce) {
-  .tab-bar-item { transition: none; }
+  .bottom-nav-item { transition: none; }
 }
-@media (prefers-reduced-transparency: reduce), (prefers-contrast: more) {
-  .tab-bar { background: #f8f9f6; -webkit-backdrop-filter: none; backdrop-filter: none; border-color: #a1aaa1; }
-  .tab-bar-item { color: #343c35; }
-  .tab-bar-item[aria-current="page"] { background: #dce3da; }
+
+@media (prefers-contrast: more) {
+  .bottom-nav { border-color: var(--green); }
+  .bottom-nav-item { color: var(--green); }
+  .bottom-nav-item[aria-current="page"] { text-decoration: underline; text-underline-offset: 2px; }
 }
-@supports not (backdrop-filter: blur(1px)) {
-  .tab-bar { background: #f8f9f6; }
+
+@media (forced-colors: active) {
+  .bottom-nav { background: Canvas; border-color: CanvasText; }
+  .bottom-nav-item[aria-current="page"] { outline: 2px solid Highlight; outline-offset: -3px; }
 }

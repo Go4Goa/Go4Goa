@@ -1,0 +1,11 @@
+.meetup-detail-top { display:flex; flex-wrap:wrap; justify-content:space-between; align-items:flex-start; gap:16px; margin-bottom:24px; }
+.meetup-detail-top .back-link { margin:0; min-height:44px; display:inline-flex; align-items:center; gap:8px; }
+.meetup-share { display:grid; justify-items:end; gap:8px; max-width:100%; }
+.meetup-share .hint { margin:0; text-align:right; }
+.meetup-created { display:flex; align-items:flex-start; gap:8px; margin:0 0 24px; color:var(--green); }
+.meetup-created svg { flex:none; margin-top:2px; }
+.meetup-detail .event-detail-meta { margin-block:16px; }
+.meetup-detail .event-preview-poster { min-height:360px; }
+.meetup-state { display:grid; justify-items:start; gap:12px; margin-bottom:20px; }
+.meetup-state p { margin:0; }
+.meetup-detail .detail-columns>section { min-width:0; }

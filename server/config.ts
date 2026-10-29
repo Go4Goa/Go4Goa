@@ -27,7 +27,15 @@ export const config = {
   resend: process.env.RESEND_API_KEY || '', emailFrom: process.env.RESEND_FROM || '', resendWebhook: process.env.RESEND_WEBHOOK_SECRET || '',
   s3Bucket: process.env.S3_BUCKET || '', s3Endpoint: process.env.S3_ENDPOINT || '', s3Region: process.env.S3_REGION || 'auto',
   mapKey: process.env.MAPTILER_KEY || '',
+  // Reuse explicitly authorized for local development. Hosted deployments use
+  // their own server secret; this value is never returned by /api/config.
+  placesKey: process.env.GOOGLE_PLACES_API_KEY || process.env.GOOGLE_MAPS_API_KEY || '',
 };
+export function placesApiKey() {
+  if (config.placesKey) return config.placesKey;
+  const file = resolve(local, 'google-places-key');
+  return !production && existsSync(file) ? readFileSync(file, 'utf8').trim() : '';
+}
 if (production && !qa && (process.env.GO_GOA_DEMO === 'true' || !process.env.DATABASE_URL || !config.s3Bucket || !config.mapKey || !config.origin.startsWith('https://') || !config.verifySid || !config.twilioSid || !config.twilioToken)) {
   throw new Error('Production requires dedicated database, HTTPS origin, private object storage, map provider and Twilio Verify. Demo mode is forbidden.');
 }
