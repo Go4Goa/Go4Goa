@@ -3,7 +3,8 @@ import sharp from 'sharp';
 import { randomUUID } from 'node:crypto';
 import { z } from 'zod';
 import { pool,tx,audit,award } from './db.ts';
-import { fail,rate,hash,seal,unseal,publicPoint,distance } from './security.ts';
+import { config } from './config.ts';
+import { fail,rate,clientIp,hash,seal,unseal,publicPoint,distance } from './security.ts';
 import { requireAccount,requireModerator } from './auth.ts';
 import { reportSchema,statusIds,type Point } from '../shared/model.ts';
 import { derivative,putAsset,getAsset,deleteAsset,hashDistance } from './storage.ts';
@@ -13,6 +14,7 @@ export const incidents=Router(), moderation=Router(),mediaRoutes=Router();
 const publicStates=['verified','in_progress','resolved'];
 let uploads=0;
 incidents.post('/',requireAccount,async(req,res)=>{
+ if(config.qa)await rate('preview-report-ip:'+clientIp(req),16,3600);
  await rate('report:'+req.account!.id,8,3600);if(uploads>=2)fail(503,'Uploads are busy. Keep this page open and retry shortly.');
  const key=z.uuid().parse(req.headers['idempotency-key']);if(!Buffer.isBuffer(req.body))fail(415,'Choose a photo and submit the form.');uploads++;
  let assets:string[]=[];
