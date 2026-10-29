@@ -1,0 +1,58 @@
+{
+  "schemaVersion": 1,
+  "recordedAt": "2026-10-29T18:47:58Z",
+  "pr": {
+    "number": 13,
+    "url": "https://github.com/actforgoa2026/Go4Goa/pull/13",
+    "author": "layalabs",
+    "authorId": 261854875,
+    "state": "merged"
+  },
+  "reviewed": {
+    "head": "d75f2007fd279f9a5c5605271f30ffe28ee8339d",
+    "base": "e2a1d622b3aac809ae687ecfb48fac7b7b008c1e",
+    "integrated": "95052007ba5f4d98e0e64bd0d5bcc8ee631cd74d",
+    "sourceReceipt": "https://github.com/actforgoa2026/Go4Goa/blob/automation/source-review/reviews/pr-13.json",
+    "sourceReceiptReviewedAt": "2026-10-29T18:41:17.275Z"
+  },
+  "verification": {
+    "workflowRun": 40933126253,
+    "attempt": 2,
+    "status": "success",
+    "artifact": {
+      "id": 12924325820,
+      "name": "design-evidence-40933126253-2",
+      "sha256": "c3441419f33ebd02bb486636ad382a592220838d836decf68a9699bbbcdfef9f"
+    },
+    "jobs": [
+      "source-review",
+      "verify",
+      "visual-evidence"
+    ],
+    "visual": {
+      "renderedPairs": 54,
+      "inspected": [
+        "320-issue.png",
+        "390-place.png",
+        "390-review.png",
+        "1440-map.png"
+      ],
+      "result": "No application visual regression found. The two changed 390px pairs are focus/scroll timing only; mobile issue/review and desktop map remain visually consistent. No italic/oblique text, decorative sideflag, overflow, or accessibility regression was found in the reviewed evidence.",
+      "detectorWarnings": [
+        "Inherited meetup-poster overused-font warnings only"
+      ]
+    }
+  },
+  "merged": {
+    "sha": "c8982c195edfabf97be6c7f8a6ab38a75499185f",
+    "tree": "793c5bb8125b32c1279132e7ede3e449db27b8f8",
+    "candidateTree": "793c5bb8125b32c1279132e7ede3e449db27b8f8",
+    "treeMatchesReviewedIntegratedCandidate": true
+  },
+  "publication": {
+    "outcome": "held",
+    "cloudReleaseBeforeAndAfter": "26515cdc5a2cdcd08137c2738d1fbf283a8bba60",
+    "reason": "PR #13 is a documentation-only merge. Its receipt and the reviewed runbook explicitly authorize no deployment; current main includes prior PR #12 changes that have not satisfied publication gates."
+  },
+  "outcome": "merged-documentation-only-no-release"
+}
