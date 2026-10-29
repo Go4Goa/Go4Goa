@@ -28,8 +28,8 @@ try{
   await page.goto(origin+'/events/new');await page.getByRole('heading',{name:'Untitled meetup',exact:true}).waitFor();
   await page.getByText('Customize graphic',{exact:true}).click();await page.getByRole('button',{name:'Ocean',exact:true}).click();await page.getByRole('button',{name:'Waves',exact:true}).click();
   const editor=`${width}-meetup-create.png`;await page.screenshot({path:'test-results/live/'+editor,fullPage:true,animations:'disabled'});captures.push(editor);
-  const listing=await context.request.get(origin+'/api/events',{headers:{authorization}});assert.equal(listing.status(),200);
-  const events=(await listing.json()).events;assert.ok(events.length,'A fictional QA meetup is required for live evidence');
+  const listing=await context.request.get(origin+'/api/explore?mode=events',{headers:{authorization}});assert.equal(listing.status(),200);
+  const events=(await listing.json()).items;assert.ok(events.length,'A fictional QA meetup is required for live evidence');
   await page.goto(origin+'/events/'+events[0].id);await page.locator('main h1').first().waitFor();await page.getByRole('button',{name:'Share meetup',exact:true}).waitFor();
   const detail=`${width}-meetup-detail.png`;await page.screenshot({path:'test-results/live/'+detail,fullPage:true,animations:'disabled'});captures.push(detail);
   await context.close();

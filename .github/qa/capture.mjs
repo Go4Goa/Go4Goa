@@ -77,6 +77,15 @@ try {
   evidence.checks.push({width,uploadFailureRetry:true,offlineGuard:true,draftAcrossSignIn:true,errors});assert.deepEqual(errors,[],'Browser runtime errors');
   for(const [route,name]of [['/','map'],['/events','events'],['/profile','profile'],['/resources','resources'],['/resources/topics/waste','resource-topic'],['/directory','directory'],['/events/new','meetup-create']]){await page.goto(origin+route);await page.locator('main h1').first().waitFor();await page.waitForTimeout(300);await capture(name);
    if(name==='meetup-create'&&await page.getByText('Customize graphic',{exact:true}).count()){
+    const time=page.getByRole('combobox',{name:/Start time/});
+    if(await time.count()){
+     await time.focus();await time.press('ArrowDown');await time.press('ArrowDown');await time.press('Enter');
+     assert.match(await time.getAttribute('aria-labelledby'),/label/);assert.equal(await time.getAttribute('aria-expanded'),'false');
+     assert.equal(await time.evaluate(el=>el===document.activeElement),true,'Time selection retains trigger focus');
+     await time.press('ArrowDown');await time.press('Escape');assert.equal(await time.getAttribute('aria-expanded'),'false');
+     await time.press('ArrowDown');await time.press('Tab');assert.equal(await time.getAttribute('aria-expanded'),'false');
+     assert.equal(await page.getByRole('combobox',{name:'How long?',exact:true}).evaluate(el=>el===document.activeElement),true,'Tab exits the time list directly');
+    }
     await page.getByRole('button',{name:'Meetup name: Untitled meetup',exact:true}).click();
     await page.getByRole('textbox',{name:'Meetup name',exact:true}).fill('Fictional recovered meetup');
     await page.getByRole('button',{name:'Save meetup name',exact:true}).click();

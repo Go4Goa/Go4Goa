@@ -38,6 +38,7 @@ export function TimePicker({ label, value, defaultValue = "09:00", onChange, des
   const labelId = `${id}-label`;
   const valueId = `${id}-value`;
   const rootRef = useRef<HTMLDivElement>(null);
+  const triggerRef = useRef<HTMLButtonElement>(null);
   const optionRefs = useRef<Array<HTMLButtonElement | null>>([]);
   const centerOnOpen = useRef(false);
   const [internal, setInternal] = useState(defaultValue);
@@ -64,7 +65,7 @@ export function TimePicker({ label, value, defaultValue = "09:00", onChange, des
     else if (top < menu.scrollTop) menu.scrollTop = top;
     else if (bottom > menu.scrollTop + menu.clientHeight) menu.scrollTop = bottom - menu.clientHeight;
   }, [activeIndex, open]);
-  const choose = (next: string) => { if (value === undefined) setInternal(next); onChange?.(next); setOpen(false); };
+  const choose = (next: string) => { if (value === undefined) setInternal(next); onChange?.(next); setOpen(false); triggerRef.current?.focus({ preventScroll: true }); };
   const openMenu = () => {
     const selectedIndex = options.indexOf(selected);
     setActiveIndex(selectedIndex >= 0 ? selectedIndex : 0);
@@ -72,6 +73,8 @@ export function TimePicker({ label, value, defaultValue = "09:00", onChange, des
     setOpen(true);
   };
   const onKeyDown = (event: React.KeyboardEvent<HTMLButtonElement>) => {
+    if (event.key === "Tab") { setOpen(false); return; }
+    if (open && (event.key === "Home" || event.key === "End")) { event.preventDefault(); setActiveIndex(event.key === "Home" ? 0 : options.length - 1); return; }
     if (event.key === "Escape") { event.preventDefault(); setOpen(false); return; }
     if (event.key === "Enter" || event.key === " ") {
       event.preventDefault();
@@ -88,7 +91,7 @@ export function TimePicker({ label, value, defaultValue = "09:00", onChange, des
   return <div ref={rootRef} className={[styles.field, className].filter(Boolean).join(" ")}>
     <span id={labelId} className={styles.label}>{label}</span>
     <div className={styles.anchor}>
-      <button type="button" className={styles.trigger} disabled={disabled} aria-labelledby={`${labelId} ${valueId}`} aria-haspopup="listbox" aria-expanded={open} aria-controls={`${id}-listbox`} onClick={() => open ? setOpen(false) : openMenu()} onKeyDown={onKeyDown}>
+      <button ref={triggerRef} type="button" role="combobox" aria-readonly="true" aria-activedescendant={open && activeIndex >= 0 ? `${id}-option-${activeIndex}` : undefined} className={styles.trigger} disabled={disabled} aria-labelledby={`${labelId} ${valueId}`} aria-haspopup="listbox" aria-expanded={open} aria-controls={`${id}-listbox`} onClick={() => open ? setOpen(false) : openMenu()} onKeyDown={onKeyDown}>
         <Clock3 size={16} aria-hidden="true" />
         <span id={valueId} className={styles.srOnly}>{selected ? display(selected) : placeholder}</span>
         <span className={styles.valueText} aria-hidden="true"><AnimatePresence initial={false} custom={direction}><motion.span key={selected || "placeholder"} className={selected ? styles.value : styles.placeholder} custom={direction} variants={reduce ? valueFade : valueRoll} initial="enter" animate="center" exit="exit">{selected ? display(selected) : placeholder}</motion.span></AnimatePresence></span>
@@ -98,7 +101,7 @@ export function TimePicker({ label, value, defaultValue = "09:00", onChange, des
         initial={reduce ? { opacity: 0 } : { opacity: 0, y: -6, scale: .97 }}
         animate={{ opacity: 1, y: 0, scale: 1, transition: reduce ? { duration: motionTokens.duration.instant } : { ...motionTokens.spring.snappy, opacity: { duration: motionTokens.duration.fast, ease: enter } } }}
         exit={{ opacity: 0, ...(reduce ? {} : { y: -4, scale: .98 }), transition: { duration: motionTokens.duration.instant, ease: standard } }}>
-        {options.map((option, index) => <button ref={node => { optionRefs.current[index] = node; }} id={`${id}-option-${index}`} type="button" role="option" aria-selected={option === selected} data-active={activeIndex === index || undefined} className={styles.option} key={option} onPointerMove={() => { if (activeIndex !== index) setActiveIndex(index); }} onClick={() => choose(option)}>{display(option)}{option === selected && <span className={styles.dot} aria-hidden="true" />}</button>)}
+        {options.map((option, index) => <button ref={node => { optionRefs.current[index] = node; }} id={`${id}-option-${index}`} type="button" role="option" tabIndex={-1} onMouseDown={event => event.preventDefault()} aria-selected={option === selected} data-active={activeIndex === index || undefined} className={styles.option} key={option} onPointerMove={() => { if (activeIndex !== index) setActiveIndex(index); }} onClick={() => choose(option)}>{display(option)}{option === selected && <span className={styles.dot} aria-hidden="true" />}</button>)}
       </motion.div>}</AnimatePresence>
     </div>
     {description && <span className={styles.description}>{description}</span>}
