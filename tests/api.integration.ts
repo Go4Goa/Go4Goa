@@ -34,12 +34,61 @@ before(async()=>{
 });
 after(async()=>{await new Promise<void>((r,j)=>server.close(e=>e?j(e):r()));await pool.end();});
 
+test('hosted QA is public to browse without exposing shared accounts or private APIs',async()=>{
+  const previous={qa:config.qa,qaAccessCode:config.qaAccessCode};
+  config.qa=true;config.qaAccessCode='integration-only-team-access-at-least-24-characters';
+  try {
+    for(const path of ['/api/health','/api/config','/api/explore']) {
+      const response=await call(path);assert.equal(response.status,200);
+      assert.equal(response.headers.get('www-authenticate'),null,'public browsing never opens a password prompt');
+    }
+    for(const role of ['resident','organizer','moderator']) {
+      for(const authorization of ['', 'Basic '+btoa('qa:incorrect')]) {
+        const denied=await call('/api/auth/demo','POST',{role},undefined,{authorization});
+        assert.equal(denied.status,403);assert.equal(denied.headers.get('set-cookie'),null);
+        assert.equal(denied.headers.get('www-authenticate'),null);
+      }
+      const accepted=await call('/api/auth/demo','POST',{role},undefined,{authorization:'Basic '+btoa('qa:'+config.qaAccessCode)});
+      assert.equal(accepted.status,200);assert.ok(accepted.headers.get('set-cookie'));
+    }
+    assert.equal((await call('/api/account')).status,401);
+    assert.equal((await call('/api/admin/incidents')).status,401);
+  } finally {Object.assign(config,previous);}
+});
+
 test('authentication, CSRF and role guards reject unauthorized mutations',async()=>{
   assert.equal((await call('/api/account')).status,401);
   assert.equal((await call('/api/admin/incidents','GET',undefined,resident)).status,403);
   assert.equal((await call('/api/auth/preferences','PATCH',{sms:false,email:false},resident,{'x-csrf-token':''})).status,403);
   assert.equal((await call('/api/auth/preferences','PATCH',{sms:false,email:false},resident,{origin:'https://attacker.example'})).status,403);
   assert.equal((await call('/api/auth/preferences','PATCH',{sms:true,email:false},resident)).status,400);
+});
+
+test('public preview guests are separate residents with private reports and no role escalation',async()=>{
+  const previous=config.qa;config.qa=true;
+  try {
+    assert.equal((await call('/api/auth/guest','POST',{role:'moderator'})).status,400);
+    assert.equal((await call('/api/auth/guest','POST',{},undefined,{origin:'https://attacker.example'})).status,403);
+    async function guest():Promise<Actor>{
+      const response=await call('/api/auth/guest','POST',{});assert.equal(response.status,200);
+      const cookie=response.headers.getSetCookie().map(v=>v.split(';')[0]).join('; ');
+      const account=(await(await call('/api/auth/me','GET',undefined,{id:'',cookie,csrf:''})).json() as any).account;
+      assert.equal(account.role,'resident');assert.equal(account.verified,false);assert.match(account.username,/^guest_/);
+      return {id:account.id,cookie,csrf:account.csrf};
+    }
+    const one=await guest(),two=await guest();assert.notEqual(one.id,two.id);
+    const reused=await call('/api/auth/guest','POST',{},one);assert.equal(reused.status,200);assert.equal(reused.headers.get('set-cookie'),null);
+    assert.equal((await call('/api/admin/incidents','GET',undefined,one)).status,403);
+    const photo=await sharp({create:{width:80,height:80,channels:3,background:'#667744'}}).jpeg().toBuffer();
+    const form=new FormData();form.set('report',JSON.stringify({category:'trash',point:{lat:15.482731,lng:73.819274},privacy:'blurred',description:'Fictional guest-private report',locationLabel:'Fictional place',alt:'Fictional test photo'}));form.set('photo',new Blob([new Uint8Array(photo)],{type:'image/jpeg'}),'guest.jpg');
+    const uploaded=await call('/api/incidents','POST',form,one,{'idempotency-key':randomUUID()});assert.equal(uploaded.status,201);
+    const {id}=await uploaded.json() as {id:string};const own=await call('/api/incidents/'+id,'GET',undefined,one);assert.equal(own.status,200);
+    const report=(await own.json() as any).incident;
+    assert.equal((await call('/api/incidents/'+id,'GET',undefined,two)).status,404);
+    assert.equal((await call(report.photo,'GET',undefined,two)).status,404);
+    assert.equal((await call('/api/incidents/'+id)).status,404);
+    assert.equal((await call('/api/auth/preferences','PATCH',{sms:false,email:false},one,{'x-csrf-token':''})).status,403);
+  }finally{config.qa=previous;}
 });
 
 test('photo report stays private until reviewed, retry is idempotent and points cannot be duplicated or edited',async()=>{

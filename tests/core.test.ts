@@ -1,7 +1,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import sharp from 'sharp';
-import { seal, unseal, publicPoint, distance } from '../server/security.ts';
+import { seal, unseal, publicPoint, distance, clientIp } from '../server/security.ts';
 import { derivative, hashDistance } from '../server/storage.ts';
 import { normalizeFeed } from '../server/actforgoa.ts';
 import { eventICS } from '../server/calendar.ts';
@@ -78,4 +78,19 @@ test('location and event input reject out-of-area coordinates and invalid time r
   assert.equal(eventSchema.safeParse({title:'Cleanup',description:'A civic cleanup walk',activity:'cleanup_walk',
     point:{lat:15.49,lng:73.82},locationLabel:'Panaji',meetup:'Meet at gate',capacity:10,
     startsAt:'2026-11-01T10:00:00Z',endsAt:'2026-11-01T09:00:00Z'}).success,false);
+});
+
+
+test('visitor limits use only trusted Vercel IPs and reject spoofed or malformed forwarding', () => {
+  const previous=process.env.VERCEL;
+  const req=(headers:Record<string,string|string[]>)=>({headers,ip:'10.0.0.1',socket:{remoteAddress:'127.0.0.1'}} as import('express').Request);
+  try {
+    delete process.env.VERCEL;
+    assert.equal(clientIp(req({'x-vercel-forwarded-for':'203.0.113.7','x-forwarded-for':'203.0.113.8'})),'127.0.0.1');
+    process.env.VERCEL='1';
+    assert.equal(clientIp(req({'x-vercel-forwarded-for':'203.0.113.7','x-forwarded-for':'203.0.113.8'})),'203.0.113.7');
+    assert.equal(clientIp(req({'x-forwarded-for':'2001:db8::1'})),'2001:db8::1');
+    assert.equal(clientIp(req({'x-forwarded-for':'203.0.113.8'})),'203.0.113.8');
+    for(const value of ['attacker','203.0.113.7, 10.0.0.1',['203.0.113.7']])assert.equal(clientIp(req({'x-vercel-forwarded-for':value})),'127.0.0.1');
+  } finally { if(previous===undefined)delete process.env.VERCEL;else process.env.VERCEL=previous; }
 });

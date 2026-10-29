@@ -1,4 +1,4 @@
-name: Verify protected QA release
+name: Verify public QA release
 on:
   push:
     branches: [cloud-release]
@@ -22,7 +22,7 @@ jobs:
           node-version: 24
       - run: npm ci
       - run: npx playwright install --with-deps chromium
-      - name: Verify exact deployment and rendered access
+      - name: Verify exact deployment and public rendered access
         run: node .github/qa/live-check.mjs
         env:
           EXPECTED_SHA: ${{ github.sha }}
@@ -54,5 +54,5 @@ jobs:
           script: |
             await github.rest.repos.createCommitStatus({...context.repo,sha:context.sha,
               state:process.env.RESULT==='success'?'success':'failure',context:'cloud/live-verification',
-              description:'Identity, QA access, Reporting smoke and rendered evidence',
+              description:'Identity, public access, Reporting smoke and rendered evidence',
               target_url:`${context.serverUrl}/${context.repo.owner}/${context.repo.repo}/actions/runs/${context.runId}`});
