@@ -25,6 +25,8 @@ Follow [Reporting QA handoff](reporting-qa-handoff.md). Report issues with the t
 
 The GitHub app is linked only to `actforgoa2026/Go4Goa`. After the cloud handoff is verified, the reviewed `cloud-release` branch drives the public stable preview. Pull requests and ordinary main pushes do not publish it. Follow [the cloud workflow](cloud-pr-workflow.md) and its exact-head/base, design evidence and live verification gates. The deployed source commit is available through the public health endpoint.
 
+For PR #12, follow the [database migration and Vercel release procedure](pr12-migration-vercel-release.md). It includes the exact SHAs, migration gate, release commands, rollback limits and verification evidence.
+
 Manual release fallback: use a clean reviewed commit including current main, run the required checks, then advance `cloud-release` by an expected-old-SHA guarded fast-forward. Confirm Vercel deployment identity and the `cloud/live-verification` status and artifact before marking a release successful. Never deploy the shared dirty design checkout.
 
 Vercel's `production` target here means the stable URL of the dedicated QA project. It is not the public resident launch. Leave the separate live-mode requirements enabled.
