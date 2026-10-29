@@ -1,0 +1,24 @@
+.event-preview-poster { display:flex; flex-direction:column; min-height:360px; padding:28px; background:var(--green); color:var(--paper); }
+.event-preview-poster>span { font-size:13px; }
+.event-preview-poster :is(h1,h2) { margin-block:28px 16px; color:inherit; font-family:"Geist Variable",sans-serif; font-size:clamp(2rem,3vw,2.75rem); font-weight:500; line-height:1.15; letter-spacing:-.03em; white-space:pre-line; overflow-wrap:anywhere; }
+.event-preview-purpose { font-size:14px; line-height:1.65; white-space:pre-wrap; overflow-wrap:anywhere; }
+.event-preview-details { display:grid; gap:18px; padding:24px 0; }
+.event-preview-details>p { display:flex; align-items:flex-start; gap:12px; margin:0; font-size:14px; line-height:1.6; }
+.event-preview-details>p>svg { flex:none; margin-top:2px; color:inherit; }
+.event-preview-details small { display:block; color:inherit; font-size:12px; white-space:pre-line; overflow-wrap:anywhere; }
+.event-preview-details .event-preview-description { display:block; white-space:pre-wrap; overflow-wrap:anywhere; }
+.event-preview-details .event-preview-materials { display:block; font-size:14px; }
+.event-preview-poster { font-family:"Inter Variable",sans-serif; }
+@media(max-width:900px){.event-preview-poster{min-height:300px;padding:24px}}
+@media(max-width:700px){.event-preview-poster{min-height:320px}.event-preview-poster :is(h1,h2){font-size:36px}}
+[data-poster-color] { --poster-foreground:#fff; --poster-pattern-ink:rgb(255 255 255 / 8%); }
+[data-poster-color=forest] { --poster-background:#193e32; }
+[data-poster-color=ocean] { --poster-background:#214d65; }
+[data-poster-color=clay] { --poster-background:#883e2e; }
+[data-poster-color=plum] { --poster-background:#5b3659; }
+[data-poster-color=ink] { --poster-background:#262e2b; }
+[data-poster-color=sand] { --poster-background:#f0e5cd; --poster-foreground:#193e32; --poster-pattern-ink:rgb(25 62 50 / 6%); }
+.event-preview-poster[data-poster-color] { background-color:var(--poster-background); color:var(--poster-foreground); }
+[data-poster-pattern=dots] { background-image:radial-gradient(circle at 2px 2px,var(--poster-pattern-ink) 1.2px,transparent 1.7px); background-size:18px 18px; }
+[data-poster-pattern=grid] { background-image:linear-gradient(var(--poster-pattern-ink) 1px,transparent 1px),linear-gradient(90deg,var(--poster-pattern-ink) 1px,transparent 1px); background-size:28px 28px; }
+[data-poster-pattern=waves] { background-image:repeating-radial-gradient(ellipse at 0 50%,transparent 0 10px,var(--poster-pattern-ink) 11px 12px,transparent 13px 22px); background-size:64px 44px; }

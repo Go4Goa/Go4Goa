@@ -10,7 +10,7 @@ if(!config.production&&!config.qa){
 }
 const client=new pg.Client({connectionString:config.database});await client.connect();
 await client.query('CREATE TABLE IF NOT EXISTS schema_migrations(name text PRIMARY KEY,applied_at timestamptz NOT NULL DEFAULT now())');
-for(const name of ['001-core.sql',...(config.production||process.env.USE_POSTGIS==='true'?['002-postgis.sql']:[]),'003-bookmarks.sql']) {
+for(const name of ['001-core.sql',...(config.production||process.env.USE_POSTGIS==='true'?['002-postgis.sql']:[]),'003-bookmarks.sql','004-event-series.sql','005-directory.sql','006-publish-meetups.sql','007-meetup-poster.sql','008-reminder-version.sql']) {
  if((await client.query('SELECT 1 FROM schema_migrations WHERE name=$1',[name])).rowCount) continue;
  await client.query('BEGIN');try{await client.query(await readFile(new URL('../db/'+name,import.meta.url),'utf8'));await client.query('INSERT INTO schema_migrations(name) VALUES ($1)',[name]);await client.query('COMMIT');console.log('Applied',name);}catch(e){await client.query('ROLLBACK');throw e;}
 }

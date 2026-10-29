@@ -30,6 +30,7 @@ try {
  run(['--import','tsx','scripts/setup.ts']);run(['--import','tsx','scripts/seed.ts']);
  // Same dates in baseline and candidate; only this disposable schema is modified.
  await db.query(`UPDATE "${schema}".incidents SET created_at='2026-10-28T10:00:00Z',updated_at='2026-10-28T10:00:00Z'`);
+ if((await db.query('SELECT to_regclass($1) AS name',[schema+'.directory_snapshot'])).rows[0].name)await db.query(`INSERT INTO "${schema}".directory_snapshot(id,snapshot) VALUES(true,$1)`,[JSON.stringify({version:'fictional-release-fixture',records:[{record_id:'goa-fictional-recycling',name:'Fictional Goa Recycling Service',collection:'community',record_type:'organization',organization:'Fictional Goa Recycling Service',role:'',focus_areas:'waste recycling',goa_location:'Panaji',jurisdiction:'Goa',summary:'Fictional fixture for directory layout and search.',source_urls:'https://example.org/fictional',website_url:'https://example.org',verification_status:'unverified',activity_status:'unknown'}],opportunities:[]})]);
  await db.query(`UPDATE "${schema}".events SET starts_at='2099-10-30T01:30:00Z'::timestamptz + CASE title WHEN 'A cleaner Miramar morning' THEN interval '0 days' WHEN 'Walk, notice, report' THEN interval '1 day' ELSE interval '3 days' END,ends_at='2099-11-03T03:30:00Z'`);
  server=spawn(process.execPath,['--import','tsx','server/index.ts'],{cwd:root,env,stdio:'inherit'});
  let ready=false;for(let i=0;i<100;i++){try{if((await fetch(origin+'/api/health')).ok){ready=true;break;}}catch{}await new Promise(r=>setTimeout(r,200));}assert.ok(ready,'API startup');
@@ -39,6 +40,7 @@ try {
  for(const width of evidence.widths){
   const context=await browser.newContext({viewport:{width,height:width===1440?1000:844},reducedMotion:'reduce',locale:'en-GB',timezoneId:'Asia/Kolkata',serviceWorkers:'block'});
   await context.route('https://tile.openstreetmap.org/**',r=>r.fulfill({contentType:'image/png',body:tile}));
+  await context.route('https://tiles.openfreemap.org/**',r=>r.request().url().endsWith('/planet')?r.fulfill({json:{tilejson:'3.0.0',tiles:['https://tiles.openfreemap.org/fixture/{z}/{x}/{y}.pbf'],minzoom:0,maxzoom:14,vector_layers:[]}}):r.fulfill({contentType:'application/x-protobuf',body:Buffer.alloc(0)}));
   const page=await context.newPage();const errors=[];page.on('pageerror',e=>errors.push(e.message));
   async function capture(name){
    await page.evaluate(()=>document.fonts.ready);await page.waitForTimeout(200);
@@ -73,7 +75,37 @@ try {
   assert.equal(await page.getByAltText('Report photo ready to submit').count(),1);await capture('upload-failed');
   await page.getByRole('button',{name:'Submit for review'}).click();await page.waitForURL('**/reports/**');await db.query(`UPDATE "${schema}".incidents SET created_at='2026-10-28T10:00:00Z',updated_at='2026-10-28T10:00:00Z' WHERE example=false`);await page.reload();await page.waitForTimeout(500);await capture('submitted');
   evidence.checks.push({width,uploadFailureRetry:true,offlineGuard:true,draftAcrossSignIn:true,errors});assert.deepEqual(errors,[],'Browser runtime errors');
-  for(const [route,name]of [['/','map'],['/events','events'],['/profile','profile']]){await page.goto(origin+route);await page.locator('main h1').first().waitFor();await page.waitForTimeout(300);await capture(name);}
+  for(const [route,name]of [['/','map'],['/events','events'],['/profile','profile'],['/resources','resources'],['/resources/topics/waste','resource-topic'],['/directory','directory'],['/events/new','meetup-create']]){await page.goto(origin+route);await page.locator('main h1').first().waitFor();await page.waitForTimeout(300);await capture(name);
+   if(name==='meetup-create'&&await page.getByText('Customize graphic',{exact:true}).count()){
+    const time=page.getByRole('combobox',{name:/Start time/});
+    if(await time.count()){
+     await time.focus();await time.press('ArrowDown');await time.press('ArrowDown');await time.press('Enter');
+     assert.match(await time.getAttribute('aria-labelledby'),/label/);assert.equal(await time.getAttribute('aria-expanded'),'false');
+     assert.equal(await time.evaluate(el=>el===document.activeElement),true,'Time selection retains trigger focus');
+     await time.press('ArrowDown');await time.press('Escape');assert.equal(await time.getAttribute('aria-expanded'),'false');
+     await time.press('ArrowDown');await time.press('Tab');assert.equal(await time.getAttribute('aria-expanded'),'false');
+     assert.equal(await page.getByRole('combobox',{name:'How long?',exact:true}).evaluate(el=>el===document.activeElement),true,'Tab exits the time list directly');
+    }
+    await page.getByRole('button',{name:'Meetup name: Untitled meetup',exact:true}).click();
+    await page.getByRole('textbox',{name:'Meetup name',exact:true}).fill('Fictional recovered meetup');
+    await page.getByRole('button',{name:'Save meetup name',exact:true}).click();
+    await page.getByText('Customize graphic',{exact:true}).click();
+    await page.getByRole('button',{name:'Ocean',exact:true}).click();await page.getByRole('button',{name:'Waves',exact:true}).click();
+    await page.getByRole('link',{name:'Resources',exact:true}).click();await page.goBack();
+    await page.getByRole('heading',{name:'Fictional recovered meetup',exact:true}).waitFor();
+    await page.reload();await page.getByRole('heading',{name:'Fictional recovered meetup',exact:true}).waitFor();
+    assert.equal(await page.locator('.event-preview-poster').getAttribute('data-poster-color'),'ocean');
+    assert.equal(await page.locator('.event-preview-poster').getAttribute('data-poster-pattern'),'waves');
+    await page.getByRole('button',{name:'Meetup name: Fictional recovered meetup',exact:true}).click();
+    await page.getByRole('textbox',{name:'Meetup name',exact:true}).fill('X'.repeat(101));
+    await page.getByRole('button',{name:'Create meetup',exact:true}).click();
+    await page.getByText('Keep the name under 100 characters.',{exact:true}).first().waitFor();
+    assert.match(page.url(),/events\/new/,'Invalid active draft cannot publish an older saved value');
+    evidence.checks.push({width,meetupDraftAcrossNavigationAndReload:true,posterRecovery:true,invalidInlineDraftBlocked:true});
+   }
+  }
+  const event=(await db.query(`SELECT id FROM "${schema}".events ORDER BY title LIMIT 1`)).rows[0];
+  await page.goto(origin+'/events/'+event.id);await page.locator('main h1').first().waitFor();await capture('meetup-detail');
   await context.close();
  }
  evidence.passed=true;

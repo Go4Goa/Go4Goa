@@ -1,70 +1,153 @@
 ---
-name: GO-GOA
-description: Calm civic reporting and local action in the Act For Goa visual system.
+name: "GO-GOA"
+description: "Clear civic tasks in white sections, Helvetica Neue and official UIArc controls."
 colors:
-  paper: "#f7f6ee"
+  paper: "#ffffff"
+  foreground: "#222b26"
   green: "#193e32"
-  muted: "#56675c"
-  line: "#d0d8ca"
-  pale: "#e9eddf"
-  white: "#fffef8"
-  link-button-hover: "#29523e"
+  accent: "#177548"
+  accent-strong: "#125c39"
+  muted: "#606761"
+  line: "#e5e8e5"
+  pale: "#f2f5f2"
+  white: "#ffffff"
   danger: "#963c2b"
-  nav-material: "rgb(248 249 246 / 72%)"
-  nav-ink: "#505651"
-  nav-selection: "rgb(30 55 43 / 9%)"
+  control-track: "oklch(89.5% 0 0)"
+  poster-ocean: "#214d65"
+  poster-clay: "#883e2e"
+  poster-plum: "#5b3659"
+  poster-ink: "#262e2b"
+  poster-sand: "#f0e5cd"
 typography:
   headline:
-    fontFamily: '"Manrope Variable", sans-serif'
+    fontFamily: "\"Helvetica Neue\", Helvetica, Arial, sans-serif"
     fontSize: "32px"
-    fontWeight: 800
+    fontWeight: 600
     lineHeight: 1.25
     letterSpacing: "-0.035em"
   headline-mobile:
-    fontFamily: '"Manrope Variable", sans-serif'
+    fontFamily: "\"Helvetica Neue\", Helvetica, Arial, sans-serif"
     fontSize: "28px"
-    fontWeight: 800
+    fontWeight: 600
     lineHeight: 1.25
     letterSpacing: "-0.035em"
   title:
-    fontFamily: '"Manrope Variable", sans-serif'
+    fontFamily: "\"Helvetica Neue\", Helvetica, Arial, sans-serif"
     fontSize: "22px"
-    fontWeight: 750
+    fontWeight: 500
     lineHeight: 1.25
     letterSpacing: "-0.025em"
   section-title:
-    fontFamily: '"Manrope Variable", sans-serif'
+    fontFamily: "\"Helvetica Neue\", Helvetica, Arial, sans-serif"
     fontSize: "18px"
-    fontWeight: 750
+    fontWeight: 500
     lineHeight: 1.25
     letterSpacing: "-0.025em"
   body:
-    fontFamily: '"Manrope Variable", sans-serif'
+    fontFamily: "\"Helvetica Neue\", Helvetica, Arial, sans-serif"
     fontSize: "16px"
-    fontWeight: 550
+    fontWeight: 400
     lineHeight: 1.6
   label:
-    fontFamily: '"Manrope Variable", sans-serif'
+    fontFamily: "\"Helvetica Neue\", Helvetica, Arial, sans-serif"
     fontSize: "14px"
-    fontWeight: 700
+    fontWeight: 500
     lineHeight: 1.4
   nav-label:
-    fontFamily: "-apple-system, BlinkMacSystemFont, system-ui, sans-serif"
+    fontFamily: "\"Helvetica Neue\", Helvetica, Arial, sans-serif"
     fontSize: "11px"
-    fontWeight: 600
-    lineHeight: "13px"
+    fontWeight: 500
+    lineHeight: "12px"
     letterSpacing: "0"
-  nav-label-wide:
-    fontFamily: "-apple-system, BlinkMacSystemFont, system-ui, sans-serif"
+  map-results-title:
+    fontFamily: "\"Helvetica Neue\", Helvetica, Arial, sans-serif"
+    fontSize: "18px"
+    fontWeight: 500
+    lineHeight: 1.25
+    letterSpacing: "-0.025em"
+  map-selection-title:
+    fontFamily: "\"Helvetica Neue\", Helvetica, Arial, sans-serif"
+    fontSize: "15px"
+    fontWeight: 500
+    lineHeight: 1.35
+    letterSpacing: "-0.025em"
+  map-row-title:
+    fontFamily: "\"Helvetica Neue\", Helvetica, Arial, sans-serif"
+    fontSize: "14px"
+    fontWeight: 500
+    lineHeight: 1.45
+    letterSpacing: "-0.02em"
+  map-body-small:
+    fontFamily: "\"Helvetica Neue\", Helvetica, Arial, sans-serif"
+    fontSize: "12px"
+    fontWeight: 400
+    lineHeight: 1.6
+  map-label:
+    fontFamily: "\"Helvetica Neue\", Helvetica, Arial, sans-serif"
     fontSize: "13px"
+    fontWeight: 500
+    lineHeight: 1.4
+  map-chip-label:
+    fontFamily: "\"Helvetica Neue\", Helvetica, Arial, sans-serif"
+    fontSize: "12px"
+    fontWeight: 500
+    lineHeight: 1.6
+  map-caption:
+    fontFamily: "\"Helvetica Neue\", Helvetica, Arial, sans-serif"
+    fontSize: "11px"
+    fontWeight: 400
+    lineHeight: 1.6
+  map-event-month:
+    fontFamily: "\"Helvetica Neue\", Helvetica, Arial, sans-serif"
+    fontSize: "10px"
+    fontWeight: 500
+    lineHeight: 1.05
+  map-event-day:
+    fontFamily: "\"Helvetica Neue\", Helvetica, Arial, sans-serif"
+    fontSize: "20px"
     fontWeight: 600
-    lineHeight: "18px"
+    lineHeight: 1.05
+  nav-label-active:
+    fontFamily: "\"Helvetica Neue\", Helvetica, Arial, sans-serif"
+    fontSize: "11px"
+    fontWeight: 700
+    lineHeight: "12px"
     letterSpacing: "0"
+  meetup-poster-title:
+    fontFamily: "\"Geist Variable\", sans-serif"
+    fontSize: "clamp(2rem, 3vw, 2.75rem)"
+    fontWeight: 500
+    lineHeight: 1.15
+    letterSpacing: "-0.03em"
+  meetup-poster-title-mobile:
+    fontFamily: "\"Geist Variable\", sans-serif"
+    fontSize: "36px"
+    fontWeight: 500
+    lineHeight: 1.15
+    letterSpacing: "-0.03em"
+  meetup-poster-purpose:
+    fontFamily: "\"Inter Variable\", sans-serif"
+    fontSize: "14px"
+    fontWeight: 400
+    lineHeight: 1.65
+  meetup-poster-detail:
+    fontFamily: "\"Inter Variable\", sans-serif"
+    fontSize: "14px"
+    fontWeight: 400
+    lineHeight: 1.6
 rounded:
-  control: "4px"
-  tab-bar: "34px"
-  tab-item: "28px"
-  switch: "999px"
+  control: "12px"
+  pill: "9999px"
+  status: "4px"
+  media: "14px"
+  participation: "24px"
+  map-media: "9px"
+  map-type-chip: "8px"
+  map-search-action: "0 13px 13px 0"
+  map-marker: "11px"
+  map-toolbar: "14px"
+  map-filter: "14px"
+  map-sheet: "14px"
 spacing:
   space-1: "0.25rem"
   space-2: "0.5rem"
@@ -76,49 +159,49 @@ spacing:
   space-10: "2.5rem"
 components:
   button-primary:
-    backgroundColor: "{colors.green}"
-    textColor: "{colors.paper}"
+    backgroundColor: "{colors.accent}"
+    textColor: "{colors.white}"
     typography: "{typography.label}"
-    rounded: "{rounded.control}"
+    rounded: "{rounded.pill}"
     padding: "0 16px"
     height: "48px"
   button-secondary:
     backgroundColor: "{colors.white}"
-    textColor: "{colors.green}"
+    textColor: "{colors.foreground}"
     typography: "{typography.label}"
-    rounded: "{rounded.control}"
+    rounded: "{rounded.pill}"
     padding: "0 16px"
     height: "48px"
   button-ghost:
     backgroundColor: "transparent"
     textColor: "{colors.muted}"
     typography: "{typography.label}"
-    rounded: "{rounded.control}"
+    rounded: "{rounded.pill}"
     padding: "0 16px"
     height: "48px"
   button-danger:
     backgroundColor: "{colors.white}"
     textColor: "{colors.danger}"
     typography: "{typography.label}"
-    rounded: "{rounded.control}"
+    rounded: "{rounded.pill}"
     padding: "0 16px"
     height: "48px"
   input:
     backgroundColor: "{colors.white}"
-    textColor: "{colors.green}"
+    textColor: "{colors.foreground}"
     rounded: "{rounded.control}"
     padding: "0 12px"
     height: "48px"
   status:
     backgroundColor: "{colors.pale}"
     textColor: "{colors.green}"
-    rounded: "{rounded.control}"
+    rounded: "{rounded.status}"
     padding: "3px 7px"
   participation:
-    backgroundColor: "{colors.pale}"
-    textColor: "{colors.green}"
-    rounded: "{rounded.control}"
-    padding: "24px"
+    backgroundColor: "{colors.white}"
+    textColor: "{colors.foreground}"
+    rounded: "{rounded.participation}"
+    padding: "28px"
   segmented-control:
     backgroundColor: "transparent"
     textColor: "{colors.muted}"
@@ -126,19 +209,108 @@ components:
     rounded: "{rounded.control}"
     padding: "3px"
   tab-bar:
-    backgroundColor: "{colors.nav-material}"
-    textColor: "{colors.nav-ink}"
+    backgroundColor: "{colors.white}"
+    textColor: "{colors.muted}"
     typography: "{typography.nav-label}"
-    rounded: "{rounded.tab-bar}"
-    padding: "5px"
-    height: "64px"
-    width: "min(352px, calc(100% - 32px))"
+    padding: "0 0 max(env(safe-area-inset-bottom, 0px), 6px)"
+    height: "calc(47px + max(env(safe-area-inset-bottom, 0px), 6px))"
+    width: "100%"
   switch:
-    backgroundColor: "{colors.line}"
-    rounded: "{rounded.switch}"
+    backgroundColor: "{colors.control-track}"
+    rounded: "{rounded.pill}"
     padding: "3px"
-    height: "26px"
+    height: "24px"
+    width: "42px"
+  map-search:
+    backgroundColor: "transparent"
+    textColor: "{colors.foreground}"
+    rounded: "{rounded.control}"
+    padding: "0"
+    height: "44px"
+  map-tool:
+    backgroundColor: "transparent"
+    textColor: "{colors.green}"
+    rounded: "{rounded.map-search-action}"
+    padding: "0"
+    height: "44px"
     width: "44px"
+  map-type-chip:
+    backgroundColor: "transparent"
+    textColor: "{colors.muted}"
+    typography: "{typography.map-chip-label}"
+    rounded: "{rounded.map-type-chip}"
+    padding: "0 8px"
+    height: "44px"
+  map-type-chip-selected:
+    backgroundColor: "{colors.pale}"
+    textColor: "{colors.foreground}"
+    typography: "{typography.map-chip-label}"
+    rounded: "{rounded.map-type-chip}"
+    padding: "0 8px"
+    height: "44px"
+  map-report-marker:
+    backgroundColor: "{colors.green}"
+    textColor: "{colors.white}"
+    rounded: "{rounded.map-marker}"
+  map-event-marker:
+    backgroundColor: "{colors.white}"
+    textColor: "{colors.green}"
+    rounded: "{rounded.map-marker}"
+  map-location-control:
+    backgroundColor: "{colors.white}"
+    textColor: "{colors.green}"
+    rounded: "{rounded.control}"
+    height: "44px"
+    width: "44px"
+  map-results-sheet:
+    backgroundColor: "{colors.white}"
+    textColor: "{colors.foreground}"
+    rounded: "{rounded.map-sheet}"
+    padding: "0 16px"
+  map-selection-preview:
+    backgroundColor: "{colors.white}"
+    textColor: "{colors.foreground}"
+    rounded: "{rounded.map-sheet}"
+    padding: "0 14px"
+    width: "360px"
+  map-results-sidebar:
+    backgroundColor: "{colors.white}"
+    textColor: "{colors.foreground}"
+    padding: "0 20px"
+    width: "340px"
+  map-list-toggle:
+    backgroundColor: "{colors.white}"
+    textColor: "{colors.foreground}"
+    typography: "{typography.map-label}"
+    rounded: "{rounded.pill}"
+    padding: "0 14px"
+    height: "44px"
+  map-filter-panel:
+    backgroundColor: "{colors.white}"
+    textColor: "{colors.foreground}"
+    rounded: "{rounded.map-filter}"
+    padding: "12px 16px 16px"
+    width: "340px"
+  button-primary-hover:
+    backgroundColor: "{colors.accent-strong}"
+    textColor: "{colors.white}"
+    typography: "{typography.label}"
+    rounded: "{rounded.pill}"
+    padding: "0 16px"
+    height: "48px"
+  map-toolbar:
+    backgroundColor: "{colors.white}"
+    textColor: "{colors.foreground}"
+    rounded: "{rounded.map-toolbar}"
+    padding: "0 0 0 12px"
+    height: "46px"
+    width: "400px"
+  meetup-poster:
+    backgroundColor: "{colors.green}"
+    textColor: "{colors.paper}"
+    typography: "{typography.meetup-poster-detail}"
+    rounded: "0"
+    padding: "28px"
 ---
 
 # Design System: GO-GOA
@@ -147,90 +319,116 @@ components:
 
 **Creative North Star: "Act For Goa civic workspace"**
 
-GO-GOA inherits the existing Act For Goa visual system: warm paper, deep green ink, upright Manrope, restrained controls and open content rows. Its character is calm, local and practical. The design supports outdoor mobile use and clear civic actions through legible type, strong text contrast and visible state.
+GO-GOA keeps Act For Goa's civic green identity while intentionally replacing the earlier paper-and-Manrope treatment with the user's requested white canvas, Helvetica Neue and official UIArc controls. The supplied Airbnb image guides the clean section spacing, softer depth and rounder actions. It is a treatment reference, not an exact layout or content specification.
 
-The content layer is mostly flat. The user-approved navigation is a separate translucent material with compact Apple HIG-inspired proportions, short system-font labels and a quiet neutral selection surface. This record describes the current local QA baseline. The rendered evidence and finish disposition cover the map and navigation; this is not a whole-app production-readiness claim.
+Open rows and clear sections carry civic information. Action green identifies major next actions, while the deeper civic green remains the identity, navigation and map-selection color. Soft offset shadows separate controls and temporary layers without wrapping every section in a card.
 
-The descriptive language follows the user-approved Act For Goa direction and current build. No new visual-world interview or concept seed was introduced for the pinned navigation refinement.
+This record captures the implemented local development revision of 29 October 2026, including the compact full-width dock and the compact map search/filter row. The user requested this direction; acceptance of this particular rendered result remains pending. Documentation is not release approval. No deployment, push or release is implied.
+
+The map retains its code-led reuse of Dizko's map composition and behavior, with GO-GOA civic content. Its surface contract is `.impeccable/surfaces/map.md`; the latest shared treatment is recorded in `.impeccable/surfaces/app.md`. This refresh updates the intentional UI changes and preserves the map's behavior and provenance.
 
 **Key Characteristics:**
 
-- Act For Goa paper and green identity, preserved from the actual source.
-- Upright Manrope content with semibold system labels confined to tab navigation.
-- Open rows, structural horizontal rules and modest control corners.
-- Compact glass navigation with a neutral selection surface and green tint.
+- White canvas, dark readable text and retained civic-green identity.
+- Upright Helvetica Neue with regular body, medium labels and stronger key headings.
+- Open rows and section spacing instead of repeated nested containers.
+- Round UIArc actions, green major CTAs and soft offset shadows.
+- A compact full-width bottom dock with visible labels.
 - Visible provenance, example labels and accessible map/list alternatives.
+- A sparse vector map with compact square content markers, one search/filter row and results that open on request as a sibling pane or phone sheet.
+- The same customizable meetup poster in creation and the dedicated page, retaining Forest and Solid defaults and scoped upright Geist and Inter typography.
 
-Source evidence: `src/styles.css`, `src/components/tab-bar.css`, `src/components/TabBar.tsx`, `src/components/arc/foundation.css`, the Arc control styles and `src/components/ui/controls.css`. `src/main.tsx` loads the Arc foundation before the GO-GOA theme. The current rendered captures are `.impeccable/review/mobile.png` and `.impeccable/review/desktop.png`.
+Source evidence: `src/styles.css`, `src/components/common.tsx`, `src/components/tab-bar.css`, `src/components/map/radar.css`, `src/components/FieldMap.tsx`, `src/components/map/markers.ts`, `src/components/map/baseStyle.ts`, `src/components/map/mapGeometry.ts`, `src/pages/Explore.tsx` and the official UIArc component styles. `src/main.tsx` loads the Arc foundation before the GO-GOA theme. Shared-theme captures remain `.impeccable/review/ui-refinement/events-mobile.jpg`, `report-360.jpg` and `events-desktop.jpg`. Current map captures are `.impeccable/review/desktop.png`, `mobile.png`, `short-phone.png`, `user-459.png`, `narrow.png`, `tablet.png`, `intermediate.png`, `landscape.png`, `mobile-selected.png`, `mobile-list.png` and `mobile-filters.png`; the map images in `ui-refinement/` are historical. Captures and source-backed tokens do not establish final QA completion.
+
+The shared meetup poster and detail-page evidence is `src/components/MeetupPoster.tsx`, `src/components/meetup-poster.css`, `src/components/ShareMeetup.tsx`, `src/pages/Events.tsx` and `src/pages/meetup-detail.css`. The approved creation direction is `.impeccable/surfaces/meetup-create.md`. Saved detail renders are `.impeccable/review/meetup-detail-desktop.png`, `meetup-detail-mobile.png` and `meetup-detail-narrow.png`.
+
+Graphic customization is defined by `shared/meetup-poster.ts`, `src/components/PosterControls.tsx`, `src/components/poster-controls.css` and `src/components/MeetupGraphicEditor.tsx`. The source-backed color and pattern choices extend the same poster; they do not change the app theme. Control captures are `.impeccable/review/poster-controls-desktop.png`, `poster-controls-mobile.png` and `poster-controls-narrow.png`.
 
 ## Colors
 
-Warm paper and pale green surfaces support deep green ink, with muted green-gray metadata and light structural rules.
+White and softly tinted neutral surfaces keep information clear; action green and deeper civic green serve distinct roles.
 
 ### Primary
 
-- **Civic green** (`green`): headings, primary actions, map report pins, active controls and selected tab tint.
-- **Link hover green** (`link-button-hover`): primary link-button hover state. Arc button hover uses opacity instead.
-- **Danger clay** (`danger`): destructive actions, validation errors and moderation redaction outlines; it is semantic feedback, not a decorative accent.
+- **Action green** (`accent`): major next actions, including primary UIArc buttons. Search-this-area uses a white surface and civic-green text.
+- **Deep green** (`accent-strong`): primary action hover state.
+
+### Secondary
+
+- **Civic green** (`green`): the wordmark, navigation selection, map markers, focus outlines and checked selection controls.
+- **Danger clay** (`danger`): destructive actions, validation errors and moderation redaction outlines; semantic feedback is paired with words.
 
 ### Neutral
 
-- **Warm paper** (`paper`): page background and text on filled primary buttons.
-- **Warm white** (`white`): fields, outlined buttons, map controls and switch thumbs.
-- **Pale leaf** (`pale`): restrained selected, hovered and supporting surfaces.
-- **Muted green-gray** (`muted`): secondary text and quiet control labels.
+- **White canvas and surface** (`paper`, `white`): the canvas, controls and panels. The legacy token name `paper` now resolves to white.
+- **Dark foreground** (`foreground`): main content and headings.
+- **Quiet gray-green** (`muted`): secondary text and inactive labels.
 - **Soft rule** (`line`): structural dividers and control borders.
-- **Glass material**, **navigation ink** and **neutral selection** (`nav-material`, `nav-ink`, `nav-selection`): confined to the tab bar. Keep their translucent source syntax.
+- **Muted surface** (`pale`): selected segments, hover feedback and quiet support surfaces.
+- **Switch track** (`control-track`): the UIArc switch's neutral unchecked state, preserving its source OKLCH syntax.
 
-**The Inherited Palette Rule.** Use the active Act For Goa colors for content and controls. The tab bar material is a local navigation treatment; it does not introduce a second brand palette.
+**The Action Color Rule.** Use action green for the major next action and retain the deeper civic green for identity, navigation and map selection.
 
-The sidecar's synthesized tonal ramps are swatch previews only, not additional production colors. The inherited `search-focus` and `warning` declarations have no active references in this snapshot and are not promoted to visual roles here. Status variants retain their implementation-specific semantic colors and text labels.
+The sidecar's synthesized tonal ramps are swatch previews only, not additional production colors. Status variants retain their implementation-specific semantic colors and written state labels. Unused foundation accents are not part of this palette.
+
+Meetup posters offer six predefined palettes. Forest reuses civic green; Ocean, Clay, Plum, Ink and Sand use the scoped `poster-*` tokens. Forest, Ocean, Clay, Plum and Ink pair with white text; Sand pairs with civic-green text. These combinations are fixed choices for the graphic, with Forest and Solid as the unchanged default. Pattern ink is white at 8% opacity on the five dark palettes and civic green at 6% on Sand.
 
 ## Typography
 
-**Content Font:** Manrope Variable, with a sans-serif fallback. The bundled variable font is loaded through `@fontsource-variable/manrope`.
+**Content and Navigation Font:** Helvetica Neue, with Helvetica, Arial and sans-serif fallbacks. The approved meetup editor and shared poster are scoped exceptions: the poster uses upright Geist Variable headings and Inter Variable supporting copy in both creation and the dedicated page. Shared navigation and the surrounding detail-page controls retain Helvetica Neue.
 
-**Navigation Label Font:** `-apple-system, BlinkMacSystemFont, system-ui, sans-serif`.
-
-Content uses compact, strong headings and readable medium-weight body text. The system font is confined to the navigation control to follow the user-approved tab-bar direction; it is not a display face.
+Regular body text, medium labels and stronger key headings keep the interface readable without the previous uniformly heavy treatment. The core weight roles are regular (400), medium (500) and semibold (600); the current destination in the compact dock is a scoped bold (700) exception.
 
 ### Hierarchy
 
-- **Headline:** the frontmatter headline roles correspond to desktop and mobile h1 sizing. The desktop headline reduces at the mobile breakpoint.
-- **Title:** section headings use the title role. Most mobile h2 elements reduce to 21px, while the nearby-list heading retains its title size.
+- **Headline:** the frontmatter roles record general desktop and mobile h1 sizing. The event-page mobile heading is a scoped exception at 32px with a 1.12 line height and a 12ch maximum measure.
+- **Title:** section headings use the title role. Most mobile h2 elements reduce to 21px; map results and selected-place previews retain their scoped roles at every width.
 - **Section title:** h3 and form legends use the section-title scale.
 - **Body:** the base role has a maximum paragraph measure of 70ch.
-- **Control label:** the label role describes Arc buttons and field labels; compact metadata uses the observed 11px to 13px range.
-- **Navigation label:** short, semibold upright labels, paired with 24px icons on mobile and 20px icons on wider layouts.
+- **Control label:** the label role describes UIArc buttons and field labels; compact metadata uses the observed 11px to 13px range.
+- **Navigation label:** visible upright labels sit beneath 22px icons at every width; the active label uses its scoped weight role.
+- **Map hierarchy:** list headings, selected-place titles, report row titles, supporting copy, list controls and example metadata retain scoped `map-*` roles. Activity labels keep the same compact size inside the filter panel at every width; the search input remains 16px. Calendar markers use distinct month and day roles, with dates formatted in Asia/Kolkata.
+- **Meetup poster:** scoped `meetup-poster-*` roles preserve the existing preview hierarchy. The title uses the mobile role at 700px and below. Secondary date, time, location and materials text is 12px; activity text is 13px. Long titles and supporting text wrap, and intentional line breaks remain visible.
 
-**The Upright Type Rule.** Use upright type everywhere. Weight, size and spacing carry emphasis; content headings remain Manrope and tab labels use the system stack.
+**The Upright Type Rule.** Use upright type throughout: Helvetica Neue for the shared app, with the approved scoped Geist and Inter meetup treatment. Weight, size and spacing carry emphasis; never use italic or oblique styling.
 
 ## Layout
 
-The app is an Operate surface. General pages use a centered 1200px maximum width, with a 720px narrow form variant. The header and map workspace expand to 1440px. Desktop padding is 40px; the intermediate workspace uses 28px; mobile content uses 20px, reducing to 16px at 360px and below.
+General pages use a centered 1200px maximum width, with a 720px narrow form variant. Outside the map route, the header expands to 1440px. Desktop page padding is 48px above and 40px at the sides; mobile pages use 30px above and 20px at the sides, reducing side padding to 16px at 360px and below.
 
-The map workspace pairs a flexible map with a 370px list and a 28px gap. At 1050px and below, the list becomes 330px with a 22px gap. At 760px and below, the layout stacks, the map reaches the viewport edges, and the list scrolls with the document. The map is 570px tall on the standard desktop layout, 640px from 1500px upward, and 340px on mobile.
+The map route occupies the viewport beneath a 48px header and above `--bottom-nav-height`, without the general page container or bottom padding. Results are closed by default at every width. A 44px minimum-height View list button sits 12px from the left and 28px above the map bottom. Opening it above 600px width adds a 340px sibling pane with a structural divider, no gap and independent scrolling beneath a sticky heading.
 
-The mobile tab bar is centered above the bottom safe area with four equal columns. Its current source sets a 64px minimum height and a 352px maximum width. At 761px and above, or in landscape at 500px height and below, it uses a 52px minimum height, 424px width and horizontal icon-label arrangement. Mobile links have a 52px minimum height; wide links have a 44px minimum height. Main content retains 140px bottom clearance. Dimensions represented as `height` in the portable component tokens are source minimum heights.
+At 600px width and below, the requested list is a floating sheet inset 12px horizontally, 70px from the map top and 28px from its bottom. Selecting a marker closes the list and opens a compact preview, up to 360px wide and 45% of the map height; phones use the available width within the same side insets. The measured preview height lifts map utilities above it. Camera positioning measures the search row and intersecting bottom overlay to keep the selected place visible. The initial activity fit on map canvases shorter than 550px reserves top and bottom overlay space. At widths of at least 600px and heights of at most 600px, map utilities arrange horizontally. Coarse-pointer devices hide zoom buttons and retain pinch zoom and location. The View list button remains available on narrow phones.
 
-Spacing follows the inherited 4px rhythm where practical. Open incident and resource rows use structural top borders and 20px to 24px vertical padding. Photos use square corners; current incident thumbnails are rectangular, rather than a mandated square aspect ratio.
+Search and the filter trigger occupy one 46px-high white row, up to 400px wide, inset 12px from the map top and sides. Search and filter actions have 44px targets, with a structural vertical divider before the filter trigger. Activity modes and other filters appear only in the temporary 340px-wide panel below the row; its width is capped by the available space. Opening filters closes the full list and temporarily hides the preview and list toggle.
+
+**The Map Owns Its Viewport Rule.** Keep the map's available height derived from its header and navigation, open results only on request, and account for overlay space when framing activity or focusing a selected place.
+
+The full-width bottom dock sits flush with the viewport. Five equal destinations occupy a centered row up to 560px wide. Each link is 46px tall, above the larger of the safe-area inset and 6px; a 1px structural rule separates navigation from content. General pages reserve the dock height plus 40px of bottom clearance. The portable tab-bar height token includes that rule and safe-area clearance.
+
+Spacing follows the inherited 4px rhythm where practical. Open incident and resource rows use structural top borders and 20px to 24px vertical padding. Event rows use 30px vertical padding on desktop and 26px on mobile. Evidence thumbnails have rounded corners; current incident thumbnails are rectangular rather than a mandated square aspect ratio.
+
+The dedicated meetup page places the shared green poster beside the existing participation panel using the detail page's 1.35fr / 0.85fr columns and 64px gap. At 760px and below, the poster, host information, directions and participation section stack with a 36px column gap. Back and Share meetup actions sit above the content in a wrapping row. The poster's padding reduces to 24px at 900px and below; its minimum height remains 360px on the dedicated page. The creation preview keeps its existing 300px intermediate and 320px mobile minimum heights, and stacks below the editor at 700px.
 
 ## Elevation & Depth
 
-The content plane is flat, with pale tonal fields and thin rules for structure. Map controls and navigation use soft ambient shadows so controls stay legible above geographic detail. The glass bar uses a 24px blur with 150% saturation, a translucent white border and an inset highlight. Reduced transparency, increased contrast or missing backdrop-filter support switch it to an opaque material.
+Open content sections stay on the white canvas. Soft offset shadows distinguish primary actions, the single map toolbar and temporary panels. The compact dock stays opaque and flat, with a structural top rule. Do not restore the superseded glass capsule.
 
 ### Shadow Vocabulary
 
-- **Arc resting control:** `0 1px 2px oklch(0% 0 0 / .035)`, used by applicable hovered buttons.
-- **Map search:** `0 3px 12px #193e3214`, separating the field from map imagery.
-- **Map marker:** `0 2px 5px #193e3240`, used for individual pins; clusters use the lighter `#193e3233` shadow.
-- **Tab material:** `0 4px 20px rgb(18 36 27 / 12%), inset 0 1px 0 rgb(255 255 255 / 70%)`.
+- **Resting control:** `0 2px 5px rgb(22 37 29 / 5%), 0 7px 20px rgb(22 37 29 / 7%)`, used by primary actions, applicable secondary hover states, shared search surfaces and the desktop participation panel.
+- **Floating panel:** `0 8px 28px rgb(22 37 29 / 13%)`, used by select menus and the map filter panel.
+- **Map utility control:** uses the resting-control shadow for zoom, location, View list and search-this-area.
+- **Map marker and cluster:** `0 2px 6px rgb(25 62 50 / 18%)`, used for compact square markers and circular count clusters. The draggable location pin uses `drop-shadow(0 3px 3px rgb(25 62 50 / 22%))`.
+- **Map preview and phone list:** use the floating-panel shadow. The requested desktop sibling pane remains flat.
 
-**The Content Stays Flat Rule.** Content rows rely on spacing and structural rules. Reserve ambient depth for controls above the map and the floating navigation material.
+**The Open Sections Rule.** Use spacing and structural rules for content hierarchy. Reserve soft depth for actions, shared toolbars and temporary layers instead of adding a container around each group.
 
 ## Shapes
 
-Content controls use the inherited modest control radius. Navigation uses its distinct capsule and rounded selected item. Switches and report pins are circular or pill-shaped because those shapes express their function. Event pins use a rounded square, so map categories remain distinguishable beyond color. Imagery and open list rows keep square corners.
+Form controls use the control radius, while buttons use the pill radius. The map search/filter row has one rounded outline; its inner search and filter actions have no independent surface or shadow. Activity controls appear inside the temporary filter panel. Evidence thumbnails, calendar tiles and participation surfaces use the softer source-backed corner vocabulary. The mobile participation area becomes an open section with a top divider.
+
+Map report markers remain square with rounded corners and show a photo or civic category icon. Event markers share that silhouette and show their month and date. Count clusters and resolved checks remain circular; the location picker uses a draggable pin. Status labels retain their compact source-specific corners. The full-width bottom dock has square edges.
 
 Structural dividers may separate rows or sections. Decorative accent stripes along the side of a card, notice, quote or other content block are prohibited.
 
@@ -238,50 +436,75 @@ Structural dividers may separate rows or sections. Decorative accent stripes alo
 
 ### Buttons
 
-Direct and compact, using the actual Arc control source. Primary buttons use green with paper text; secondary buttons use warm white with a rule border; ghost buttons are transparent with muted text; danger buttons retain a clear outlined silhouette. Medium controls have a 48px minimum height, with 44px and 52px variants. Keyboard focus uses a green outline with an offset. Fine-pointer hover adds the resting shadow for primary and secondary variants; active states provide immediate color or opacity feedback. Disabled controls remain visibly disabled. Primary link buttons use the separate inherited hover green.
+Official UIArc buttons use round silhouettes and medium labels. Primary actions are green with white text and deepen on hover; secondary buttons are white with a rule border and dark text; ghost buttons are transparent with muted text; danger buttons retain an outlined silhouette. Medium controls have a 48px minimum height, with 44px and 52px variants. Keyboard focus uses a green outline with an offset. Press, disabled, loading and reduced-motion states remain from UIArc. The React Router `ButtonLink` adapter shares the same UIArc variant classes and keeps link semantics.
 
 ### Chips
 
-Status labels use compact upright bold text on a pale surface with modest corners. Status-specific color is paired with literal state text, and sometimes an SVG icon. These are informative labels, not decorative eyebrows. Example labels and provenance remain visible wherever fictional development content appears.
+Status labels use UIArc Badge with compact upright medium text and existing written semantic states. These are informative labels, not decorative eyebrows. Example labels and provenance remain visible wherever fictional development content appears. Activity selection uses UIArc SegmentedControl, with a pale selected segment and dark text.
 
 ### Cards / Containers
 
-Use open, horizontally separated rows for reports, resources and activity. A participation panel is an actual bounded exception: pale background, modest corners, 24px padding and an 18px content gap, reduced to 20px padding on mobile. Notices use plain tonal backgrounds without side stripes.
+Use open, horizontally separated rows for reports, resources and activity. A desktop participation panel is a bounded exception: white surface, rounded corners, resting shadow, 28px padding and an 18px content gap. On mobile it becomes an open section with a top rule and no shadow. Informational notices and receipts sit in the content flow without side stripes.
 
 ### Inputs / Fields
 
-Arc fields use warm white, a rule border, the control radius and 48px minimum height. Labels are explicit and sit above the field. Focus uses a pale background change; the foundation intentionally suppresses text-input outlines. Invalid fields use danger-colored borders and written errors. The map search uses a visible focus-within outline around its whole shell. Textarea, disabled and reduced-motion states remain from the reused component implementation.
+Official UIArc Input, Textarea, Select and SearchField share the Helvetica theme. Form fields use white, a light border, the control radius and 48px minimum height. Explicit labels sit above the field unless an accessible hidden label is appropriate for search. The current input focus treatment darkens its border and exposes a green focus outline; SearchField draws focus around its inner shell. Invalid fields use danger borders and written errors. Select options use the shared floating-panel shadow. Disabled and reduced-motion states remain from UIArc.
 
 ### Navigation
 
-Four link destinations are Map, Report, Events and Profile. Current-page semantics use `aria-current="page"`; their label stays visible. Selection uses the neutral surface with green icon and text tint. The selected icon stroke is slightly stronger, while label weight stays constant. Hover and press use subtle neutral feedback. Transition timing is 160ms ease-out, removed for reduced motion. Reduced-transparency and increased-contrast modes use opaque material, stronger borders and darker inactive text.
+Five link destinations are Map, Report, Meetups, Resources and Profile. A Directory button in Resources opens `/directory`; Directory routes keep Resources selected in the dock. Current-page semantics use `aria-current="page"`; the label stays visible. Selection uses green icon and text tint with stronger label weight. Hover and press use a pale surface. Color transitions run for 150ms with ease-out and are removed for reduced motion. Increased contrast strengthens the divider and current-page underline; forced colors retain explicit selection.
 
-The sidecar navigation specimen preserves control dimensions, material and states in normal document flow so it can render inside the design panel. The app positions this same control at the viewport bottom.
+The sidecar navigation specimen uses the current dock in normal document flow so it can render inside the design panel. The app positions it at the viewport bottom.
 
 ### Segmented controls and selection controls
 
-Arc segmented controls use an open track with no border or shadow; the selected segment is pale. Keyboard changes select immediately; pointer changes may use the inherited non-bouncing morph spring. Shadcn/Radix switches and checkboxes retain native accessible behavior, green checked state, visible keyboard focus and reduced motion. The switch's painted size is 44px by 26px; the settings row enlarges its pointer target with a transparent hit area.
+UIArc segmented controls use an open track with no border or independent shadow; the selected segment is pale. Keyboard changes select immediately; pointer changes may use the inherited non-bouncing morph spring. Official UIArc Switch and Checkbox replace the former shadcn adapters, while preserving UIArc's Radix accessibility internals, green checked state, visible keyboard focus and reduced motion. The switch's painted track is 42px by 24px inside a 48px minimum-height button. The checkbox paints an 18px square inside a 48px target.
+
+### Feedback
+
+Shared errors, loading, empty states and status labels use the attributed UIArc Alert, Skeleton, EmptyState and Badge components. Written errors and recovery actions remain visible. The local error treatment has a light danger-tinted surface without a decorative side stripe.
 
 ### Map and list
 
-Use report circles and event rounded squares with an explanatory key. Selecting a pin highlights the matching list item. The map has a bounded height, real provider attribution, search controls and an accessible list alternative. Keep resource provenance and availability context with the action it informs.
+The basemap uses a local seven-layer OpenFreeMap vector style: pale land, parks and water, white roads, and sparse upright city, town and village labels. Buildings, POIs, transit, route shields, road labels and land-use patterns are omitted. Local streets appear from zoom 15 and village labels from zoom 13; no grayscale, contrast or brightness filter is applied. Report/photo/category and calendar-date event markers are square with rounded corners, zoom-scaled between 44px and 48px; count clusters are 48px. A report thumbnail loads only from GO-GOA's public media, and category icons remain available when media fails or data-saving settings discourage images. Resolved reports add a 17px check badge with an explicitly sized, centered SVG. Marker labels, example context and approximate-location text preserve meaning beyond color.
 
-Source ownership is documented in `docs/repository-intake.md`, `src/components/arc/PROVENANCE.md` and `src/components/ui/PROVENANCE.md`. UIArc source was inherited through the Act For Goa theme; shadcn/Radix behavior and attribution are retained. These provenance files do not imply that every upstream gallery component is part of GO-GOA. Keep license and publication checks separate from this visual record.
+Selecting a marker opens a compact preview at every width and closes the full list. Overlapping markers spread with dashed geographic connectors. Search and the filter trigger share one white row with one soft shadow and a vertical divider. Activity selection lives inside the filter panel; its selected UIArc segment uses a pale fill and dark text. Location, zoom and search-this-area remain separate white map utilities with civic-green icons and text. UIArc SearchField supplies visible focus around its shell, filter controls support keyboard focus and Escape, and marker and list actions remain keyboard accessible. Filters temporarily hide the preview and list toggle. The full list opens only on request and returns to the map through its close button or Escape; at phone widths it hides map utilities beneath the sheet. Above 600px width, including short landscape, the list retains its sibling pane and map controls.
+
+The accessible result list remains the alternative when tiles cannot load. Loading and tile failures have explicit text and recovery, and provider attribution stays visible. The report form's embedded location picker retains tap, drag and coordinate-entry behavior; the viewport layout belongs only to the activity map. Keep resource provenance and availability context with the action it informs.
+
+### Meetup poster and sharing
+
+`MeetupPoster` renders the same flat, square-edged graphic in the live creation preview and dedicated meetup page. It carries the activity, title, description, date and time in India Standard Time, public place, meeting instructions, capacity, recurrence and bring-along items. Its heading is h2 in the preview and h1 on the dedicated page. The selected palette controls text and background color; 18px outline icons and an 18px gap between detail rows preserve the existing preview treatment. The poster has no border, shadow or decorative side stripe.
+
+Customize graphic is collapsed above the creation preview until opened. Labeled Color and Background fieldsets offer Forest, Ocean, Clay, Plum, Ink and Sand, plus Solid, Dots, Grid and Waves. Color buttons have 64px minimum targets and 28px circular swatches, arranged in six columns or three at 380px and below. Background buttons use a two-column grid, 44px minimum targets and 28px by 24px swatches. Labels, check icons and `aria-pressed` communicate selection; the chosen background also receives an outline. The patterns are local CSS textures: Dots repeat every 18px, Grid every 28px and Waves every 64px by 44px. Solid has no texture.
+
+Choices update the shared preview immediately and persist on every created occurrence. The existing graphic remains visible when customization is closed. On the dedicated page, Edit graphic exposes the same controls to people allowed to manage the meetup, with live preview, Cancel and Save graphic. Cancel restores the saved appearance. Saving disables edits while pending, reports errors inline and announces success after server acceptance; version checks reject stale edits. `shared/meetup-poster.ts` restricts persisted choices to the predefined palette and pattern names, with no arbitrary CSS or remote-image background input.
+
+Creating a meetup publishes it immediately and opens its dedicated page. The creator sees a plain inline success notice with a check icon and the invitation to share. Legacy pending meetups show their state and a Publish meetup action for people allowed to manage them; the sharing action stays hidden until publication. Cancelled and ended meetups retain written state messages. Report moderation is separate.
+
+Share meetup is a secondary UIArc button above the poster. It invokes native sharing when available; otherwise it copies the canonical `/events/:id` URL. A successful copy changes the icon to a check and shows an announced status beneath the button. Native-share cancellation is quiet. Other sharing or clipboard failures reveal a labeled, read-only link field that selects its value on focus for manual copying. The detail page remains readable without an app account; joining uses the existing sign-in action. Public sharing still depends on a reachable host and any deployment access gate.
+
+Source ownership is documented in `docs/repository-intake.md`, `src/components/arc/PROVENANCE.md`, `src/components/ui/PROVENANCE.md` and `src/components/map/PROVENANCE.md`. The map provenance records the exact Dizko source commit and adapted marker sizing, overlap handling, viewport layout and tile options. UIArc source was inherited through the Act For Goa reference or added from the official UIArc registry. Its underlying Radix behavior and attribution are retained; the former shadcn switch and checkbox adapters have been replaced. These provenance files do not imply that every upstream gallery component is part of GO-GOA. Keep license and publication checks separate from this visual record.
+
 
 ## Do's and Don'ts
 
 ### Do:
 
-- **Do** inherit the active theme from src/styles.css after the UIArc foundation.
-- **Do** use existing UIArc and shadcn/Radix controls and retain their provenance.
-- **Do** retain concise labels, visible keyboard focus, reduced-motion handling and opaque navigation fallbacks.
+- **Do** load the active theme from src/styles.css after the UIArc foundation.
+- **Do** use official UIArc controls, including its accessible Radix internals, and retain their provenance.
+- **Do** use Helvetica Neue, white sections, pill actions and spacing to establish hierarchy.
+- **Do** keep the map search/filter row compact, put activity modes inside filters and open results only on request.
+- **Do** reuse MeetupPoster between creation and the dedicated page, keeping its saved palette, background, scoped typography and content in sync.
+- **Do** retain concise labels, visible keyboard focus and reduced-motion handling.
 - **Do** keep list content available when a map cannot load and preserve map attribution.
 - **Do** label fictional local examples and retain source and availability context.
 
 ### Don't:
 
 - **Don't** use italic or oblique type, eyebrow text, em dashes or decorative side stripes.
+- **Don't** restore the superseded paper palette, Manrope type or floating glass navigation.
 - **Don't** expand the selected tab into a large dark green block.
 - **Don't** promote unused foundation gradients, alternate accents or dark themes into the GO-GOA palette.
-- **Don't** replace open lists with decorative card grids or use glyphs as substitute icons.
-- **Don't** treat this documented QA baseline or its map/navigation review as whole-app production approval.
+- **Don't** replace open lists with decorative card grids, nest decorative containers or use glyphs as substitute icons.
+- **Don't** treat this local documentation or captured renders as user acceptance or production approval.

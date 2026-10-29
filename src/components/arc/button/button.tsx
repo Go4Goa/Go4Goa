@@ -10,6 +10,8 @@ import styles from "./button.module.css";
 export type ButtonVariant = "primary" | "secondary" | "ghost" | "danger";
 export type ButtonSize = "sm" | "md" | "lg";
 
+export const buttonClassName = (variant: ButtonVariant = "primary", size: ButtonSize = "md", className?: string) => [styles.button, styles[variant], styles[size], className].filter(Boolean).join(" ");
+
 export interface ButtonProps extends Omit<ButtonHTMLAttributes<HTMLButtonElement>, "onDrag" | "onDragEnd" | "onDragStart" | "onAnimationStart"> {
   variant?: ButtonVariant;
   size?: ButtonSize;
@@ -74,7 +76,7 @@ function useMorphWidth(content: RefObject<HTMLElement | null>, key: string, redu
 
 function LabelPhase({ children, icon, reduced, ref }: { children: ReactNode; icon: boolean; reduced: boolean; ref?: Ref<HTMLSpanElement> }) {
   const present = useIsPresent();
-  return <motion.span ref={ref} className={styles.labelPhase} aria-hidden={present ? undefined : true} initial={reduced ? fadeIn : icon ? iconIn : textIn} animate={rest} exit={reduced ? fadeOut : icon ? iconOut : textOut} transition={reduced ? { duration: motionTokens.duration.instant } : icon ? iconEnter : { duration: motionTokens.duration.standard, ease: [...motionTokens.ease.enter] }}>{children}</motion.span>;
+  return <motion.span ref={ref} data-arc-label="" className={styles.labelPhase} aria-hidden={present ? undefined : true} initial={reduced ? fadeIn : icon ? iconIn : textIn} animate={rest} exit={reduced ? fadeOut : icon ? iconOut : textOut} transition={reduced ? { duration: motionTokens.duration.instant } : icon ? iconEnter : { duration: motionTokens.duration.standard, ease: [...motionTokens.ease.enter] }}>{children}</motion.span>;
 }
 
 export const Button = forwardRef<HTMLButtonElement, ButtonProps>(function Button(
@@ -95,7 +97,7 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(function Button
   const popup = props["aria-haspopup"];
   const anchorsLayer = (popup !== undefined && popup !== false && popup !== "false") || props.role === "combobox" || (props as Record<string, unknown>)["data-state"] !== undefined;
   const inert = disabled || loading || props["aria-disabled"] === true || props["aria-disabled"] === "true";
-  const classes = [styles.button, styles[variant], styles[size], className].filter(Boolean).join(" ");
+  const classes = buttonClassName(variant, size, className);
 
   return (
     <motion.button

@@ -1,5 +1,5 @@
 /* Press scale is driven by Motion (whileTap) alone, so transform never gets a CSS transition here. */
-.button { position: relative; display: inline-flex; min-height: var(--control-height-md); align-items: center; justify-content: center; gap: var(--space-2); border: 1px solid transparent; border-radius: var(--radius-control); padding: 0 var(--space-4); font: inherit; font-size: var(--text-sm); font-weight: var(--weight-label, 700); line-height: var(--leading-body); white-space: nowrap; cursor: pointer; -webkit-tap-highlight-color: transparent; transition: color var(--duration-fast) var(--ease-standard), background var(--duration-fast) var(--ease-standard), border-color var(--duration-fast) var(--ease-standard), opacity var(--duration-fast) var(--ease-standard), box-shadow var(--duration-fast) var(--ease-standard); }
+.button { position: relative; display: inline-flex; min-height: var(--control-height-md); align-items: center; justify-content: center; gap: var(--space-2); border: 1px solid transparent; border-radius: var(--radius-pill, 999px); padding: 0 var(--space-4); font: inherit; font-size: var(--text-sm); font-weight: var(--weight-label, 700); line-height: var(--leading-body); white-space: nowrap; cursor: pointer; -webkit-tap-highlight-color: transparent; transition: color var(--duration-fast) var(--ease-standard), background var(--duration-fast) var(--ease-standard), border-color var(--duration-fast) var(--ease-standard), opacity var(--duration-fast) var(--ease-standard), box-shadow var(--duration-fast) var(--ease-standard); }
 .button:disabled { cursor: not-allowed; opacity: .52; }
 .button[aria-busy="true"] { cursor: progress; }
 /* Anchors of floating layers never scale: Radix opens on pointerdown and would measure a shrunken trigger. */
@@ -11,7 +11,7 @@
 .labelContent { display: inline-flex; flex: none; align-items: center; }
 .labelPhase { display: inline-flex; align-items: center; justify-content: center; gap: var(--space-2); white-space: nowrap; }
 .labelPhase svg { flex: none; }
-.primary { color: var(--background); background: var(--foreground); border-color: var(--foreground); }
+.primary { color: var(--accent-foreground); background: var(--accent); border-color: var(--accent); box-shadow: var(--shadow-resting); }
 .secondary { color: var(--foreground); background: var(--surface); border-color: var(--border); }
 .ghost { color: var(--text-secondary); background: transparent; border-color: transparent; }
 .danger { color: var(--danger); background: var(--surface); border-color: var(--border); }
@@ -20,7 +20,7 @@
 .danger:disabled { color: color-mix(in oklab, var(--danger) 55%, var(--surface-muted)); }
 .ghost:disabled { opacity: 1; color: var(--text-muted); }
 @media (hover: hover) and (pointer: fine) {
-  .primary:hover:not(:disabled) { opacity: .91; box-shadow: var(--shadow-resting); }
+  .primary:hover:not(:disabled) { background: var(--accent-strong); border-color: var(--accent-strong); box-shadow: var(--shadow-resting); }
   .secondary:hover:not(:disabled) { background: var(--surface-muted); box-shadow: var(--shadow-resting); }
   .ghost:hover:not(:disabled) { color: var(--foreground); background: var(--surface-muted); }
   .danger:hover:not(:disabled) { border-color: var(--danger); background: var(--surface-muted); }

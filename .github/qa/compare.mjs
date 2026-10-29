@@ -5,7 +5,7 @@ import {createHash} from 'node:crypto';
 const root=process.argv[2];
 const base=JSON.parse(await readFile(join(root,'baseline/results.json'))),candidate=JSON.parse(await readFile(join(root,'candidate/results.json')));
 const hash=async path=>createHash('sha256').update(await readFile(path)).digest('hex');
-if(base.captures.length!==39||candidate.captures.length!==39)throw new Error("Expected all 39 baseline/candidate states");
+if(base.captures.length!==54||candidate.captures.length!==54)throw new Error("Expected all 54 baseline/candidate states");
 const changes=[];
 for(const frame of candidate.captures){
  const before=base.captures.find(f=>f.file===frame.file);

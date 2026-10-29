@@ -1,0 +1,113 @@
+/* The map is the primary surface. Secondary controls open only on request. */
+body:has(.radar-page) .app-header { height: 48px; padding: 0 16px; max-width: none; }
+body:has(.radar-page) .wordmark { font-size: 22px; }
+body:has(.radar-page) .wordmark svg { width: 17px; height: 17px; }
+body:has(.radar-page) .header-actions { gap: 12px; }
+body:has(.radar-page) .environment-label { font-size: 11px; }
+body:has(.radar-page) .resource-link { font-size: 12px; }
+main:has(.radar-page) { padding: 0; }
+.radar-page { position: relative; display: flex; height: calc(100dvh - 48px - var(--bottom-nav-height, 0px)); min-height: 0; overflow: hidden; --map-sheet-height: 0px; }
+body:has(.global-offline) .radar-page { height: calc(100dvh - 90px - var(--bottom-nav-height, 0px)); }
+.radar-canvas { position: relative; flex: 1; min-width: 0; height: 100%; }
+.radar-canvas .field-map { height: 100%; }
+.field-map .map-canvas { background: #f5f6f3; }
+.field-map .leaflet-tile-pane { filter: none; }
+.field-map .leaflet-control-attribution { font-size: 10px !important; }
+body:has(.bottom-nav) .radar-page .leaflet-bottom { bottom: 0; }
+
+.radar-topbar { position: absolute; top: 12px; left: 12px; right: 12px; max-width: 400px; z-index: 600; pointer-events: none; }
+.radar-topbar > * { pointer-events: auto; }
+.radar-search-row { display: flex; align-items: center; padding-left: 12px; height: 46px; background: var(--white); border: 1px solid var(--line); border-radius: 14px; box-shadow: var(--shadow-resting); }
+.radar-search { display: flex; align-items: center; flex: 1; min-width: 0; }
+.radar-search > div { flex: 1; min-width: 0; }
+.radar-search > div > div { padding: 0; min-height: 44px; }
+.radar-search > div > div:not([data-filled]) > span { display: none; }
+.radar-search input { min-width: 0; font-size: 16px; }
+.radar-search button, .radar-tool { flex: none; width: 44px; height: 44px; min-height: 44px; padding: 0; color: var(--green); border: 0; background: transparent; box-shadow: none; }
+.radar-search-row .radar-tool { border-radius: 0 13px 13px 0; border-left: 1px solid var(--line); }
+.radar-tool.is-active { background: var(--pale); }
+.radar-filters { display: grid; gap: 12px; position: absolute; top: 54px; left: 0; width: 340px; max-width: 100%; max-height: calc(100dvh - 180px); overflow-y: auto; overscroll-behavior: contain; padding: 12px 16px 16px; border-radius: 14px; background: var(--white); border: 1px solid var(--line); box-shadow: var(--shadow-floating); }
+.radar-panel-title { display: flex; align-items: center; justify-content: space-between; }
+.radar-panel-title h2 { font-size: 16px; }
+.radar-panel-title button, .radar-dismiss, .radar-sheet-toggle { flex: none; width: 44px; height: 44px; min-height: 44px; padding: 0; color: var(--green); }
+.radar-types { width: 100%; }
+.radar-types button { min-height: 44px; padding-inline: 8px; font-size: 12px; }
+.radar-filters label { font-size: 12px; }
+.radar-filter-actions { display: flex; justify-content: space-between; gap: 12px; }
+.radar-error { position: absolute; left: 12px; right: 68px; top: 112px; max-width: 400px; z-index: 610; background: var(--white); padding: 12px; border: 1px solid var(--line); border-radius: 12px; }
+.radar-error .error-message { margin: 0; background: transparent; padding: 0; }
+
+.radar-map-controls { position: absolute; right: 12px; bottom: calc(var(--map-sheet-height, 0px) + 28px); z-index: 450; display: grid; gap: 8px; }
+.radar-map-controls > button, .radar-zoom { background: var(--white); border: 1px solid var(--line); border-radius: 12px; box-shadow: var(--shadow-resting); overflow: hidden; }
+.radar-map-controls button { display: grid; place-content: center; width: 44px; height: 44px; min-height: 44px; padding: 0; color: var(--green); }
+.radar-zoom button { border: 0; background: transparent; }
+.radar-zoom button + button { border-top: 1px solid var(--line); }
+.radar-map-controls button:hover { background: var(--pale); }
+.radar-map-controls button:focus-visible { outline-offset: -4px; }
+.radar-search-area { position: absolute; top: 68px; left: 50%; translate: -50% 0; z-index: 440; min-height: 44px; padding: 0 12px; border: 1px solid var(--line); border-radius: 999px; background: var(--white); color: var(--green); font-size: 12px; font-weight: 500; box-shadow: var(--shadow-resting); white-space: nowrap; }
+.radar-map-loading, .radar-map-failure { position: absolute; left: 12px; top: 120px; z-index: 460; max-width: calc(100% - 80px); padding: 10px 12px; background: var(--white); border: 1px solid var(--line); border-radius: 12px; font-size: 12px; }
+.radar-map-failure button { min-height: 44px; padding: 0 8px; font-size: 12px; }
+.radar-list-toggle { position: absolute; bottom: 28px; left: 12px; z-index: 450; min-height: 44px; padding: 0 14px; border-radius: 999px; font-size: 13px; box-shadow: var(--shadow-resting); }
+
+.radar-results { position: absolute; left: 12px; bottom: 28px; width: 360px; max-width: calc(100% - 24px); max-height: 45%; overflow-y: auto; overscroll-behavior: contain; padding: 0 14px; background: var(--white); border: 1px solid var(--line); border-radius: 14px; box-shadow: var(--shadow-floating); z-index: 500; }
+.radar-results[hidden] { display: none; }
+.radar-results-heading, .radar-result-rows { display: none; }
+.radar-selection { position: relative; padding: 12px 0 0; }
+.radar-selected-copy { min-width: 0; padding-right: 28px; }
+.radar-selected-copy .meta-line { margin-bottom: 4px; font-size: 10px; }
+.radar-selected-copy h2 { font-size: 15px; line-height: 1.35; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.radar-selected-copy p { font-size: 11px; color: var(--muted); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; margin-top: 3px; }
+.radar-selected-copy .text-link { min-height: 44px; font-size: 12px; }
+.radar-dismiss { position: absolute; right: -8px; top: 1px; }
+.is-list-expanded .radar-results { position: relative; inset: auto; width: 340px; max-width: none; max-height: none; flex: none; border: 0; border-left: 1px solid var(--line); border-radius: 0; padding: 0 20px; box-shadow: none; }
+.is-list-expanded .radar-results-heading { position: sticky; top: 0; z-index: 2; display: flex; justify-content: space-between; align-items: center; gap: 8px; padding: 12px 0; background: var(--white); }
+.radar-results-heading h2 { font-size: 18px; overflow-wrap: anywhere; }
+.radar-results-heading p { font-size: 12px; color: var(--muted); margin-top: 3px; }
+.is-list-expanded .radar-result-rows { display: block; }
+.is-list-expanded .radar-selection { display: none; }
+.radar-demo-note { font-size: 11px; color: var(--muted); margin-bottom: 12px; }
+.radar-results .incident-row { gap: 12px; padding: 16px 0; }
+.radar-results .row-photo { width: 56px; height: 66px; }
+.radar-results .row-heading { font-size: 14px; }
+.radar-results .row-tail .text-button { min-height: 44px; }
+.radar-event-row { position: relative; padding-bottom: 6px; }
+.radar-event-row > .text-button { min-height: 44px; margin-left: 58px; font-size: 11px; }
+.radar-event-row .event-row { padding-bottom: 0; }
+.radar-report-link { display: grid; gap: 6px; padding: 20px 0; border-top: 1px solid var(--line); font-size: 12px; color: var(--muted); }
+.radar-report-link span { display: flex; align-items: center; gap: 8px; color: var(--green); font-size: 14px; font-weight: 500; }
+.radar-page:has(.radar-filters) :is(.radar-results, .radar-list-toggle) { visibility: hidden; }
+
+/* Dizko's category / calendar markers, sized to a compact 44–48px target. */
+.radar-marker, .radar-cluster { display: grid; place-items: center; border: 0; background: transparent; }
+.radar-marker-face { position: relative; display: flex; align-items: center; justify-content: center; width: 100%; height: 100%; border-radius: 11px; border: 2px solid var(--white); background: var(--green); color: var(--white); box-shadow: 0 2px 6px rgb(25 62 50 / 18%); }
+.radar-marker-face img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; border-radius: 9px; }
+.radar-marker-glyph { display: grid; place-items: center; width: 50%; }
+.radar-marker-glyph svg { width: 100%; }
+.radar-marker:hover .radar-marker-face { border-color: var(--green); }
+.radar-marker.is-selected .radar-marker-face { outline: 2px solid var(--green); outline-offset: 3px; }
+.radar-event .radar-marker-face { flex-direction: column; background: var(--white); color: var(--green); border: 1px solid #8c9f92; line-height: 1.05; gap: 2px; }
+.radar-event .radar-marker-face > span { font-size: 10px; font-weight: 500; }
+.radar-event .radar-marker-face strong { font-size: 20px; font-weight: 600; }
+.radar-marker-resolved { position: absolute; right: -3px; bottom: -3px; width: 17px; height: 17px; background: var(--white); color: var(--green); border-radius: 50%; border: 1px solid var(--green); padding: 2px; z-index: 1; }
+.radar-marker-resolved svg { display: block; width: 100%; height: 100%; }
+.radar-cluster.leaflet-marker-icon { display: grid; place-items: center; border: 2px solid var(--white); border-radius: 50%; background: var(--green); color: var(--white); font-weight: 600; font-size: 14px; box-shadow: 0 2px 6px rgb(25 62 50 / 18%); }
+.radar-meetup-pin { border: 0; background: transparent; cursor: grab; }
+.radar-meetup-pin svg { display: block; overflow: visible; filter: drop-shadow(0 3px 3px rgb(25 62 50 / 22%)); }
+.radar-meetup-pin:active { cursor: grabbing; }
+.radar-meetup-pin:focus-visible { outline: 2px solid var(--green); outline-offset: 3px; border-radius: 16px; }
+.radar-sr-only { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; border: 0; }
+
+@media (max-width: 600px) {
+  .is-list-expanded .radar-results { position: absolute; top: 70px; bottom: 28px; left: 12px; right: 12px; width: auto; border: 1px solid var(--line); border-radius: 14px; padding: 0 16px; box-shadow: var(--shadow-floating); }
+  .is-list-expanded .radar-map-controls { visibility: hidden; }
+  .radar-results { width: auto; right: 12px; }
+}
+@media (min-width: 600px) and (max-height: 600px) {
+  .radar-map-controls { display: flex; }
+  .radar-zoom { display: flex; }
+  .radar-zoom button + button { border-top: 0; border-left: 1px solid var(--line); }
+  .radar-list-toggle { padding-inline: 12px; }
+}
+@media (pointer: coarse) {
+  .radar-page .radar-zoom { display: none; }
+}
