@@ -18,8 +18,15 @@ try{
  for(const width of [320,390,1440]){
   const context=await browser.newContext({httpCredentials:{username:'qa',password:code},viewport:{width,height:width===1440?1000:844},reducedMotion:'reduce',serviceWorkers:'block'});
   const page=await context.newPage();
+  async function settle(){await page.evaluate(()=>document.fonts.ready);await page.evaluate(()=>window.scrollTo(0,0));await page.waitForTimeout(300);}
+
   for(const [path,name]of [['/report','report'],['/','map'],['/events','events'],['/profile','profile'],['/resources','resources'],['/resources/topics/waste','resource-topic'],['/directory','directory']]){
-   await page.goto(origin+path);await page.locator('main h1').first().waitFor();await page.evaluate(()=>document.fonts.ready);
+   await page.goto(origin+path);await page.locator('main h1').first().waitFor();
+   if(name==='map'){await page.locator('.maplibregl-canvas').waitFor();await page.locator('.radar-map-loading').waitFor({state:'hidden',timeout:60000});assert.equal(await page.locator('.radar-map-failure').count(),0,'Live map provider must render');await page.getByRole('button',{name:/\d+ places? · View list/}).waitFor();}
+   if(name==='events')await page.locator('.event-feed .event-row').first().waitFor();
+   if(name==='directory')await page.locator('.directory-results').waitFor();
+   if(name==='profile')await page.getByRole('button',{name:'Continue as a resident',exact:true}).waitFor();
+   await settle();
    const bad=await page.evaluate(()=>[...document.querySelectorAll('body *')].filter(e=>{const r=e.getBoundingClientRect();return r.width&&r.height&&/italic|oblique/.test(getComputedStyle(e).fontStyle);}).map(e=>e.tagName));assert.deepEqual(bad,[],'Live typography');
    const file=`${width}-${name}.png`;await page.screenshot({path:'test-results/live/'+file,fullPage:true,animations:'disabled'});captures.push(file);
   }
@@ -27,10 +34,12 @@ try{
   const signedIn=await context.request.post(origin+'/api/auth/demo',{headers:{origin,authorization},data:{role:'resident'}});assert.equal(signedIn.status(),200);
   await page.goto(origin+'/events/new');await page.getByRole('button',{name:'Meetup name: Untitled meetup',exact:true}).waitFor();
   await page.getByText('Customize graphic',{exact:true}).click();await page.getByRole('button',{name:'Ocean',exact:true}).click();await page.getByRole('button',{name:'Waves',exact:true}).click();
+  await settle();
   const editor=`${width}-meetup-create.png`;await page.screenshot({path:'test-results/live/'+editor,fullPage:true,animations:'disabled'});captures.push(editor);
   const listing=await context.request.get(origin+'/api/explore?mode=events',{headers:{authorization}});assert.equal(listing.status(),200);
   const events=(await listing.json()).items;assert.ok(events.length,'A fictional QA meetup is required for live evidence');
   await page.goto(origin+'/events/'+events[0].id);await page.locator('main h1').first().waitFor();await page.getByRole('button',{name:'Share meetup',exact:true}).waitFor();
+  await settle();
   const detail=`${width}-meetup-detail.png`;await page.screenshot({path:'test-results/live/'+detail,fullPage:true,animations:'disabled'});captures.push(detail);
   await context.close();
  }
