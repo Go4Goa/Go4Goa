@@ -94,6 +94,8 @@ jobs:
         run: |
           npm ci --prefix baseline
           npm ci --prefix candidate
+          npm run build --prefix baseline
+          npm run build --prefix candidate
           cd candidate
           npx playwright install --with-deps chromium
       - name: Record exact provenance

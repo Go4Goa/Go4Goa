@@ -9,5 +9,5 @@ module.exports=async({github,context,core})=>{
  let receipt;
  try{const r=await github.rest.repos.getContent({owner,repo,path:`reviews/pr-${pr.number}.json`,ref:'automation/source-review'});receipt=JSON.parse(Buffer.from(r.data.content,'base64').toString());}
  catch{throw new Error('Awaiting cloud source review for this head and base. No candidate code executed.');}
- if(receipt.head!==pr.head.sha||receipt.base!==pr.base.sha||receipt.sourceReviewed!==true||Date.now()-Date.parse(receipt.reviewedAt)>86400000||!Number.isFinite(Date.parse(receipt.reviewedAt)))throw new Error('Missing, stale or mismatched source-review receipt');
+ if(receipt.head!==pr.head.sha||receipt.base!==pr.base.sha||receipt.sourceReviewed!==true||Date.now()-Date.parse(receipt.reviewedAt)>86400000||Date.parse(receipt.reviewedAt)>Date.now()+300000||!Number.isFinite(Date.parse(receipt.reviewedAt)))throw new Error('Missing, stale or mismatched source-review receipt');
 };

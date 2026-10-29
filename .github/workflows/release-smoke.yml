@@ -1,0 +1,58 @@
+name: Verify protected QA release
+on:
+  push:
+    branches: [cloud-release]
+  workflow_dispatch:
+permissions:
+  contents: read
+concurrency:
+  group: go4goa-qa-release
+  cancel-in-progress: false
+jobs:
+  smoke:
+    if: github.ref == 'refs/heads/cloud-release'
+    runs-on: ubuntu-latest
+    timeout-minutes: 22
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020
+        with:
+          node-version: 24
+      - run: npm ci
+      - run: npx playwright install --with-deps chromium
+      - name: Verify exact deployment and rendered access
+        run: node .github/qa/live-check.mjs
+        env:
+          EXPECTED_SHA: ${{ github.sha }}
+          QA_ACCESS_CODE: ${{ secrets.GO_GOA_QA_ACCESS_CODE }}
+      - name: Exercise isolated hosted QA Reporting
+        run: node --import tsx scripts/qa-smoke.ts
+        env:
+          GO_GOA_QA: 'true'
+          PUBLIC_ORIGIN: https://go-goa-qa.vercel.app
+          QA_ACCESS_CODE: ${{ secrets.GO_GOA_QA_ACCESS_CODE }}
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        if: ${{ !cancelled() }}
+        with:
+          name: live-evidence-${{ github.sha }}-${{ github.run_attempt }}
+          path: test-results/live
+          if-no-files-found: error
+          retention-days: 30
+  result:
+    needs: smoke
+    if: always() && github.ref == 'refs/heads/cloud-release'
+    runs-on: ubuntu-latest
+    permissions:
+      statuses: write
+    steps:
+      - uses: actions/github-script@60a0d83039c74a4aee543508d2ffcb1c3799cdea9
+        env:
+          RESULT: ${{ needs.smoke.result }}
+        with:
+          script: |
+            await github.rest.repos.createCommitStatus({...context.repo,sha:context.sha,
+              state:process.env.RESULT==='success'?'success':'failure',context:'cloud/live-verification',
+              description:'Identity, QA access, Reporting smoke and rendered evidence',
+              target_url:`${context.serverUrl}/${context.repo.owner}/${context.repo.repo}/actions/runs/${context.runId}`});

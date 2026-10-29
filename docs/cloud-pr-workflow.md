@@ -26,6 +26,8 @@ Vercel will follow a separate `cloud-release` branch after its GitHub connection
 
 The current private organization repository does not support branch protection on its present plan. These are reviewer/workflow controls, not an enforceable restriction on other collaborators' direct writes. GitHub Team is required if the owner wants repository-enforced branch protection. No plan upgrade or charge is authorized by this document.
 
+`Verify protected QA release` runs only on `cloud-release`. It waits for `/api/health` to identify the expected Git commit, checks unauthenticated 401s, captures 12 live mobile/desktop views and runs the hosted fictional Reporting smoke test. It requires the shared QA access code as the encrypted `GO_GOA_QA_ACCESS_CODE` Actions secret; this secret is never referenced by PR jobs. Its separate status job publishes `cloud/live-verification` with the exact run URL for the cloud reviewer.
+
 After publication, verify source/deployment identity, unauthenticated 401 protection, authenticated health and Reporting behavior, and mobile/desktop rendering. Record immutable evidence. Stop subsequent releases after failure. Restore only a previous verified application deployment when safe, without reversing migrations blindly.
 
 ## Commissioning gates
