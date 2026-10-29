@@ -1,0 +1,103 @@
+{
+  "schemaVersion": 1,
+  "status": "merged_post_merge_checks_complete_publication_held",
+  "recordedAt": "2026-10-29T16:40:51.782Z",
+  "repository": "actforgoa2026/Go4Goa",
+  "pr": {
+    "number": 12,
+    "url": "https://github.com/actforgoa2026/Go4Goa/pull/12",
+    "merged": "e2a1d622b3aac809ae687ecfb48fac7b7b008c1e",
+    "head": "c34e53e1f35c1be5a7427e8a400cc0803e087d5e",
+    "base": "26515cdc5a2cdcd08137c2738d1fbf283a8bba60"
+  },
+  "ownerReview": {
+    "reviewer": "ZakKrevitt",
+    "state": "COMMENTED",
+    "submittedAt": "2026-10-29T16:34:21Z",
+    "body": "love it, ship it "
+  },
+  "mainQa": {
+    "run": 40912966195,
+    "attempt": 1,
+    "conclusion": "success",
+    "jobs": {
+      "sourceReview": "success",
+      "verify": "success",
+      "visualEvidence": "success"
+    },
+    "verifiedSteps": [
+      "npm ci",
+      "source-gate and accessibility tests",
+      "npm test",
+      "npm run test:integration",
+      "npm run build"
+    ]
+  },
+  "artifact": {
+    "id": 12914962274,
+    "name": "design-evidence-40912966195-1",
+    "downloaded": true,
+    "unpacked": true,
+    "viewed": true,
+    "provenance": {
+      "head": "e2a1d622b3aac809ae687ecfb48fac7b7b008c1e",
+      "base": "e2a1d622b3aac809ae687ecfb48fac7b7b008c1e",
+      "integrated": "e2a1d622b3aac809ae687ecfb48fac7b7b008c1e",
+      "run": 40912966195,
+      "attempt": 1
+    },
+    "rendered": {
+      "pairs": 54,
+      "widths": [
+        320,
+        390,
+        1440
+      ],
+      "changedPairs": [
+        "320-place.png",
+        "390-review.png"
+      ],
+      "automatedChecksPassed": true,
+      "overflow": false,
+      "accessibilityViolations": 0
+    },
+    "manualInspection": {
+      "viewedPairs": [
+        "320-place baseline/candidate",
+        "390-review baseline/candidate",
+        "1440-signin-draft baseline/candidate"
+      ],
+      "observation": "The paired renders are visually consistent within each pair. The 320 place and 390 review pairs show no apparent layout, typography, overflow, or accessibility regression; the desktop sign-in view visibly introduces phone sign-in UI and is byte-identical within this same-SHA comparison."
+    },
+    "impeccable": {
+      "contextPresent": true,
+      "detectorPresent": true,
+      "resolvedTarget": "src/pages/Report.tsx",
+      "surfaceBriefResolved": false,
+      "surfaceBriefReason": "not-found",
+      "warnings": [
+        "overused-font in meetup-poster.css for Geist",
+        "overused-font in meetup-poster.css for Inter"
+      ],
+      "italicOrObliqueFindings": 0,
+      "sideflagFindings": 0
+    }
+  },
+  "publicationBlockers": [
+    "The original PR run had no current source-review receipt and its source gate failed before execution; the successful main-push source-review does not retroactively satisfy that pre-execution gate.",
+    "Artifact provenance compares e2a1d622 to itself for base, candidate and integrated commits, not against the prior verified release 26515cdc; it cannot establish absence of regressions introduced by PR #12.",
+    "The vendored Impeccable context reports no resolved surface brief for the rendered Reporting target, so the required surface-specific workflow was incomplete.",
+    "No exact-SHA cloud-release publication, Vercel deployment, or live-evidence artifact exists for e2a1d622."
+  ],
+  "releaseState": {
+    "main": "e2a1d622b3aac809ae687ecfb48fac7b7b008c1e",
+    "cloudRelease": "26515cdc5a2cdcd08137c2738d1fbf283a8bba60",
+    "publication": "held"
+  },
+  "actionsNotTaken": [
+    "No cloud-release update.",
+    "No deployment or rollback.",
+    "No GitHub comment/review or collaborator message."
+  ],
+  "disposition": "Manual merge and post-merge QA are recorded. Publication remains held pending a valid pre-release evidence path; do not treat the main-push artifact as a candidate-vs-baseline approval."
+}
