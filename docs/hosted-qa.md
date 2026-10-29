@@ -4,7 +4,7 @@ URL: https://go-goa-qa.vercel.app
 
 This is an isolated testing environment. It uses its own Neon Postgres/PostGIS database and a private Vercel Blob store. It contains fictional personas and example records. Use sample photos and places only. SMS notifications and email delivery are disabled in hosted QA.
 
-Phone sign-in needs `GO_GOA_PHONE_VERIFICATION=true` and the Verify credentials in Vercel. Use the restricted API key when it is available. The owner authorized temporary Watchdoggs Verify reuse for the 30 October 2026 hackathon test. Replace the shared credentials after the test. Test both new credential sets before you revoke the shared credentials.
+The owner’s current instruction is no sign-ins anywhere in this public QA site. Keep `GO_GOA_PHONE_VERIFICATION=false` and automatic guest sessions. Existing Verify credentials or earlier test setup do not authorize enabling phone sign-in; any future change needs a new owner decision.
 
 ## Give the Reporting QA partner access
 
@@ -12,7 +12,7 @@ Share the URL directly. On 29 October 2026 Zachary explicitly authorized public 
 
 The preview starts a separate guest resident session automatically in each browser. The private session cookie keeps each visitor's activity separate. Clearing cookies removes access to that guest activity.
 
-Guests can browse, create meetups, RSVP and use bookmarks without signing in. A guest must verify a phone number before submitting a report when phone verification is enabled. Guest creation cannot select a role or obtain moderator permissions. Shared seeded personas remain available only to authorized automated QA through the encrypted test-account API.
+Guests can browse, submit reports, create meetups, RSVP and use bookmarks without signing in. Phone verification remains disabled for this public QA workflow. Guest creation cannot select a role or obtain moderator permissions. Shared seeded personas remain available only to authorized automated QA through the encrypted test-account API.
 
 Follow [Reporting QA handoff](reporting-qa-handoff.md). Report issues with the tested URL and commit, browser, steps and scrubbed screenshots. Do not put the QA password, cookies, personal information or provider keys into issues.
 

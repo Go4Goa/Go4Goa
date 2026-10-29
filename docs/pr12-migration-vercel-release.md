@@ -4,21 +4,23 @@ Use this procedure to release PR #12 to the shared `go-goa-qa` Vercel project.
 
 This procedure is for fictional QA data. It does not approve a public resident launch.
 
-## Fixed release state
+## Historical PR #12 reference
 
 | Item | Required value |
 |---|---|
 | Pull request | [#12](https://github.com/actforgoa2026/Go4Goa/pull/12) |
 | Reviewed PR head | `c34e53e1f35c1be5a7427e8a400cc0803e087d5e` |
 | PR base | `26515cdc5a2cdcd08137c2738d1fbf283a8bba60` |
-| Merged release commit | `e2a1d622b3aac809ae687ecfb48fac7b7b008c1e` |
-| Current verified deployment | `26515cdc5a2cdcd08137c2738d1fbf283a8bba60` |
+| PR #12 merge commit | `e2a1d622b3aac809ae687ecfb48fac7b7b008c1e` |
+| Deployment verified when this runbook was drafted | `26515cdc5a2cdcd08137c2738d1fbf283a8bba60` |
 | Release branch | `cloud-release` |
 | Database migration | `db/009-ai-review.sql` |
 | Vercel project | `go-goa-qa` (`prj_6Q7Eugjt0H5X2fpIvyohQdGBJd15`) |
 | Stable URL | https://go-goa-qa.vercel.app |
 
-Stop if `main` no longer points to the merged release commit. Make a new release plan for the new commit.
+These SHAs describe PR #12, not a permanently pinned deployment target. Before every release, inspect current `main`, the live health response, the latest release record and Zachary's current design decisions. Select and record the exact reviewed current-main commit as `TARGET_RELEASE` and the current release branch as `CURRENT_RELEASE`. Include all approved live design. If either ref changes after review, stop and re-evaluate the new commits. Merging this runbook does not itself authorize a deployment.
+
+The owner's current instruction is no sign-ins anywhere in this public QA site. Keep automatic guest access, no site password and no Vercel login. Keep `GO_GOA_PHONE_VERIFICATION=false`; the presence of provider credentials does not authorize enabling it.
 
 ## Ownership
 
@@ -28,7 +30,7 @@ Stop if `main` no longer points to the merged release commit. Make a new release
 | Source-review agent | Review the complete PR diff and publish the exact source-review receipt. |
 | Database agent | Back up the QA database, apply migration 009, and verify the schema. |
 | Release agent | Verify Vercel settings and fast-forward `cloud-release`. |
-| Verification agent | Verify the exact deployment, automated evidence, phone flow, and AI result. |
+| Verification agent | Verify the exact deployment, automated evidence, anonymous guest flow and approved report-review behavior. |
 
 One agent can do multiple tasks. Each task must keep its separate evidence.
 
@@ -36,12 +38,13 @@ One agent can do multiple tasks. Each task must keep its separate evidence.
 
 Stop the release if one of these conditions is true:
 
-- Zak did not approve commit `e2a1d622b3aac809ae687ecfb48fac7b7b008c1e` for release.
+- The exact `TARGET_RELEASE` is not covered by current owner release authorization.
 - The source-review receipt is missing, expired, or for different SHAs.
 - A required CI job did not pass.
 - The database agent cannot make and verify a backup.
 - The migration state is inconsistent.
-- A required Vercel variable is missing from the Production target.
+- A required Vercel variable is missing from the Production target, or phone sign-in is enabled.
+- The candidate changes approved design, introduces a sign-in step, or omits newer approved live design.
 - `cloud-release` changed after the release agent read it.
 - The deployed health response does not show the release commit.
 - The live verification workflow or a manual check fails.
@@ -50,15 +53,13 @@ Do not bypass a stop condition. Record the failure and give it to Zak.
 
 ## 1. Complete the source-review gate
 
-PR #12 merged after Zak reviewed its head. Its `source-review` job did not pass.
-
-The job stopped with this expected hold:
+Inspect the current checks and source-review records instead of assuming a historical run is still current. A missing receipt produces this expected hold:
 
 ```text
 Awaiting cloud source review for this head and base. No candidate code executed.
 ```
 
-The source-review agent must inspect this exact diff:
+The historical PR #12 diff is:
 
 ```bash
 git fetch origin --prune
@@ -68,14 +69,14 @@ git diff 26515cdc5a2cdcd08137c2738d1fbf283a8bba60..c34e53e1f35c1be5a7427e8a400cc
 
 Review dependencies, authentication, APIs, migration 009, AI review, phone verification, privacy, and all shared UI changes.
 
-If the review passes, publish `reviews/pr-12.json` on `automation/source-review`.
+For an open PR, fetch its current head, base and integrated merge candidate, then review the complete diff before authorizing execution. A receipt must use those current SHAs. For PR #12, the receipt path is `reviews/pr-12.json` on `automation/source-review`; other PRs use their own number.
 
-Use this receipt shape:
+Use this receipt shape, replacing the placeholders only with the SHAs actually reviewed:
 
 ```json
 {
-  "head": "c34e53e1f35c1be5a7427e8a400cc0803e087d5e",
-  "base": "26515cdc5a2cdcd08137c2738d1fbf283a8bba60",
+  "head": "REVIEWED_CURRENT_PR_HEAD",
+  "base": "REVIEWED_CURRENT_PR_BASE",
   "sourceReviewed": true,
   "reviewedAt": "CURRENT_UTC_ISO_TIME",
   "review": "PROSE REVIEW RECORD"
@@ -84,26 +85,29 @@ Use this receipt shape:
 
 The receipt expires after 24 hours. Do not copy an old receipt or change its SHAs.
 
-Run the held checks again:
+For a still-open reviewed PR, dispatch its integrated candidate checks with its PR number:
 
 ```bash
-gh workflow run "QA checks" --ref main -f pr_number=12
+gh workflow run "QA checks" --ref main -f pr_number=PR_NUMBER
 gh run list --workflow "QA checks" --limit 5
 gh run view RUN_ID --json status,conclusion,jobs,url
 ```
 
-Require successful `source-review`, `verify`, and `visual-evidence` jobs. Review the matching visual artifact before release.
+Require successful `source-review`, `verify`, and `visual-evidence` jobs for the actual reviewed candidate. Review the artifact provenance and rendered comparisons at 320px, 390px and desktop widths.
+
+For an already merged PR, verify the exact current-main commit separately. An ordinary main CI run compares that commit with itself; it does not establish preservation of the previous approved live design. Compare the selected release against the actual live baseline as well. Inspect Reporting and any affected shared navigation, map and event surfaces. Missing rendered evidence is a hold.
 
 The receipt authorizes isolated CI execution. It does not authorize the Vercel release.
 
 ## 2. Prepare a clean migration checkout
 
-Create a separate clean worktree for the merged release commit:
+Set `TARGET_RELEASE` to the exact current-main commit already reviewed and covered by release authorization. Create a separate clean worktree for that commit:
 
 ```bash
 git fetch origin --prune
-test "$(git rev-parse origin/main)" = "e2a1d622b3aac809ae687ecfb48fac7b7b008c1e"
-git worktree add --detach ../Go4Goa-pr12-release e2a1d622b3aac809ae687ecfb48fac7b7b008c1e
+: "${TARGET_RELEASE:?Set the reviewed release SHA first}"
+test "$(git rev-parse origin/main)" = "$TARGET_RELEASE"
+git worktree add --detach ../Go4Goa-pr12-release "$TARGET_RELEASE"
 cd ../Go4Goa-pr12-release
 test -z "$(git status --short)"
 ```
@@ -124,18 +128,17 @@ The integration command needs the isolated test database from the repository wor
 
 Keep all existing project variables. Do not replace the database, Blob, encryption, origin, access, or map values.
 
-Confirm these PR #12 variables in the Vercel Production target:
+Confirm these settings in the Vercel Production target:
 
 | Variable | Required setting |
 |---|---|
-| `GO_GOA_AI_REVIEW` | `1` |
-| `AI_REVIEW_MODEL` | `claude-sonnet-5` |
-| `ANTHROPIC_API_KEY` | A valid server key |
-| `ANTHROPIC_WORKSPACE_ID` | The approved workspace ID |
-| `GO_GOA_PHONE_VERIFICATION` | `true` |
-| `TWILIO_API_KEY_SID` | A restricted Verify key SID |
-| `TWILIO_API_KEY_SECRET` | The matching key secret |
-| `TWILIO_VERIFY_SERVICE_SID` | The approved Verify service SID |
+| `GO_GOA_QA` | `true`, retaining the existing isolated QA environment |
+| `GO_GOA_PHONE_VERIFICATION` | `false`, preserving the owner's no-sign-in instruction |
+| `GO_GOA_AI_REVIEW` | Preserve the separately approved state; do not enable a provider as part of this runbook merge |
+
+Twilio credentials are not required for the guest workflow. Do not add an SMS test, phone verification step or login requirement. Do not remove private-session, CSRF or moderator authorization controls.
+
+If AI review has separate current authorization, verify its model, workspace, credentials and privacy behavior before activating it. Otherwise leave it disabled and test the manual moderation path. Never send resident data to an unapproved provider.
 
 Confirm these existing hosted-QA variables remain present:
 
@@ -235,23 +238,22 @@ Migration 009 is additive. Do not delete the table during an application rollbac
 
 ## 6. Fast-forward the release branch
 
-Zak must approve this step after the migration passes.
+Proceed only under current owner release authorization after the migration and all review gates pass. Read both refs again immediately before publication:
 
 ```bash
 git fetch origin --prune
-CURRENT_RELEASE="$(git rev-parse origin/cloud-release)"
-TARGET_RELEASE="e2a1d622b3aac809ae687ecfb48fac7b7b008c1e"
-test "$CURRENT_RELEASE" = "26515cdc5a2cdcd08137c2738d1fbf283a8bba60"
+: "${CURRENT_RELEASE:?Set the release branch SHA recorded during review}"
+: "${TARGET_RELEASE:?Set the reviewed current-main SHA}"
+test "$(git rev-parse origin/cloud-release)" = "$CURRENT_RELEASE"
 test "$(git rev-parse origin/main)" = "$TARGET_RELEASE"
 git merge-base --is-ancestor "$CURRENT_RELEASE" "$TARGET_RELEASE"
-git push origin "$TARGET_RELEASE":refs/heads/cloud-release
-git fetch origin cloud-release
-test "$(git rev-parse origin/cloud-release)" = "$TARGET_RELEASE"
 ```
 
-Do not use `--force`. Stop if the remote branch changed.
+Advance `cloud-release` through the established GitHub ref-update tool with `branch_name=cloud-release`, `expected_sha=CURRENT_RELEASE`, `sha=TARGET_RELEASE` and `force=false`. The expected-old-SHA check is required; a plain push does not enforce that guard. If this guarded operation is unavailable, hold publication. Never force-push or silently substitute a different SHA.
 
-The push starts the Vercel Production deployment and the `Verify public QA release` workflow.
+Fetch the branch afterward and confirm it equals `TARGET_RELEASE`. Stop if main or the release branch changed before the guarded update.
+
+The guarded branch update starts the Vercel Production deployment and the `Verify public QA release` workflow.
 
 ## 7. Verify the exact deployment
 
@@ -259,14 +261,14 @@ Check the stable health response:
 
 ```bash
 curl --fail --silent --show-error https://go-goa-qa.vercel.app/api/health | \
-  jq --exit-status '.ok == true and .mode == "hosted-qa" and .release.commit == "e2a1d622b3aac809ae687ecfb48fac7b7b008c1e"'
+  jq --exit-status --arg target "$TARGET_RELEASE" '.ok == true and .mode == "hosted-qa" and .release.commit == $target'
 ```
 
 Check the public feature flags:
 
 ```bash
 curl --fail --silent --show-error https://go-goa-qa.vercel.app/api/config | \
-  jq --exit-status '.qa == true and .demo == true and .phoneVerification == true'
+  jq --exit-status '.qa == true and .demo == true and .phoneVerification == false'
 ```
 
 Inspect the release workflow once Vercel finishes:
@@ -280,22 +282,16 @@ Require a successful `cloud/live-verification` status for the release commit. Do
 
 Verify these manual flows with fictional QA data:
 
-1. Open a new private browser session.
-2. Confirm that the app creates a separate guest resident.
-3. Confirm that the app does not show a site password or Vercel sign-in.
-4. Open the report form and keep the draft through the phone step.
-5. Use one approved test phone number.
-6. Confirm real SMS delivery and code acceptance separately.
-7. Submit a safe trash report at a fictional test point.
-8. Record the report ID.
-9. Confirm the AI decision and `ai_reviews` record.
-10. Confirm that a publish result appears through the public API.
-11. Confirm that a reject, merge, or hold result stays within its designed visibility.
-12. Close the synthetic report after verification.
+1. Open two fresh private browser contexts and confirm they receive separate guest residents without any sign-in form, phone step, password or Vercel login.
+2. Check Reporting, events, RSVP, bookmarks and profile without asking the visitor to sign in.
+3. Confirm a report draft survives navigation, upload failure and retry without a phone gate.
+4. Submit an approved synthetic test report with a fictional location and safe test photo. Record its ID and verify that retries do not duplicate it.
+5. Confirm pending/private reports and photos stay private to the creating session and authorized moderation, including across the two guest contexts. Preserve location precision and CSRF controls.
+6. Confirm moderation and public projections, and the approved AI behavior only if that provider has separate release authorization.
+7. Compare mobile and desktop design to the approved baseline. Check upright type, existing tokens/components and absence of decorative sideflags.
+8. Close the synthetic report after verification through the supported moderation action.
 
-Use a test photo without faces, plates, house numbers, or private interiors. Do not use a real resident report.
-
-Provider acceptance does not prove SMS delivery. API success does not prove code acceptance or final report submission.
+Use fictional QA data only. Never send real SMS or email, use real residents, seed a production database, or copy production secrets into test environments. API success alone does not establish the complete rendered guest workflow.
 
 ## 8. Failure and rollback
 
@@ -307,7 +303,7 @@ If a live check fails, promote the previous verified Vercel deployment. Do not f
 
 Keep migration 009 in place during an application rollback. The old application does not use the additive `ai_reviews` table.
 
-Set the AI or phone flag to false only through an approved incident action. A variable change needs a new deployment.
+Keep phone verification disabled throughout release and rollback. If separately authorized AI review fails, disable it through the approved incident procedure. Variable changes need a new deployment; verify guest access again afterward.
 
 ## 9. Release record
 
@@ -321,8 +317,9 @@ Record these items before the release closes:
 - The Vercel deployment ID and immutable URL.
 - The deployed Git commit from `/api/health`.
 - The `cloud/live-verification` run and artifact.
-- The real SMS provider result, delivery result, and code result.
-- The synthetic report ID and AI result.
+- Evidence that phone verification is disabled and guest sessions require no sign-in.
+- The synthetic report ID, moderation result and any separately approved AI result.
+- The approved live baseline, mobile/desktop visual evidence and design review outcome.
 - All failed or incomplete checks.
 
 Do not describe a partial result as a complete release.
