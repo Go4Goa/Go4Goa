@@ -1,0 +1,118 @@
+{
+  "schemaVersion": 1,
+  "recordType": "verified_protected_qa_release",
+  "recordedAt": "2026-10-29T14:59:36.890Z",
+  "repository": "actforgoa2026/Go4Goa",
+  "scope": "Owner-authorized integrated Go4Goa release; future unattended scope remains layalabs Reporting FEATURE/UX only",
+  "target": "https://go-goa-qa.vercel.app",
+  "environment": "protected fictional shared QA, using Vercel production alias; not public resident launch",
+  "source": "912d7416335687fa806f26042fc0f8dcdf5940eb",
+  "main": "912d7416335687fa806f26042fc0f8dcdf5940eb",
+  "cloudRelease": "912d7416335687fa806f26042fc0f8dcdf5940eb",
+  "pullRequests": [
+    {
+      "number": 3,
+      "url": "https://github.com/actforgoa2026/Go4Goa/pull/3",
+      "head": "6c292cdbc70d3fd19cb41d0134c64e74612fc723",
+      "base": "ce16b40b0e42f29ba304ea20beb22153c412a2bf",
+      "merged": "6d68f9cf1e005613edc7c4563c8c824e7d2b3101",
+      "scope": "Approved map, navigation, Resources, Directory, Meetup creator/poster and Reporting fixes"
+    },
+    {
+      "number": 4,
+      "url": "https://github.com/actforgoa2026/Go4Goa/pull/4",
+      "head": "e862066ff34b5ce7660464368e6f56d06b3c342f",
+      "base": "6d68f9cf1e005613edc7c4563c8c824e7d2b3101",
+      "integrated": "d27d98266ef12477151a6d5b185138463f31fe4b",
+      "merged": "912d7416335687fa806f26042fc0f8dcdf5940eb",
+      "scope": "Live verification harness only; application tree unchanged"
+    }
+  ],
+  "mergeSafety": {
+    "expectedHeadGuards": true,
+    "reviewedTreeEquality": true,
+    "cloudReleaseExpectedOld": "6d68f9cf1e005613edc7c4563c8c824e7d2b3101",
+    "fastForwardOnly": true
+  },
+  "deployment": {
+    "id": "dpl_9HTEUA4Gt3AP61zhNR8dFr566Gsd",
+    "url": "https://go-goa-jy6wzcpei-zakkrevitt-gmailcoms-projects.vercel.app",
+    "projectId": "prj_6Q7Eugjt0H5X2fpIvyohQdGBJd15",
+    "teamId": "team_HFlIoPSiBdah4eZZDkHUF4Z7",
+    "state": "READY",
+    "platform": "Vercel GitHub app, repository access limited to Go4Goa",
+    "productionBranch": "cloud-release",
+    "previewsDisabled": true,
+    "gitCommentsDisabled": true
+  },
+  "checks": {
+    "unit": 29,
+    "integration": 7,
+    "policy": 11,
+    "build": "pass",
+    "pr3Runs": [
+      40892527587,
+      40892579132
+    ],
+    "pr4Run": {
+      "id": 40894503037,
+      "attempt": 2,
+      "result": "success"
+    },
+    "mainRun": {
+      "id": 40896262883,
+      "result": "success"
+    },
+    "liveRun": {
+      "id": 40896333901,
+      "result": "success",
+      "url": "https://github.com/actforgoa2026/Go4Goa/actions/runs/40896333901"
+    },
+    "combinedStatuses": {
+      "Vercel": "success",
+      "cloud/live-verification": "success"
+    }
+  },
+  "visual": {
+    "impeccableVersion": "4.7.0",
+    "baselineCandidatePairs": 54,
+    "widths": [
+      320,
+      390,
+      1440
+    ],
+    "newAccessibilityOrOverflowFindings": 0,
+    "italicObliqueOrSideflags": 0,
+    "actualRenderedReview": true,
+    "pr4Notes": "Application source unchanged; 52 identical pairs. Actual two changed pairs inspected: focus/scroll timing in 320-place and 390-upload-failed, no application change. Baselines not replaced."
+  },
+  "live": {
+    "artifactId": 12907770773,
+    "artifactName": "live-evidence-912d7416335687fa806f26042fc0f8dcdf5940eb-1",
+    "artifactRun": 40896333901,
+    "captures": 27,
+    "sourceIdentityVerified": true,
+    "unauthenticatedStatus": 401,
+    "loadedMapTilesAndMarkers": true,
+    "hostedPlaceSearch": true,
+    "publicDirectoryRecords": 459,
+    "privateNotesExcluded": true,
+    "notificationProvidersDisabled": true,
+    "reportingSmoke": "PASS: access gate, hosted sessions, photo storage, private pending report, blurred coordinates, retry, moderation, points, RSVP, bookmarks, calendar and cached resources",
+    "syntheticReportClosed": "5a275c56-ab82-4687-b7d2-f1f331640deb"
+  },
+  "migrations": [
+    "004-event-series.sql",
+    "005-directory.sql",
+    "006-publish-meetups.sql",
+    "007-meetup-poster.sql",
+    "008-reminder-version.sql"
+  ],
+  "knownLimits": [
+    "Protected fictional QA only; Google Places/OpenFreeMap policy compatibility remains a public-launch issue.",
+    "Browser emulation does not certify a physical camera/device. Device Hub was not used.",
+    "Private organization plan lacks enforceable branch protection; workflow/reviewer controls cannot restrict direct writes by collaborators.",
+    "Real layalabs PR event has not yet exercised the existing subscription."
+  ],
+  "handoff": "Release verified. Cloud authority activation is recorded separately in handoff.json."
+}
