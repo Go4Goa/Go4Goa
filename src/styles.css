@@ -135,3 +135,7 @@ main { padding-bottom: calc(var(--bottom-nav-height, 53px) + 40px); }
   .sign-in.compact > h1 { font-size: 24px; }
 }
 @media (max-width: 360px) { :root { --page-gutter: 16px; } }
+
+.profile-preferences .account-settings { margin: 0; padding: 0; border: 0; }
+.profile-page > .contribution { margin-top: 32px; padding-top: 24px; border-top: 1px solid var(--line); }
+.profile-page > .points-history { margin-bottom: 0; }

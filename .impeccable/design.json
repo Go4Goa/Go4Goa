@@ -1,6 +1,6 @@
 {
   "schemaVersion": 2,
-  "generatedAt": "2026-10-29T12:44:27.623062+00:00",
+  "generatedAt": "2026-10-29T15:48:05.095712+00:00",
   "title": "Design System: GO-GOA",
   "extensions": {
     "colorMeta": {
@@ -319,7 +319,7 @@
       {
         "name": "resting-control",
         "value": "0 2px 5px rgb(22 37 29 / 5%), 0 7px 20px rgb(22 37 29 / 7%)",
-        "purpose": "Primary actions, applicable secondary hover states, the single map toolbar and desktop participation panel."
+        "purpose": "Primary actions, applicable secondary hover states, shared map and directory search surfaces, unselected report category choices and the desktop participation panel."
       },
       {
         "name": "floating-panel",
@@ -502,11 +502,12 @@
   ],
   "narrative": {
     "northStar": "Act For Goa civic workspace",
-    "overview": "GO-GOA keeps Act For Goa's civic green identity while intentionally replacing the earlier paper-and-Manrope treatment with the user's requested white canvas, Helvetica Neue and official UIArc controls. The supplied Airbnb image guides the clean section spacing, softer depth and rounder actions. It is a treatment reference, not an exact layout or content specification.\n\nOpen rows and clear sections carry civic information. Action green identifies major next actions, while the deeper civic green remains the identity, navigation and map-selection color. Soft offset shadows separate controls and temporary layers without wrapping every section in a card.\n\nThis record captures the implemented local development revision of 29 October 2026, including the compact full-width dock and the compact map search/filter row. The user requested this direction; acceptance of this particular rendered result remains pending. Documentation is not release approval. No deployment, push or release is implied.\n\nThe map retains its code-led reuse of Dizko's map composition and behavior, with GO-GOA civic content. Its surface contract is `.impeccable/surfaces/map.md`; the latest shared treatment is recorded in `.impeccable/surfaces/app.md`. This refresh updates the intentional UI changes and preserves the map's behavior and provenance.",
+    "overview": "GO-GOA keeps Act For Goa's civic green identity while intentionally replacing the earlier paper-and-Manrope treatment with the user's requested white canvas, Helvetica Neue and official UIArc controls. The supplied Airbnb image guides the clean section spacing, softer depth and rounder actions. It is a treatment reference, not an exact layout or content specification.\n\nOpen rows and clear sections carry civic information. Action green identifies major next actions, while the deeper civic green remains the identity, navigation and map-selection color. Soft offset shadows separate controls and temporary layers without wrapping every section in a card.\n\nThis record captures the 29 October 2026 extension of the accepted Resources layout and spacing across the app, retaining the compact full-width dock and map search/filter row. The user explicitly requested this extension and shipment to production, superseding the earlier local-preview restriction. The independent finish review returned `ship` for the nine-file implementation without material fixes. The subsequent Profile refinement prioritizes reports and meetups, with account controls on a separate preferences page; its independent finish review also returned `ship` without material fixes. This records the reviewed release candidate; it does not claim deployment has completed.\n\nThe map retains its code-led reuse of Dizko's map composition and behavior, with GO-GOA civic content. Its surface contract is `.impeccable/surfaces/map.md`; the latest shared treatment is recorded in `.impeccable/surfaces/app.md`. This refresh updates the intentional UI changes and preserves the map's behavior and provenance.",
     "keyCharacteristics": [
       "White canvas, dark readable text and retained civic-green identity.",
       "Upright Helvetica Neue with regular body, medium labels and stronger key headings.",
       "Open rows and section spacing instead of repeated nested containers.",
+      "Shared page widths, responsive gutters and title-copy grouping across lists, forms, profile and reading surfaces.",
       "Round UIArc actions, green major CTAs and soft offset shadows.",
       "A compact full-width bottom dock with visible labels.",
       "Visible provenance, example labels and accessible map/list alternatives.",
@@ -521,8 +522,13 @@
       },
       {
         "name": "The Upright Type Rule",
-        "body": "Use upright type throughout: Helvetica Neue for the shared app, with the approved scoped Geist and Inter meetup treatment. Weight, size and spacing carry emphasis; never use italic or oblique styling.",
+        "body": "Use upright type throughout: Helvetica Neue for the shared app and composer, with scoped Geist and Inter only in meetup poster artwork. Weight, size and spacing carry emphasis; never use italic or oblique styling.",
         "section": "typography"
+      },
+      {
+        "name": "The Shared Page Rhythm Rule",
+        "body": "Use the shared page-width, workspace-width, page-gutter, page-padding-top and section-gap tokens for app content. Apply their mobile and narrow variants at the documented breakpoints, group each description with its heading, and keep lists open on the page canvas.",
+        "section": "layout"
       },
       {
         "name": "The Map Owns Its Viewport Rule",
@@ -539,6 +545,7 @@
       "Do load the active theme from src/styles.css after the UIArc foundation.",
       "Do use official UIArc controls, including its accessible Radix internals, and retain their provenance.",
       "Do use Helvetica Neue, white sections, pill actions and spacing to establish hierarchy.",
+      "Do apply the shared page rhythm to lists, forms, profile and reading surfaces, reserving the wider workspace measure for detail and editing layouts.",
       "Do keep the map search/filter row compact, put activity modes inside filters and open results only on request.",
       "Do reuse MeetupPoster between creation and the dedicated page, keeping its saved palette, background, scoped typography and content in sync.",
       "Do retain concise labels, visible keyboard focus and reduced-motion handling.",
@@ -551,7 +558,7 @@
       "Don't expand the selected tab into a large dark green block.",
       "Don't promote unused foundation gradients, alternate accents or dark themes into the GO-GOA palette.",
       "Don't replace open lists with decorative card grids, nest decorative containers or use glyphs as substitute icons.",
-      "Don't treat this local documentation or captured renders as user acceptance or production approval."
+      "Don't treat design documentation or captured renders as evidence that an authorized production deployment has completed."
     ]
   }
 }

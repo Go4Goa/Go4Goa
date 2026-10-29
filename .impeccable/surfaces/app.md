@@ -38,3 +38,23 @@ STORY: Browse map or events, inspect relevant information, then report or partic
 FIRST VIEWPORT: One map toolbar holds search and activity selection. A plain bottom summary replaces the floating result card. Events use open rows and distinct section spacing; primary actions earn saturated color.
 FORM: Code-led refinement with official UIArc controls throughout. Existing accepted compact navigation stays. No new visual-world interview required for these explicit reference and typography constraints.
 FINISH: Inspect dev renders and key interactions; document the local revision. No deployment, push or release until explicitly requested.
+
+## App-wide layout extension, 29 October 2026
+
+THESIS: Carry the accepted Resources layout and spacing into the rest of the app so each task starts with clear page identity, nearby controls and open content.
+
+OWN-WORLD: Retain the white canvas, civic green, upright Helvetica Neue, official UIArc controls and soft action shadows. Use shared page and workspace measures, responsive gutters, title-copy grouping and section spacing. The meetup composer now inherits the same typography, colors and 44px / 48px / 52px controls; only poster artwork retains its scoped Geist and Inter fonts and palette choices.
+
+STORY: Browse meetups or Directory, choose a report category, review a report, create a meetup, or manage a profile with the same page rhythm. Resources and Directory lists share the standard measure; Directory details, report and meetup details, and editing workspaces retain the wider measure. Existing map behavior, privacy, provenance and browser-local Directory notes remain intact.
+
+FIRST VIEWPORT: Standard content uses an 800px maximum width and workspaces use 1120px. Gutters are 40px by default, 20px at 760px and below, and 16px at 360px and below; top padding is 32px by default and 24px on phones. Shared section spacing is 32px by default and 28px on phones. Descriptions sit 8px below their heading, with a general 28px title-group gap before controls. Open event rows use 24px vertical padding. Report category choices align icon and text horizontally and stack on phones, with 112px desktop and 88px phone minimum heights. Profile, sign-in and reading sections use the same compact spacing vocabulary.
+
+FORM: This is a code-led extension of an accepted layout. The user's explicit request to apply it across the app and ship to production supersedes the local-only restrictions in the dated dev sections above. Those sections remain as historical direction records. The normative shared tokens and their responsive variants are recorded in DESIGN.md; the sidecar extends those tokens without duplicating their primitives.
+
+FINISH: The independent finish review returned `ship` for the nine-file implementation, with no material fixes, after reviewing 320px, 378px and 390px phones, 768px tablet and 1280px desktop. Ignored evidence in the authoring checkout is `.impeccable/review/ui-refinement/`: current `release-*.jpg` captures plus `app-events-mobile.jpg`, `app-report-mobile.jpg` and `app-layout-checks.json`. The checks record Helvetica Neue, zero italic elements and no horizontal overflow for Events, Directory, Resources and Profile at 320px, 768px and 1280px. This documents readiness and the current authorization; it does not claim the production deployment has completed.
+
+### Profile follow-up
+
+The user's final Profile direction prioritizes reports and meetups. The username and private-profile context lead into activity tabs and results; contribution points and history follow. A labeled UIArc-styled cog opens `/profile/preferences`, which contains notification toggles, email changes, export, deletion, sign-out, privacy and role-gated moderation access. Back preserves the selected activity tab. Original account handlers, verification conditions and deletion confirmation remain unchanged, and account controls are absent from the main Profile DOM.
+
+The independent review returned `ship` with no material fixes, and source checks and the build passed. Current ignored captures in the same review folder are `profile-activity-mobile.jpg`, `profile-preferences-mobile.jpg` (390px by 844px), `profile-preferences-expanded-320.jpg` (scrolled), `profile-activity-desktop.jpg` and `profile-preferences-desktop.jpg` (1280px by 900px). This refinement reuses the shared tokens and does not establish completed deployment.
