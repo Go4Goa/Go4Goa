@@ -1,3 +1,4 @@
+import {introducedAccessibility} from './accessibility.mjs';
 import {readFile,writeFile} from 'node:fs/promises';
 import {join} from 'node:path';
 import {createHash} from 'node:crypto';
@@ -15,7 +16,4 @@ const summary={automatedChecksPassed:base.passed&&candidate.passed,renderedRevie
 await writeFile(join(root,'comparison.json'),JSON.stringify(summary,null,2));
 console.log(`Captured ${changes.length} pairs; ${changes.filter(c=>c.changed).length} changed. Rendered design approval is still required.`);
 if(!summary.automatedChecksPassed)throw new Error('Incomplete browser evidence');
-// UUIDs belong to independent fictional database rows, not UI changes. Keep node
-// counts and selectors so additional violations still fail.
-const accessibilityKey=v=>JSON.stringify({...v,nodes:v.nodes.map(n=>n.map(s=>s.replace(/[a-f0-9]{8}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{12}/gi,'<fixture-id>'))).sort((a,b)=>JSON.stringify(a).localeCompare(JSON.stringify(b)))});
-for(const c of changes){if(c.candidateOverflow&&!c.baselineOverflow)throw new Error("New horizontal overflow: "+c.file);const existing=new Set(c.baselineAccessibility.map(accessibilityKey));const introduced=c.candidateAccessibility.filter(v=>['serious','critical'].includes(v.impact)&&!existing.has(accessibilityKey(v)));if(introduced.length)throw new Error('New serious accessibility finding: '+c.file);}
+for(const c of changes){if(c.candidateOverflow&&!c.baselineOverflow)throw new Error("New horizontal overflow: "+c.file);if(introducedAccessibility(c.baselineAccessibility,c.candidateAccessibility).length)throw new Error('New serious accessibility finding: '+c.file);}
