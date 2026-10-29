@@ -17,7 +17,7 @@ import { notificationRoutes } from './notifications.ts';
 import { qaAuthorized } from '../shared/qa-access.ts';
 import { categories } from '../shared/model.ts';
 import { searchPlaces,suggestPlaces,resolvePlace } from './places.ts';
-import { phoneVerificationEnabled } from './twilio-verify.ts';
+import { phoneVerificationEnabled } from './twilio-credentials.ts';
 export function createApp() {
  const app=express();app.disable('x-powered-by');
  app.use(async(req,res,next)=>{if(config.qa&&!await qaAuthorized(req.get('authorization')||null,config.qaAccessCode)){res.set({'WWW-Authenticate':'Basic realm="GO-GOA QA"','Cache-Control':'no-store'}).status(401).json({error:'QA access required.'});return;}if(config.qa)res.set('X-Robots-Tag','noindex, nofollow, noarchive');next();});

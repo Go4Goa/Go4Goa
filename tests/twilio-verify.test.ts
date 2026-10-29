@@ -1,17 +1,28 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { phoneVerificationEnabled, requestTwilioVerification } from '../server/twilio-verify.ts';
+import { phoneVerificationEnabled, selectTwilioVerifyCredentials } from '../server/twilio-credentials.ts';
+import { requestTwilioVerification } from '../server/twilio-verify.ts';
 
 const credentials = {
-  accountSid: 'AC_test',
-  authToken: 'secret',
+  credentialSid: 'SK_test',
+  credentialSecret: 'secret',
   serviceSid: 'VA_test',
 };
+
+test('restricted API keys take priority over main account credentials', () => {
+  assert.deepEqual(selectTwilioVerifyCredentials({
+    apiKeySid: 'SK_restricted', apiKeySecret: 'restricted-secret',
+    accountSid: 'AC_main', authToken: 'main-secret', serviceSid: 'VA_test',
+  }), { credentialSid: 'SK_restricted', credentialSecret: 'restricted-secret', serviceSid: 'VA_test' });
+  assert.deepEqual(selectTwilioVerifyCredentials({
+    apiKeySid: '', apiKeySecret: '', accountSid: 'AC_main', authToken: 'main-secret', serviceSid: 'VA_test',
+  }), { credentialSid: 'AC_main', credentialSecret: 'main-secret', serviceSid: 'VA_test' });
+});
 
 test('phone verification requires the feature flag and all provider credentials', () => {
   assert.equal(phoneVerificationEnabled(false, credentials), false);
   assert.equal(phoneVerificationEnabled(true, credentials), true);
-  assert.equal(phoneVerificationEnabled(true, { ...credentials, authToken: '' }), false);
+  assert.equal(phoneVerificationEnabled(true, { ...credentials, credentialSecret: '' }), false);
 });
 
 test('Twilio Verify requests use the service endpoint and server credentials', async () => {
@@ -31,7 +42,7 @@ test('Twilio Verify requests use the service endpoint and server credentials', a
 
   assert.deepEqual(result, { status: 'pending' });
   assert.equal(request?.url, 'https://verify.twilio.com/v2/Services/VA_test/Verifications');
-  assert.equal(new Headers(request?.init?.headers).get('authorization'), `Basic ${Buffer.from('AC_test:secret').toString('base64')}`);
+  assert.equal(new Headers(request?.init?.headers).get('authorization'), `Basic ${Buffer.from('SK_test:secret').toString('base64')}`);
   assert.equal(String(request?.init?.body), 'To=%2B919876543210&Channel=sms');
 });
 

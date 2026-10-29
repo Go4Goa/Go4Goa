@@ -1,14 +1,5 @@
 import { fail } from './security.ts';
-
-export type TwilioVerifyCredentials = {
-  accountSid: string;
-  authToken: string;
-  serviceSid: string;
-};
-
-export function phoneVerificationEnabled(enabled: boolean, credentials: TwilioVerifyCredentials) {
-  return enabled && Boolean(credentials.accountSid && credentials.authToken && credentials.serviceSid);
-}
+import type { TwilioVerifyCredentials } from './twilio-credentials.ts';
 
 export async function requestTwilioVerification(
   credentials: TwilioVerifyCredentials,
@@ -21,7 +12,7 @@ export async function requestTwilioVerification(
       {
         method: 'POST',
         headers: {
-          authorization: `Basic ${Buffer.from(`${credentials.accountSid}:${credentials.authToken}`).toString('base64')}`,
+          authorization: `Basic ${Buffer.from(`${credentials.credentialSid}:${credentials.credentialSecret}`).toString('base64')}`,
           'content-type': 'application/x-www-form-urlencoded',
         },
         body: new URLSearchParams(data),

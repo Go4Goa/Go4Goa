@@ -4,7 +4,7 @@ URL: https://go-goa-qa.vercel.app
 
 This is an isolated testing environment. It uses its own Neon Postgres/PostGIS database and a private Vercel Blob store. It contains fictional personas and example records. Use sample photos and places only. SMS notifications and email delivery are disabled in hosted QA.
 
-Phone sign-in needs `GO_GOA_PHONE_VERIFICATION=true` and all Verify credentials in Vercel. The owner authorized temporary Watchdoggs Verify reuse for the 30 October 2026 hackathon test. Replace the shared credentials after the test. Test both new credential sets before you revoke the shared credentials.
+Phone sign-in needs `GO_GOA_PHONE_VERIFICATION=true` and the Verify credentials in Vercel. Use the restricted API key when it is available. The owner authorized temporary Watchdoggs Verify reuse for the 30 October 2026 hackathon test. Replace the shared credentials after the test. Test both new credential sets before you revoke the shared credentials.
 
 ## Give the Reporting QA partner access
 

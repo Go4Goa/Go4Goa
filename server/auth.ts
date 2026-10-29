@@ -5,7 +5,8 @@ import { config, phoneVerificationCredentials } from './config.ts';
 import { pool, tx, audit } from './db.ts';
 import { clientIp, fail, hash, lookupHash, seal, unseal, rate, equal } from './security.ts';
 import type { Account } from '../shared/model.ts';
-import { phoneVerificationEnabled, requestTwilioVerification } from './twilio-verify.ts';
+import { phoneVerificationEnabled } from './twilio-credentials.ts';
+import { requestTwilioVerification } from './twilio-verify.ts';
 
 declare global { namespace Express { interface Request { account?: Account } } }
 export const auth = Router();
