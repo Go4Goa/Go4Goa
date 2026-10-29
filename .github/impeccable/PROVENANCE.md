@@ -1,0 +1,1 @@
+Vendored from the user-installed Impeccable 4.7.0 skill on 2026-10-29. Engine 0.1.16 is downloaded by the original launcher with SHA-256 verification. Upstream: https://github.com/pbakaus/impeccable. License: Apache-2.0. No local binaries, project context or credentials are included.

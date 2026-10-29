@@ -1,32 +1,146 @@
 name: QA checks
-on: [push, pull_request]
+on:
+  push:
+    branches: [main]
+  pull_request_target:
+    types: [opened, synchronize, reopened, ready_for_review]
+  workflow_dispatch:
+    inputs:
+      pr_number:
+        description: Optional PR number for commissioning an integrated candidate
+        required: false
+        type: string
 permissions:
   contents: read
+concurrency:
+  group: qa-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
 jobs:
-  verify:
+  source-review:
+    permissions:
+      contents: read
+      pull-requests: read
     runs-on: ubuntu-latest
+    timeout-minutes: 3
+    outputs:
+      base: ${{ steps.gate.outputs.base }}
+      head: ${{ steps.gate.outputs.head }}
+      candidate: ${{ steps.gate.outputs.candidate }}
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+        with:
+          persist-credentials: false
+          # pull_request_target uses the trusted base workflow and policy.
+          ref: ${{ github.sha }}
+      - uses: actions/github-script@60a0d83039c74a4aee543508d2ffcb1c3799cdea9 # v7
+        id: gate
+        with:
+          script: |
+            await require('./.github/qa/source-gate.cjs')({github,context,core});
+  verify:
+    needs: source-review
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
     services:
       postgres:
         image: postgres:16
         env:
           POSTGRES_PASSWORD: qa_local_only
           POSTGRES_DB: go_goa_test
-        ports:
-          - 5432:5432
+        ports: ['5432:5432']
         options: >-
-          --health-cmd pg_isready
-          --health-interval 5s
-          --health-timeout 5s
-          --health-retries 10
+          --health-cmd pg_isready --health-interval 5s
+          --health-timeout 5s --health-retries 10
     env:
       TEST_DATABASE_URL: postgresql://postgres:qa_local_only@127.0.0.1:5432/go_goa_test
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+        with:
+          persist-credentials: false
+          ref: ${{ needs.source-review.outputs.candidate }}
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4
         with:
           node-version: 24
-          cache: npm
       - run: npm ci
+      - run: node --test .github/qa/source-gate.test.cjs .github/qa/accessibility.test.mjs
       - run: npm test
       - run: npm run test:integration
       - run: npm run build
+  visual-evidence:
+    needs: source-review
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    services:
+      postgres:
+        image: postgres:16
+        env:
+          POSTGRES_PASSWORD: qa_local_only
+          POSTGRES_DB: go_goa_test
+        ports: ['5432:5432']
+        options: >-
+          --health-cmd pg_isready --health-interval 5s
+          --health-timeout 5s --health-retries 10
+    env:
+      TEST_DATABASE_URL: postgresql://postgres:qa_local_only@127.0.0.1:5432/go_goa_test
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+        with:
+          path: harness
+          persist-credentials: false
+          ref: ${{ github.sha }}
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+        with:
+          path: baseline
+          persist-credentials: false
+          ref: ${{ needs.source-review.outputs.base }}
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+        with:
+          path: candidate
+          persist-credentials: false
+          ref: ${{ needs.source-review.outputs.candidate }}
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4
+        with:
+          node-version: 24
+      - name: Install isolated baseline and candidate
+        run: |
+          npm ci --prefix baseline
+          npm ci --prefix candidate
+          npm run build --prefix baseline
+          npm run build --prefix candidate
+          cd candidate
+          npx playwright install --with-deps chromium
+      - name: Record exact provenance
+        env:
+          PR_HEAD: ${{ needs.source-review.outputs.head }}
+          PR_BASE: ${{ needs.source-review.outputs.base }}
+        run: |
+          mkdir -p evidence
+          node -e 'const fs=require("fs"),cp=require("child_process");fs.writeFileSync("evidence/provenance.json",JSON.stringify({head:process.env.PR_HEAD,base:process.env.PR_BASE,integrated:cp.execFileSync("git",["-C","candidate","rev-parse","HEAD"],{encoding:"utf8"}).trim(),runId:process.env.GITHUB_RUN_ID,attempt:process.env.GITHUB_RUN_ATTEMPT},null,2))'
+      - name: Load actual Impeccable context
+        working-directory: candidate
+        run: ../harness/.github/impeccable/scripts/impeccable context --target src/pages/Report.tsx > ../evidence/impeccable-context.txt
+      - name: Capture approved base with fictional data
+        run: node harness/.github/qa/capture.mjs baseline evidence/baseline
+      - name: Capture integrated candidate with identical fictional data
+        if: ${{ !cancelled() }}
+        run: node harness/.github/qa/capture.mjs candidate evidence/candidate
+      - name: Impeccable source detector
+        if: ${{ !cancelled() }}
+        working-directory: candidate
+        shell: bash
+        run: |
+          set +e
+          ../harness/.github/impeccable/scripts/impeccable detect --json src > ../evidence/impeccable-detect.json
+          code=$?
+          if [ "$code" -ne 0 ] && [ "$code" -ne 2 ]; then exit "$code"; fi
+      - name: Record visual changes for review
+        if: ${{ !cancelled() }}
+        run: node harness/.github/qa/compare.mjs evidence
+      - name: Publish review evidence
+        if: ${{ !cancelled() }}
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
+        with:
+          name: design-evidence-${{ github.run_id }}-${{ github.run_attempt }}
+          path: evidence
+          if-no-files-found: error
+          retention-days: 14
