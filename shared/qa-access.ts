@@ -1,4 +1,4 @@
-/** Shared by the edge gate and the API so an API rewrite cannot bypass QA access. */
+/** Authorizes shared QA test-account creation, never public page access. */
 export async function qaAuthorized(authorization: string | null, code: string | undefined) {
   if (!code || code.length < 24 || !authorization?.startsWith('Basic ')) return false;
   let supplied: string;

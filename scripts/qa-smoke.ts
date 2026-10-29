@@ -20,9 +20,10 @@ async function signIn(role:string):Promise<Actor> {
   const who=await (await call('/api/auth/me','GET',undefined,{cookie,csrf:''})).json() as any;
   return {cookie,csrf:who.account.csrf};
 }
-for(const path of ['/','/api/health','/api/explore','/api/auth/demo']) {
-  assert.equal((await fetch(origin+path)).status,401);
+for(const path of ['/','/api/health','/api/explore']) {
+  const response=await fetch(origin+path);assert.equal(response.status,200);assert.equal(response.headers.get('www-authenticate'),null);
 }
+for(const role of ['resident','organizer','moderator'])assert.equal((await fetch(origin+'/api/auth/demo',{method:'POST',headers:{origin,'content-type':'application/json'},body:JSON.stringify({role})})).status,403);
 assert.equal((await (await call('/api/health')).json() as any).mode,'hosted-qa');
 const resident=await signIn('resident'),moderator=await signIn('moderator');
 const bytes=await sharp({create:{width:400,height:300,channels:3,background:'#b7c9aa'}}).jpeg().toBuffer();
@@ -59,5 +60,5 @@ assert.equal((await call('/api/account/bookmarks/'+event.id,'DELETE',undefined,r
 const resources=await (await call('/api/resources?category=trash')).json() as any;
 assert.ok(resources.resources.length>0);
 assert.ok(resources.sync.every((s:any)=>s.last_success));
-console.log('PASS: access gate, hosted sessions, photo storage, private pending report, blurred coordinates, retry, moderation, points, RSVP, bookmarks, calendar and cached resources.');
+console.log('PASS: public browsing, restricted test accounts, hosted sessions, photo storage, private pending report, blurred coordinates, retry, moderation, points, RSVP, bookmarks, calendar and cached resources.');
 console.log('Synthetic report closed after verification:',id);

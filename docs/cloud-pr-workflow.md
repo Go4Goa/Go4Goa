@@ -1,6 +1,6 @@
 # Cloud Reporting review and release
 
-Status: setup in progress. Cloud release authority has not been handed off. The local release worker remains active. Do not enable unattended merging/publication until the commissioning checks below pass.
+Status: the cloud handoff was verified at automation/release-records/handoff.json and the local worker is paused. On 29 October 2026 the owner explicitly authorized public browsing without a site password or Vercel login. This access decision supersedes the previous outer-gate requirement; all design, review, privacy and release gates remain.
 
 ## Review boundary
 
@@ -20,23 +20,23 @@ Artifacts bind PR head, base, integrated commit, run ID and attempt. Download th
 
 ## Planned publication boundary
 
-The existing target is protected `go-goa-qa` (`prj_6Q7Eugjt0H5X2fpIvyohQdGBJd15`, team `team_HFlIoPSiBdah4eZZDkHUF4Z7`). Its stable URL is https://go-goa-qa.vercel.app. This remains fictional shared QA, not a public resident launch.
+The existing target is `go-goa-qa` (`prj_6Q7Eugjt0H5X2fpIvyohQdGBJd15`, team `team_HFlIoPSiBdah4eZZDkHUF4Z7`). Its stable URL is https://go-goa-qa.vercel.app. This is a publicly viewable fictional QA preview; real account/provider readiness remains separate.
 
 Vercel will follow a separate `cloud-release` branch after its GitHub connection is authorized and commissioned. Disable preview deployments and PR/commit comments. Ordinary main and feature pushes must not publish. Do not copy a broad personal Vercel token into Actions. Deployment secrets stay at Vercel. Publication must use a fast-forward, expected-SHA update of `cloud-release`, after rechecking main, reviewed head/base, reviews, required checks and current live provenance. Never force-push or bypass repository protections.
 
 The current private organization repository does not support branch protection on its present plan. These are reviewer/workflow controls, not an enforceable restriction on other collaborators' direct writes. GitHub Team is required if the owner wants repository-enforced branch protection. No plan upgrade or charge is authorized by this document.
 
-`Verify protected QA release` runs only on `cloud-release`. It waits for `/api/health` to identify the expected Git commit, checks unauthenticated 401s, captures 27 live mobile/desktop views and runs the hosted fictional Reporting smoke test. It requires the shared QA access code as the encrypted `GO_GOA_QA_ACCESS_CODE` Actions secret; this secret is never referenced by PR jobs. Its separate status job publishes `cloud/live-verification` with the exact run URL for the cloud reviewer.
+`Verify public QA release` runs only on `cloud-release`. It waits for `/api/health` to identify the expected Git commit, checks unauthenticated public 200 responses without login redirects or password challenges, and rejects unauthenticated shared test-account creation with 403, captures 27 live mobile/desktop views and runs the hosted fictional Reporting smoke test. It requires the shared QA access code as the encrypted `GO_GOA_QA_ACCESS_CODE` Actions secret; this secret is never referenced by PR jobs. Its separate status job publishes `cloud/live-verification` with the exact run URL for the cloud reviewer.
 
-After publication, verify source/deployment identity, unauthenticated 401 protection, authenticated health and Reporting behavior, and mobile/desktop rendering. Record immutable evidence. Stop subsequent releases after failure. Restore only a previous verified application deployment when safe, without reversing migrations blindly.
+After publication, verify source/deployment identity, public access without a site password plus restricted test-account/private API access, authenticated health and Reporting behavior, and mobile/desktop rendering. Record immutable evidence. Stop subsequent releases after failure. Restore only a previous verified application deployment when safe, without reversing migrations blindly.
 
 ## Commissioning gates
 
-- [ ] Review and integrate the hosting prerequisite (PR #1).
-- [ ] Green GitHub-hosted tests/build and complete baseline/candidate artifacts.
-- [ ] Hosted monitor downloads the real private ZIP, unpacks it and visually reads PNGs.
-- [ ] Vercel GitHub app access limited to Go4Goa; release-branch-only publication verified.
-- [ ] Cloud post-deployment identity, access, Reporting and rendered checks verified.
-- [ ] Explicit verified release handoff recorded; pause the local worker to prevent duplicate releases.
+- [x] Review and integrate the hosting prerequisite (PR #1).
+- [x] Green GitHub-hosted tests/build and complete baseline/candidate artifacts.
+- [x] Hosted monitor downloads the real private ZIP, unpacks it and visually reads PNGs.
+- [x] Vercel GitHub app access limited to Go4Goa; release-branch-only publication verified.
+- [x] Cloud post-deployment identity, access, Reporting and rendered checks verified.
+- [x] Explicit verified release handoff recorded; pause the local worker to prevent duplicate releases.
 
-Until all gates pass, keep the existing cloud monitor source-review-only and the local release worker as sole release owner.
+The verified handoff and activation are recorded on automation/release-records. Keep the local worker paused while the cloud monitor owns releases.

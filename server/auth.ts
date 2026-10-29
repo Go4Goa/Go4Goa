@@ -5,6 +5,7 @@ import { config } from './config.ts';
 import { pool, tx, audit } from './db.ts';
 import { clientIp, fail, hash, lookupHash, seal, unseal, rate, equal } from './security.ts';
 import type { Account } from '../shared/model.ts';
+import { qaAuthorized } from '../shared/qa-access.ts';
 
 declare global { namespace Express { interface Request { account?: Account } } }
 export const auth = Router();
@@ -36,6 +37,8 @@ auth.post('/verify-code',async(req,res)=>{
 });
 auth.post('/demo',async(req,res)=>{
  if(!config.demo||(!config.qa&&(config.production||!['127.0.0.1','::1','::ffff:127.0.0.1'].includes(req.socket.remoteAddress||''))))fail(404,'Not found.');
+ // Public browsing must not grant a shared resident or moderator identity.
+ if(config.qa&&!await qaAuthorized(req.get('authorization')||null,config.qaAccessCode))fail(403,'Shared test accounts require team access. You can browse the site without signing in.');
  const role=z.enum(['resident','organizer','moderator']).parse(req.body.role);await rate('demo:'+clientIp(req),30,600);const user=(await pool.query('SELECT id FROM users_private WHERE demo=true AND role=$1 ORDER BY created_at LIMIT 1',[role])).rows[0];if(!user)fail(503,'Run the local seed command first.');await session(res,user.id);res.json({ok:true});
 });
 auth.post('/logout',requireAccount,async(req,res)=>{await pool.query('DELETE FROM sessions WHERE token_hash=$1',[hash(req.cookies.go_goa_session)]);res.clearCookie('go_goa_session',{path:'/'});res.json({ok:true});});

@@ -34,6 +34,28 @@ before(async()=>{
 });
 after(async()=>{await new Promise<void>((r,j)=>server.close(e=>e?j(e):r()));await pool.end();});
 
+test('hosted QA is public to browse without exposing shared accounts or private APIs',async()=>{
+  const previous={qa:config.qa,qaAccessCode:config.qaAccessCode};
+  config.qa=true;config.qaAccessCode='integration-only-team-access-at-least-24-characters';
+  try {
+    for(const path of ['/api/health','/api/config','/api/explore']) {
+      const response=await call(path);assert.equal(response.status,200);
+      assert.equal(response.headers.get('www-authenticate'),null,'public browsing never opens a password prompt');
+    }
+    for(const role of ['resident','organizer','moderator']) {
+      for(const authorization of ['', 'Basic '+btoa('qa:incorrect')]) {
+        const denied=await call('/api/auth/demo','POST',{role},undefined,{authorization});
+        assert.equal(denied.status,403);assert.equal(denied.headers.get('set-cookie'),null);
+        assert.equal(denied.headers.get('www-authenticate'),null);
+      }
+      const accepted=await call('/api/auth/demo','POST',{role},undefined,{authorization:'Basic '+btoa('qa:'+config.qaAccessCode)});
+      assert.equal(accepted.status,200);assert.ok(accepted.headers.get('set-cookie'));
+    }
+    assert.equal((await call('/api/account')).status,401);
+    assert.equal((await call('/api/admin/incidents')).status,401);
+  } finally {Object.assign(config,previous);}
+});
+
 test('authentication, CSRF and role guards reject unauthorized mutations',async()=>{
   assert.equal((await call('/api/account')).status,401);
   assert.equal((await call('/api/admin/incidents','GET',undefined,resident)).status,403);

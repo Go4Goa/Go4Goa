@@ -12,11 +12,18 @@ for(let i=0;i<90;i++){
  await new Promise(r=>setTimeout(r,10000));
 }
 assert.equal(health?.release?.commit,sha,'Stable alias did not reach the expected commit');assert.equal(health.mode,'hosted-qa');
-for(const path of ['/','/report','/api/health','/api/explore'])assert.equal((await fetch(origin+path,{signal:AbortSignal.timeout(15000)})).status,401,'Unauthenticated access gate: '+path);
+for(const path of ['/','/report','/events','/resources','/directory','/api/health','/api/explore']){
+ const response=await fetch(origin+path,{signal:AbortSignal.timeout(15000)});
+ assert.equal(response.status,200,'Public access: '+path);assert.equal(response.redirected,false,'No login redirect: '+path);assert.equal(response.headers.get('www-authenticate'),null);
+}
+for(const role of ['resident','organizer','moderator']){
+ const response=await fetch(origin+'/api/auth/demo',{method:'POST',headers:{origin,'content-type':'application/json'},body:JSON.stringify({role})});
+ assert.equal(response.status,403,'Shared test persona remains restricted');assert.equal(response.headers.get('set-cookie'),null);assert.equal(response.headers.get('www-authenticate'),null);
+}
 const browser=await chromium.launch({headless:true});const captures=[];
 try{
  for(const width of [320,390,1440]){
-  const context=await browser.newContext({httpCredentials:{username:'qa',password:code},viewport:{width,height:width===1440?1000:844},reducedMotion:'reduce',serviceWorkers:'block'});
+  const context=await browser.newContext({viewport:{width,height:width===1440?1000:844},reducedMotion:'reduce',serviceWorkers:'block'});
   const page=await context.newPage();
   async function settle(){await page.evaluate(()=>document.fonts.ready);await page.evaluate(()=>window.scrollTo(0,0));await page.waitForTimeout(300);}
 
@@ -45,4 +52,4 @@ try{
  }
 }finally{await browser.close();}
 await writeFile('test-results/live/provenance.json',JSON.stringify({sha,health,origin,captures,runId:process.env.GITHUB_RUN_ID},null,2));
-console.log('Live identity, access protection and 27 rendered views verified; manual rendered approval remains required.');
+console.log('Live identity, public browsing, restricted test accounts and 27 rendered views verified; manual rendered approval remains required.');

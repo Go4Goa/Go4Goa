@@ -1,6 +1,6 @@
 # QA baseline status
 
-Updated 29 October 2026. Protected shared QA is live at https://go-goa-qa.vercel.app. See [hosted access and workflow](hosted-qa.md). The deployed application snapshot is `6baf926`; this is a testing environment, not a certified public resident launch.
+Updated 29 October 2026. Publicly viewable QA is live at https://go-goa-qa.vercel.app. The owner authorized removal of the site password and Vercel login. Shared test identities and private APIs remain restricted. See [hosted access and workflow](hosted-qa.md); current source and release evidence are on automation/release-records. This is a fictional preview, not a certified resident-account launch.
 
 ## Implemented
 
@@ -37,4 +37,4 @@ Updated 29 October 2026. Protected shared QA is live at https://go-goa-qa.vercel
 
 ## Roles and notifications
 
-Use separate browser profiles for resident, organizer and moderator tests. Local demo login remains restricted to non-production loopback. Hosted QA explicitly enables fictional test personas behind the shared password gate; phone verification and live SMS/email delivery are disabled there. Do not tunnel a local demo server to the internet. Phone/email verification and notification consent are separate. Notification API acceptance is not proof of delivery; delivery is tracked through provider callbacks.
+Use separate browser profiles for resident, organizer and moderator tests. Local demo login remains restricted to non-production loopback. Hosted QA explicitly enables fictional test personas through a credential-restricted test-account endpoint; public browsing has no password; phone verification and live SMS/email delivery are disabled there. Do not tunnel a local demo server to the internet. Phone/email verification and notification consent are separate. Notification API acceptance is not proof of delivery; delivery is tracked through provider callbacks.
