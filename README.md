@@ -2,7 +2,11 @@
 
 A mobile-first civic PWA for reporting issues and organizing community action in Goa.
 
-**QA baseline, not a production release.** Reporting, maps, events, private profiles, moderation and a Node/Postgres API are implemented. Local demo accounts use fictional data. Real phone verification, message delivery, hosted storage and a shared deployment still need configuration and validation.
+**QA baseline, not a production release.**
+
+Shared testing is available at https://go-goa-qa.vercel.app. Get the QA password from Zachary; see [hosted QA access and PR workflow](docs/hosted-qa.md).
+
+ Reporting, maps, events, private profiles, moderation and a Node/Postgres API are implemented. Local demo accounts use fictional data. Real phone verification, message delivery, live provider services still need configuration and validation.
 
 ## Start here
 

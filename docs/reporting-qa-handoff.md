@@ -8,11 +8,13 @@ You are the Reporting QA lead for GO-GOA, a standalone Goa civic PWA.
 
 Repository: https://github.com/actforgoa2026/Go4Goa
 
+For browser QA, use https://go-goa-qa.vercel.app with the private QA credentials from Zachary. See `docs/hosted-qa.md`. Local setup is only needed when investigating or fixing code.
+
 Your assignment is to test the Reporting feature and report actionable findings. Zachary and his assistant own general design, navigation, event creation and attendance. Do not redesign shared UI or modify event flows. Coordinate before touching shared authentication, API contracts or database migrations. Do not write to the separate ActForGoa or Dizko repositories.
 
-Read `README.md`, `CONTRIBUTING.md`, `docs/qa-status.md`, `docs/architecture.md` and `DESIGN.md`. Follow any applicable `AGENTS.md`. Use Node 24 and the documented local setup. Create a branch such as `qa/reporting-first-pass`; do not push directly to main. This is a local QA baseline, not a production app. Demo users and seeded reports are fictional. No live provider credentials are required.
+Read `README.md`, `CONTRIBUTING.md`, `docs/qa-status.md`, `docs/architecture.md` and `DESIGN.md`. Follow any applicable `AGENTS.md`. Use Node 24 and the documented local setup. Create a branch such as `qa/reporting-first-pass`; do not push directly to main. This is a protected QA baseline, not a public resident app. Demo users and seeded reports are fictional. No live provider credentials are required.
 
-First run `npm test`, `npm run test:integration` and `npm run build`. Record the commit and outcomes. Then test Reporting in a mobile-size browser and a desktop browser, with resident, moderator and signed-out views. Use fictional data and a harmless fixture photo. Never use a person's real phone, house location, identifying photo or number plate. Do not send live notifications.
+When investigating or changing code, run `npm test`, `npm run test:integration` and `npm run build` locally and record their outcomes. Browser-only QA can begin directly on the hosted URL. Record the tested commit, then test Reporting in a mobile-size browser and a desktop browser, with resident, moderator and signed-out views. Use fictional data and a harmless fixture photo. Never use a person's real phone, house location, identifying photo or number plate. Do not send live notifications.
 
 ## Test matrix
 

@@ -2,7 +2,7 @@ import { randomUUID } from 'node:crypto';
 import { pool,tx,audit } from '../server/db.ts';
 import { seal,publicPoint } from '../server/security.ts';
 import { config } from '../server/config.ts';
-if(!config.demo||config.production)throw new Error('Fictional seeds are development-only.');
+if(!config.demo||(config.production&&!config.qa))throw new Error('Fictional seeds require development or protected QA mode.');
 await tx(async db=>{
  if((await db.query('SELECT 1 FROM users_private WHERE demo=true LIMIT 1')).rowCount){console.log('Example data already exists.');return;}
  const ids:Record<string,string>={};for(const [role,username]of [['resident','mandovi_resident'],['organizer','coastal_neighbours'],['moderator','goa_reviewer']]){const id=randomUUID();ids[role]=id;await db.query('INSERT INTO users_private(id,role,demo) VALUES ($1,$2,true)',[id,role]);await db.query('INSERT INTO profiles VALUES ($1,$2)',[id,username]);}

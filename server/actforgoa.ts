@@ -20,7 +20,8 @@ export async function syncResources(fetcher:typeof fetch=fetch) {
  if(inFlight)return inFlight;
  inFlight=(async()=>{
   const lock=await pool.connect();try {
-   if(!(await lock.query('SELECT pg_try_advisory_lock(43104311) AS locked')).rows[0].locked)return {busy:true};
+   await lock.query('BEGIN');
+   if(!(await lock.query('SELECT pg_try_advisory_xact_lock(43104311) AS locked')).rows[0].locked)return {busy:true};
    for(const source of ['catalog','directory'] as const){
     const state=(await pool.query('SELECT * FROM sync_state WHERE source=$1',[source])).rows[0];
     try{
@@ -32,13 +33,16 @@ export async function syncResources(fetcher:typeof fetch=fetch) {
      const reader=response.body!.getReader();let bytes=0;const chunks:Uint8Array[]=[];while(true){const {done,value}=await reader.read();if(done)break;bytes+=value.length;if(bytes>20*1024*1024){await reader.cancel();throw new Error('Upstream response too large');}chunks.push(value);}
      const body=Buffer.concat(chunks).toString('utf8'),revision=hash(body);const records=normalizeFeed(source,JSON.parse(body),revision);if(!records.length)throw new Error('Empty snapshot rejected');
      await tx(async db=>{await db.query('UPDATE resources SET active=false WHERE id LIKE $1',['afg:'+source+':%']);
-      for(const r of records)await db.query(`INSERT INTO resources(id,source_id,kind,title,summary,topics,location,source_url,listing_url,source_label,verified_at,verification,revision,synced_at,active) VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12,$13,now(),true) ON CONFLICT(id) DO UPDATE SET kind=excluded.kind,title=excluded.title,summary=excluded.summary,topics=excluded.topics,location=excluded.location,source_url=excluded.source_url,listing_url=excluded.listing_url,source_label=excluded.source_label,verified_at=excluded.verified_at,verification=excluded.verification,revision=excluded.revision,synced_at=now(),active=true`,[r.id,r.sourceId,r.kind,r.title,r.summary,r.topics,r.location,r.sourceUrl,r.listingUrl,r.sourceLabel,r.verifiedAt,r.verification,r.revision]);
+      await db.query(`INSERT INTO resources(id,source_id,kind,title,summary,topics,location,source_url,listing_url,source_label,verified_at,verification,revision,synced_at,active)
+        SELECT id,"sourceId",kind,title,summary,topics,location,"sourceUrl","listingUrl","sourceLabel","verifiedAt",verification,revision,now(),true
+        FROM jsonb_to_recordset($1::jsonb) AS r(id text,"sourceId" text,kind text,title text,summary text,topics text[],location text,"sourceUrl" text,"listingUrl" text,"sourceLabel" text,"verifiedAt" text,verification text,revision text)
+        ON CONFLICT(id) DO UPDATE SET kind=excluded.kind,title=excluded.title,summary=excluded.summary,topics=excluded.topics,location=excluded.location,source_url=excluded.source_url,listing_url=excluded.listing_url,source_label=excluded.source_label,verified_at=excluded.verified_at,verification=excluded.verification,revision=excluded.revision,synced_at=now(),active=true`,[JSON.stringify(records)]);
       await db.query('UPDATE sync_state SET etag=$2,revision=$3,last_success=now(),last_error=NULL,record_count=$4 WHERE source=$1',[source,response.headers.get('etag'),revision,records.length]);await db.query(`INSERT INTO sync_runs(source,status,revision,records) VALUES ($1,'success',$2,$3)`,[source,revision,records.length]);
      });
     }catch(error){const message=error instanceof z.ZodError?'Upstream schema changed':error instanceof Error?error.message:'Sync failed';await pool.query('UPDATE sync_state SET last_error=$2 WHERE source=$1',[source,message]);await pool.query(`INSERT INTO sync_runs(source,status,error) VALUES ($1,'error',$2)`,[source,message]);}
    }
    return {ok:true};
-  }finally{await lock.query('SELECT pg_advisory_unlock(43104311)');lock.release();}
+  }finally{await lock.query('ROLLBACK');lock.release();}
  })().finally(()=>{inFlight=null;});return inFlight;
 }
 export const matchTerms:Record<Category,string[]>={trash:['waste','recycl','cleanup'],pothole:['public works','road','mobility'],streetlight:['electric','streetlight'],water:['water','public works'],electrical:['electric','emergency'],other:['civic','municipal','panchayat']};

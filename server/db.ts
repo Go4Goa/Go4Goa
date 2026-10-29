@@ -1,6 +1,6 @@
 import pg from 'pg';
 import { config } from './config.ts';
-export const pool = new pg.Pool({ connectionString: config.database, max: 8, connectionTimeoutMillis: 5000, idleTimeoutMillis: 10000 });
+export const pool = new pg.Pool({ connectionString: config.database, max: process.env.VERCEL ? 2 : 8, connectionTimeoutMillis: 10000, idleTimeoutMillis: 5000 });
 export type DB = Pick<pg.PoolClient, 'query'>;
 export async function tx<T>(fn: (db: DB) => Promise<T>): Promise<T> {
   const client = await pool.connect();
