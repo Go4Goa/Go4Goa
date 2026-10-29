@@ -2,11 +2,11 @@
 
 The established target is the protected `go-goa-qa` Vercel project at https://go-goa-qa.vercel.app. Its Vercel production alias serves shared QA, not the public resident launch. See `hosted-qa.md` and `cloud-pr-workflow.md` for the active release procedure. The requirements below govern a later public launch.
 
-Before deployment, finish the release gates in `qa-status.md`, name the privacy operator and set an audited moderator onboarding process. Use dedicated GO-GOA credentials. The sole approved reuse is the existing Google Places server key for hosted Go4Goa, explicitly authorized by Zachary on 29 October 2026; do not reuse other service credentials.
+Before deployment, finish the release gates in `qa-status.md`. Name the privacy operator. Set an audited moderator onboarding process. Use dedicated GO-GOA credentials. Zachary authorized two temporary exceptions on 29 October 2026. They cover the Google Places server key and the Watchdoggs Twilio Verify service. The Twilio exception covers the 30 October hackathon QA and first live test. Replace both projects' Twilio credentials after the test. Test each replacement before you revoke the shared credentials.
 
 Required: Node 24 runtime, Postgres/PostGIS, private object storage, an HTTPS origin, MapTiler, Twilio Verify. Resend and Twilio Messaging are optional until notification delivery is enabled and tested.
 
-Set `NODE_ENV=production`, `GO_GOA_DEMO=false`, `DATABASE_URL`, `DATA_KEY` (32-byte hex), `PUBLIC_ORIGIN`, the S3 settings, `MAPTILER_KEY`, and Twilio Verify settings from `.env.example` through the host's secret manager. Keep DATA_KEY backed up securely; losing it makes encrypted records unreadable. Use a separate least-privilege application database role after migrations.
+Set the required values from `.env.example` through the host secret manager. Set `GO_GOA_PHONE_VERIFICATION=true` to enable phone sign-in. Keep `DATA_KEY` in a secure backup. A lost key makes encrypted records unreadable. Use a separate application database role after migrations. Give this role only the required permissions.
 
 Build with `npm ci` and `npm run build`; apply `npm run db:setup` with the migration role. Do not seed a production database. Run `npm start` as the web process and `npm run worker` as a separate worker. Health is `/api/health`. Configure HTTPS termination, backup/restore, object-retention/deletion retries and monitoring. Current proxy-IP handling is conservative and must be reviewed for the chosen host; do not broadly trust arbitrary forwarded headers.
 
