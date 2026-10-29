@@ -1,24 +1,9 @@
-/* Arc's shipped foundation values, scoped to this editor and its portal menus.
-   The app theme had replaced these with square 4px fields and heavy labels.
-   Component styles and motion remain the official registry source. */
-.event-create,
-body:has(.event-create) [data-radix-popper-content-wrapper] {
- --surface:var(--neutral-0); --surface-raised:var(--neutral-0); --surface-muted:var(--neutral-2);
- --foreground:var(--neutral-11); --text-secondary:var(--neutral-8); --text-muted:var(--neutral-8);
- --border:oklch(93.5% 0 0); --border-strong:oklch(82% 0 0);
- --radius-control:1.125rem; --radius-panel:1.625rem; --radius-surface:2.125rem;
- --control-height-sm:2.25rem; --control-height-md:2.75rem; --control-height-lg:3.125rem;
- --font-body:"Inter Variable",sans-serif; --font-display:"Geist Variable",sans-serif;
- --weight-label:500; --text-sm:.875rem; --text-base:1rem; --text-xl:1.375rem;
- --accent:oklch(33% 0 0); --accent-strong:oklch(24% 0 0);
- --focus-outline:var(--foreground);
- font-family:var(--font-body); color:var(--foreground);
-}
-.event-create { max-width:1120px; margin:auto; padding:28px 40px 40px; }
+/* The composer uses the shared app theme; poster artwork keeps its own palette. */
+.event-create { max-width:1120px; margin:auto; padding:var(--page-padding-top) var(--page-gutter) 40px; }
 .event-create-top { display:flex; justify-content:space-between; align-items:center; margin-bottom:32px; color:var(--text-secondary); font-size:13px; }
 .event-create-top .back-link { margin:0; }
-.event-composer-layout { display:grid; grid-template-columns:minmax(0,1.35fr) minmax(0,1fr); gap:72px; align-items:start; }
-.event-composer { display:grid; gap:30px; min-width:0; }
+.event-composer-layout { display:grid; grid-template-columns:minmax(0,1.35fr) minmax(0,1fr); gap:48px; align-items:start; }
+.event-composer { display:grid; gap:32px; min-width:0; }
 .event-name-editor { --text-xl:clamp(2rem,3.4vw,3rem); padding:0 0 20px; border-bottom:1px solid var(--line); }
 .event-fieldset { min-width:0; margin:0; padding:0; border:0; }
 .event-fieldset legend { margin-bottom:12px; font-size:14px; font-weight:500; }
@@ -54,6 +39,6 @@ body:has(.event-create) [data-radix-popper-content-wrapper] {
 .event-repeat-fields { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:12px; }
 .event-preview-dates { margin-top:20px; font-size:13px; }
 .event-preview-dates ol { padding-left:20px; line-height:1.8; }
-@media(max-width:900px){.event-composer-layout{gap:36px}.event-create{padding-inline:28px}}
-@media(max-width:700px){.event-create{padding:18px 20px 30px}.event-create-top{margin-bottom:24px}.event-composer-layout{grid-template-columns:minmax(0,1fr);gap:40px}.event-composer{gap:26px}.event-name-editor{--text-xl:2.25rem}.event-live-preview{position:static;max-width:440px;width:100%}.event-section-heading>span{font-size:11px}.event-create-footer>button{width:100%}}
-@media(max-width:380px){.event-create{padding-inline:16px}.event-name-editor{--text-xl:2rem}.event-date-row{grid-template-columns:minmax(0,1fr)}.event-section-heading{flex-wrap:wrap;gap:4px}.event-activity-options{gap:6px}}
+@media(max-width:900px){.event-composer-layout{gap:36px}}
+@media(max-width:700px){.event-create{padding:var(--page-padding-top) var(--page-gutter) 30px}.event-create-top{margin-bottom:24px}.event-composer-layout{grid-template-columns:minmax(0,1fr);gap:40px}.event-composer{gap:28px}.event-name-editor{--text-xl:2.25rem}.event-live-preview{position:static;max-width:440px;width:100%}.event-section-heading>span{font-size:11px}.event-create-footer>button{width:100%}}
+@media(max-width:380px){.event-name-editor{--text-xl:2rem}.event-date-row{grid-template-columns:minmax(0,1fr)}.event-section-heading{flex-wrap:wrap;gap:4px}.event-activity-options{gap:6px}}

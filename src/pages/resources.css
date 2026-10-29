@@ -1,5 +1,5 @@
-.page.resources-page { max-width: 1200px; overflow-anchor: none; }
-.page.resources-page.resource-home { max-width: 800px; }
+.page.resources-page { max-width: var(--page-width); overflow-anchor: none; }
+.page.resources-page.resource-home { max-width: var(--page-width); }
 .resource-heading { display: grid; gap: 0; margin-bottom: 16px; }
 .resource-title-row { display: flex; align-items: center; justify-content: space-between; gap: 16px; }
 .resource-title-row h1 { font-size: 32px; }
