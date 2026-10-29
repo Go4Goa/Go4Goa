@@ -1,0 +1,14 @@
+{
+  "recordedAt": "2026-10-29T15:28:30.938Z",
+  "type": "owner_access_decision",
+  "repository": "actforgoa2026/Go4Goa",
+  "ownerRequest": "Just make the site public. Don't password protect it. My colleague can't even get it. Can't even look at the site.",
+  "policy": "The existing Go4Goa URL must open without a site password, Vercel login, membership requirement or login redirect. Do not reintroduce site-wide protection without a later explicit owner instruction.",
+  "target": "https://go-goa-qa.vercel.app",
+  "publicChecks": "Anonymous public page and API GETs return 200 with no WWW-Authenticate challenge or redirect; rendered map/data load in a fresh unauthenticated browser.",
+  "privateChecks": "Shared resident/organizer/moderator test-account creation requires the existing encrypted QA credential and denies anonymous requests with403/no cookie/no browser challenge. Private account, moderation and private media access remain authorized by session/roles. Fictional QA and disabled notification providers remain.",
+  "scope": "Access correction only. Approved visual design and existing safe feature ownership boundaries are unchanged.",
+  "supersedes": "Site-wide password/401/Vercel-login preservation clauses in the original handoff, runbooks, local fallback and cloud monitor. All other release, source review, design, privacy and verification gates remain mandatory.",
+  "implementationPR": "https://github.com/actforgoa2026/Go4Goa/pull/9",
+  "releaseEvidence": "Record separately after deployment verification."
+}
