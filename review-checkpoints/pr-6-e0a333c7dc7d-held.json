@@ -1,0 +1,92 @@
+{
+  "schemaVersion": 1,
+  "kind": "layalabs-pr-review-checkpoint",
+  "disposition": "held",
+  "recordedAt": "2026-10-29T15:20:00Z",
+  "automation": {
+    "title": "Review Layalabs Reporting PRs with active cloud release authority",
+    "eventDeliveryId": "edd03670-d3ab-11f1-838e-4e0d5fd939a2",
+    "event": "pull_request.synchronize",
+    "supersedesCheckpoint": "review-checkpoints/pr-6-8f0baccf7de0-held.json"
+  },
+  "pullRequest": {
+    "number": 6,
+    "url": "https://github.com/actforgoa2026/Go4Goa/pull/6",
+    "author": {
+      "login": "layalabs",
+      "id": 261854875
+    },
+    "head": "e0a333c7dc7dcb9db86dc0c6134bf93aca405e5e",
+    "base": "912d7416335687fa806f26042fc0f8dcdf5940eb",
+    "integratedCandidate": "8e48e9ee22191c67651491ba346ac1213a847647",
+    "draft": false
+  },
+  "reviewedSurface": {
+    "changedFiles": [
+      ".env.example",
+      "db/009-ai-review.sql",
+      "docs/architecture.md",
+      "docs/moderation-playbook.md",
+      "package-lock.json",
+      "package.json",
+      "scripts/setup.ts",
+      "server/ai-review.ts",
+      "server/incident-actions.ts",
+      "server/incidents.ts",
+      "server/worker.ts",
+      "src/pages/Admin.tsx",
+      "src/pages/Privacy.tsx",
+      "src/pages/Report.tsx",
+      "src/pages/ReportDetail.tsx",
+      "tests/ai-review.test.ts",
+      "tests/api.integration.ts"
+    ],
+    "visualReview": "blocked: exact successful design-evidence run and provenance do not exist because source-review prevented execution"
+  },
+  "sourceReview": {
+    "receiptWritten": false,
+    "workflowRerun": false,
+    "executionAuthorized": false,
+    "currentRun": 40900146731,
+    "gate": "failed",
+    "checks": {
+      "sourceReview": "failure",
+      "verify": "skipped",
+      "visualEvidence": "skipped"
+    },
+    "evidence": "No receipt reviews/pr-6.json exists on automation/source-review for this head/base. The trusted gate held execution."
+  },
+  "holds": [
+    {
+      "gate": "scope-and-coordination",
+      "conflict": "PR #6 is not safe Reporting FEATURE/UX. It changes the database, shared API, report lifecycle, worker/background execution, administrative moderation UI and provider configuration. CONTRIBUTING.md requires coordination for shared API, authentication and database changes. Issue #5 has no Zachary-approved coordination or comments."
+    },
+    {
+      "gate": "owner-approved-moderation-and-privacy-authority",
+      "conflict": "Current PRODUCT.md and reporting QA authority require reports to move through moderation before publication, with moderator inspection, redaction and photo-safety confirmation. PR #6 replaces that with external-model publish/merge/reject outcomes and reduces moderators to escalation handling."
+    },
+    {
+      "gate": "external-provider-and-data-boundary",
+      "conflict": "The new revision sends the private report description and, for exact reports, the public location label to Anthropic. It requires ANTHROPIC_API_KEY/GO_GOA_AI_REVIEW and an external provider. Current approved architecture records the opposite boundary for labels and has no Zachary-approved provider, retention, data-processing, security or deployment authority for this change."
+    },
+    {
+      "gate": "unresolved-security-and-correctness-risk",
+      "conflict": "The deterministic text flag holds only the publish path; decide() permits model-driven merge or rejection before the text flag is considered. Untrusted report text remains in the model prompt, so the proposed guard does not resolve model-influenced report disposition risk."
+    },
+    {
+      "gate": "source-review-and-tests",
+      "conflict": "No current source-review receipt exists. The trusted run 40900146731 failed source-review and skipped verification and visual evidence. No contributor code was executed or tested in this run."
+    }
+  ],
+  "noActionTaken": [
+    "no contributor-code execution",
+    "no source-review receipt",
+    "no workflow rerun",
+    "no artifact review",
+    "no merge",
+    "no cloud-release update",
+    "no deployment",
+    "no GitHub comment or review"
+  ],
+  "resumeCondition": "A future matching event with cloud-accessible Zachary approval that expressly resolves scope, human moderation/privacy authority, third-party provider/data governance, and shared API/schema coordination. Re-fetch all SHAs, authority, checks and provenance before deciding whether a receipt is appropriate."
+}
