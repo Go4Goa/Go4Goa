@@ -1,0 +1,60 @@
+{
+  "schemaVersion": 1,
+  "kind": "layalabs-pr-review-checkpoint",
+  "disposition": "held",
+  "recordedAt": "2026-10-29T15:18:00Z",
+  "automation": {
+    "title": "Review Layalabs Reporting PRs with active cloud release authority",
+    "eventDeliveryId": "60279070-d3ab-11f1-9bd5-e5b354a163fb",
+    "event": "pull_request.opened",
+    "firstObservedMatchingEvent": true
+  },
+  "pullRequest": {
+    "number": 6,
+    "url": "https://github.com/actforgoa2026/Go4Goa/pull/6",
+    "author": {
+      "login": "layalabs",
+      "id": 261854875
+    },
+    "head": "8f0baccf7de011e5ce2fef482b2c9fd5b04e5e54",
+    "base": "912d7416335687fa806f26042fc0f8dcdf5940eb",
+    "integratedCandidate": "5cffebd295fe582565134aca184ea886a16254a7",
+    "draft": false
+  },
+  "sourceReview": {
+    "receiptWritten": false,
+    "workflowRerun": false,
+    "executionAuthorized": false,
+    "currentRun": 40899467542,
+    "gate": "failed",
+    "evidence": "source-gate.cjs reported: Awaiting cloud source review for this head and base. No candidate code executed."
+  },
+  "holds": [
+    {
+      "gate": "scope-and-coordination",
+      "conflict": "This is not safe Reporting FEATURE/UX: it adds automated external AI moderation, a new database table/migration, API and worker changes, Vercel configuration and provider-secret requirements. CONTRIBUTING.md requires coordination for shared API, authentication and database changes; Issue #5 contains no Zachary-approved coordination."
+    },
+    {
+      "gate": "owner-approved-moderation-and-privacy-authority",
+      "conflict": "Current PRODUCT.md says reports move through moderation before publication. Current docs/reporting-qa-handoff.md requires moderator inspection, redaction and photo-safety confirmation before publishing. Current docs/architecture.md says new reports remain private until moderation and blurred labels require moderator review/redaction. PR #6 proposes external AI publish/merge/reject decisions and acknowledges exact-location labels may become public without human review."
+    },
+    {
+      "gate": "source-review-and-tests",
+      "conflict": "No source-review receipt exists for this exact head/base; source-review failed and verify/visual-evidence were skipped. No PR code was executed or tested in this automation run."
+    },
+    {
+      "gate": "deployment-security",
+      "conflict": "The PR requires a new third-party Anthropic key and enabled background review behavior; no owner-approved security, provider, retention, deployment or release provenance authorizes publication."
+    }
+  ],
+  "noActionTaken": [
+    "no contributor-code execution",
+    "no source-review receipt",
+    "no workflow rerun",
+    "no merge",
+    "no cloud-release update",
+    "no deployment",
+    "no GitHub comment or review"
+  ],
+  "resumeCondition": "Only a new matching event for a changed PR, or cloud-accessible Zachary approval resolving the recorded scope, moderation/privacy, security and coordination conflicts. Re-fetch head/base and all gates before any receipt."
+}
