@@ -1,0 +1,7 @@
+{
+  "head": "d75f2007fd279f9a5c5605271f30ffe28ee8339d",
+  "base": "e2a1d622b3aac809ae687ecfb48fac7b7b008c1e",
+  "sourceReviewed": true,
+  "reviewedAt": "2026-10-29T18:41:17.275Z",
+  "review": "Owner explicitly requested review and conditional merge of PRs 13 and 14, preserving design and no sign-ins. PR 13 whole diff reviewed in clean isolated checkout: only docs/hosted-qa.md and docs/pr12-migration-vercel-release.md change; executable source, dependencies, workflows, auth, APIs and migrations are identical to base. Corrected instructions that would enable phone sign-in: GO_GOA_PHONE_VERIFICATION=false, automatic independent guest sessions, no site password or Vercel login. Preserved private-session/CSRF/moderator controls, required current-main/live-design reconciliation, actual baseline visual evidence, dedicated test DB, migration backup, expected-old-SHA release guard, and separate provider/release authorization. This receipt authorizes isolated candidate CI execution only. Merge depends on current passing checks and final head/base/review recheck. No deployment authorized by this receipt. PR 14 remains held: shared header design change, removal of no-gamified-rankings policy, privacy text inconsistency and category ranking truncation defect."
+}
