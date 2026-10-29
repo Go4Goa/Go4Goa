@@ -1,0 +1,105 @@
+{
+  "schemaVersion": 1,
+  "kind": "layalabs-pr-review-checkpoint",
+  "disposition": "held",
+  "recordedAt": "2026-10-29T16:10:00Z",
+  "automation": {
+    "title": "Review Layalabs Reporting PRs with active cloud release authority",
+    "eventDeliveryId": "06f062e0-d3b3-11f1-8b2e-2767c32c0468",
+    "event": "pull_request.opened"
+  },
+  "pullRequest": {
+    "number": 12,
+    "url": "https://github.com/actforgoa2026/Go4Goa/pull/12",
+    "author": {
+      "login": "layalabs",
+      "id": 261854875
+    },
+    "head": "b27e367ac4a29e3f375781d124e229a265b8e93f",
+    "base": "1f815793e54550266e2f724421b2255b179d6c89",
+    "integratedCandidate": "a83fcca748fed67415613391740cb16c22ae4832",
+    "draft": false
+  },
+  "prerequisite": {
+    "requiredPublicGuestReleaseRecord": "automation/release-records/releases/2026-10-29-public-guest.json",
+    "observed": "missing (404)",
+    "consequence": "Temporary owner-directed merge and deployment hold remains active."
+  },
+  "reviewedSurface": {
+    "changedFiles": [
+      ".env.example",
+      "db/009-ai-review.sql",
+      "docs/architecture.md",
+      "docs/deployment-runbook.md",
+      "docs/hosted-qa.md",
+      "docs/moderation-playbook.md",
+      "package-lock.json",
+      "package.json",
+      "scripts/setup.ts",
+      "server/ai-review.ts",
+      "server/app.ts",
+      "server/auth.ts",
+      "server/config.ts",
+      "server/incident-actions.ts",
+      "server/incidents.ts",
+      "server/twilio-credentials.ts",
+      "server/twilio-verify.ts",
+      "server/worker.ts",
+      "src/pages/Admin.tsx",
+      "src/pages/Privacy.tsx",
+      "src/pages/Report.tsx",
+      "src/pages/ReportDetail.tsx",
+      "tests/ai-review.test.ts",
+      "tests/api.integration.ts",
+      "tests/twilio-verify.test.ts"
+    ],
+    "visualReview": "blocked: no source-review authorization and no exact successful visual artifact"
+  },
+  "sourceReview": {
+    "receiptWritten": false,
+    "workflowRerun": false,
+    "executionAuthorized": false,
+    "currentRun": 40908671413,
+    "gate": "failed",
+    "checks": {
+      "sourceReview": "failure",
+      "verify": "skipped",
+      "visualEvidence": "skipped"
+    },
+    "evidence": "No receipt reviews/pr-12.json exists on automation/source-review for this head/base."
+  },
+  "holds": [
+    {
+      "gate": "temporary-public-guest-release-hold",
+      "conflict": "The mandated public-guest release record does not exist, so no merge or deployment may race manual PR9."
+    },
+    {
+      "gate": "no-sign-in-owner-direction",
+      "conflict": "PR #12 enables guarded phone sign-in/Twilio Verify. This conflicts with the current cloud-accessible owner direction requiring no sign-in UI, phone/email onboarding, persona chooser or site-wide protection."
+    },
+    {
+      "gate": "eligible-scope-and-shared-security",
+      "conflict": "This is not safe Reporting FEATURE/UX. It modifies authentication, secret/provider handling, database schema, report lifecycle, worker behavior, moderation UI and privacy text."
+    },
+    {
+      "gate": "prior-unresolved-AI-moderation-authority",
+      "conflict": "It reintroduces the held automatic external AI publish/merge/reject design, including external handling of private report material, without Zachary-approved moderation, privacy, retention, provider or release authority. Issues #5 and #7 have no owner coordination comments."
+    },
+    {
+      "gate": "source-review-and-tests",
+      "conflict": "The source-review gate failed and verify/visual evidence were skipped. Contributor-reported checks and real-provider calls are not cloud release evidence."
+    }
+  ],
+  "noActionTaken": [
+    "no contributor-code execution",
+    "no source-review receipt",
+    "no workflow rerun",
+    "no provider call",
+    "no artifact review",
+    "no merge",
+    "no cloud-release update",
+    "no deployment",
+    "no GitHub comment or review"
+  ],
+  "resumeCondition": "First, a verified public-guest release record must exist with source/design/access evidence. Then a future matching event still requires fresh owner approval resolving the no-sign-in conflict and all AI moderation/provider/security/shared-schema holds; re-fetch all SHAs, authority, checks and provenance before deciding whether a receipt is appropriate."
+}
