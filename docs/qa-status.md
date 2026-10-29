@@ -1,6 +1,6 @@
 # QA baseline status
 
-Prepared 29 October 2026. This is source code for local collaborative QA. It has not been deployed publicly or certified production-ready.
+Updated 29 October 2026. Protected shared QA is live at https://go-goa-qa.vercel.app. See [hosted access and workflow](hosted-qa.md). The deployed application snapshot is `6baf926`; this is a testing environment, not a certified public resident launch.
 
 ## Implemented
 
@@ -16,8 +16,10 @@ Prepared 29 October 2026. This is source code for local collaborative QA. It has
 
 - TypeScript check and production client/PWA build pass.
 - Six core tests: encryption/privacy cell, public DTO isolation, EXIF removal and image bounds, source adapter contract/provenance, ICS formatting, input validation.
+- One hosted-access test verifies that the shared password gate fails closed.
 - Four isolated Postgres/API scenarios: access/CSRF/roles; report upload, idempotency, privacy, moderation, redaction and immutable points; simultaneous RSVP capacity, check-in/bookmarks and approval; upstream schema failure retaining cached resources.
 - Local live Act For Goa sync completed during development.
+- Hosted smoke checks passed for the access gate, sessions, private photo storage, pending-report privacy, blurred public coordinates, submission retry, moderation, points, RSVP, bookmarks, calendar export and cached resources. The dedicated Neon database uses PostGIS; private photos use Vercel Blob. Runtime dependency audit reports zero vulnerabilities.
 - Map/navigation rendered at 390×844 and 1440×1000. Independent Impeccable review accepted that scope. This is not a review of every screen.
 
 ## Remaining QA and production gates
@@ -25,7 +27,7 @@ Prepared 29 October 2026. This is source code for local collaborative QA. It has
 - Partner: Reporting browser/device QA using `reporting-qa-handoff.md`. Automated tests do not cover every failure, duplicate-merge lifecycle, deletion or camera/browser combination.
 - Our team: general design, event creation and attendance browser QA.
 - Real Twilio Verify, Resend delivery, SMS delivery/opt-out and signed webhook validation need dedicated provider accounts, credentials and end-to-end testing. Local demo never sends notifications.
-- Private S3-compatible storage, production map/geocoding/static previews, HTTPS hosting and PostGIS deployment need provisioning and validation. Current queries also support local Haversine fallback; production index/query performance needs load testing.
+- QA HTTPS hosting, private photo storage and PostGIS are provisioned and verified. A separate public-launch environment, production map/geocoding/static previews and index/query load testing remain necessary.
 - Service worker and manifest build successfully; installation, offline lifecycle, updates and weak-network behavior need actual browser/device QA. Shell caching does not make private records or map tiles available offline.
 - Drafts are memory-only and clear when leaving Reporting. Automatic durable offline submission is not implemented.
 - Resource corrections currently support attaching matches; removal/exclusion and expanded matching rules remain follow-up work. Contact details are linked to authoritative source pages instead of republishing raw personal contact fields.
@@ -35,4 +37,4 @@ Prepared 29 October 2026. This is source code for local collaborative QA. It has
 
 ## Roles and notifications
 
-Use separate browser profiles for resident, organizer and moderator tests. The local demo login is enabled only in non-production on loopback. Do not tunnel a demo server to the internet. Phone/email verification and notification consent are separate. Notification API acceptance is not proof of delivery; delivery is tracked through provider callbacks.
+Use separate browser profiles for resident, organizer and moderator tests. Local demo login remains restricted to non-production loopback. Hosted QA explicitly enables fictional test personas behind the shared password gate; phone verification and live SMS/email delivery are disabled there. Do not tunnel a local demo server to the internet. Phone/email verification and notification consent are separate. Notification API acceptance is not proof of delivery; delivery is tracked through provider callbacks.
