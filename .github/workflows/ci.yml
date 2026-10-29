@@ -5,6 +5,11 @@ on:
   pull_request_target:
     types: [opened, synchronize, reopened, ready_for_review]
   workflow_dispatch:
+    inputs:
+      pr_number:
+        description: Optional PR number for commissioning an integrated candidate
+        required: false
+        type: string
 permissions:
   contents: read
 concurrency:
