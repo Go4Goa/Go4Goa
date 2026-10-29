@@ -1,0 +1,4 @@
+import { defineConfig } from 'vite';
+import react from '@vitejs/plugin-react';
+import { VitePWA } from 'vite-plugin-pwa';
+export default defineConfig({plugins:[react(),VitePWA({registerType:'prompt',injectRegister:null,includeAssets:['icon.svg','icon-192.png','icon-512.png'],manifest:{name:'GO-GOA',short_name:'GO-GOA',description:'Report civic issues and join local action.',theme_color:'#f7f6ee',background_color:'#f7f6ee',display:'standalone',start_url:'/',scope:'/',icons:[{src:'/icon-192.png',sizes:'192x192',type:'image/png',purpose:'any'},{src:'/icon-512.png',sizes:'512x512',type:'image/png',purpose:'any maskable'}]},workbox:{globPatterns:['**/*.{js,css,html,woff2,png,svg}'],navigateFallback:'/index.html',navigateFallbackDenylist:[/^\/api\//],runtimeCaching:[],cleanupOutdatedCaches:true,clientsClaim:true}})],server:{port:4310,strictPort:true,proxy:{'/api':'http://127.0.0.1:4311'}},build:{chunkSizeWarningLimit:600}});

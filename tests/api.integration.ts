@@ -1,0 +1,118 @@
+import { after, before, test } from 'node:test';
+import assert from 'node:assert/strict';
+import { randomUUID } from 'node:crypto';
+import type { Server } from 'node:http';
+import sharp from 'sharp';
+import { createApp } from '../server/app.ts';
+import { pool } from '../server/db.ts';
+import { config } from '../server/config.ts';
+import { hash } from '../server/security.ts';
+import { syncResources } from '../server/actforgoa.ts';
+import { queueUpdate } from '../server/events.ts';
+
+if(new URL(config.database).pathname!=='/go_goa_test') throw new Error('Refusing integration tests outside go_goa_test.');
+let server:Server, base:string;
+type Actor={id:string;cookie:string;csrf:string};
+let resident:Actor,other:Actor,organizer:Actor,moderator:Actor;
+async function actor(role:string):Promise<Actor> {
+  const id=randomUUID(),token=randomUUID(),csrf=randomUUID();
+  await pool.query('INSERT INTO users_private(id,role,demo) VALUES ($1,$2,true)',[id,role]);
+  await pool.query('INSERT INTO profiles(id,username) VALUES ($1,$2)',[id,'qa_'+id.replaceAll('-','').slice(0,16)]);
+  await pool.query('INSERT INTO sessions(token_hash,user_id,csrf) VALUES ($1,$2,$3)',[hash(token),id,csrf]);
+  return {id,cookie:'go_goa_session='+token,csrf};
+}
+async function call(path:string,method='GET',body?:unknown,who?:Actor,extra:Record<string,string>={}) {
+  return fetch(base+path,{method,headers:{origin:config.origin,...(who?{cookie:who.cookie,'x-csrf-token':who.csrf}:{}),
+    ...(body&&! (body instanceof FormData)?{'content-type':'application/json'}:{}),...extra},
+    body:body instanceof FormData?body:body?JSON.stringify(body):undefined});
+}
+before(async()=>{
+  server=createApp().listen(0,'127.0.0.1'); await new Promise<void>(r=>server.once('listening',r));
+  base='http://127.0.0.1:'+(server.address() as {port:number}).port;
+  [resident,other,organizer,moderator]=await Promise.all(['resident','resident','organizer','moderator'].map(actor));
+});
+after(async()=>{await new Promise<void>((r,j)=>server.close(e=>e?j(e):r()));await pool.end();});
+
+test('authentication, CSRF and role guards reject unauthorized mutations',async()=>{
+  assert.equal((await call('/api/account')).status,401);
+  assert.equal((await call('/api/admin/incidents','GET',undefined,resident)).status,403);
+  assert.equal((await call('/api/auth/preferences','PATCH',{sms:false,email:false},resident,{'x-csrf-token':''})).status,403);
+  assert.equal((await call('/api/auth/preferences','PATCH',{sms:false,email:false},resident,{origin:'https://attacker.example'})).status,403);
+  assert.equal((await call('/api/auth/preferences','PATCH',{sms:true,email:false},resident)).status,400);
+});
+
+test('photo report stays private until reviewed, retry is idempotent and points cannot be duplicated or edited',async()=>{
+  const photo=await sharp({create:{width:100,height:80,channels:3,background:'#667744'}}).jpeg().toBuffer();
+  const draft={category:'trash',description:'Private home landmark',locationLabel:'Private home landmark',
+    point:{lat:15.482731,lng:73.819274},privacy:'blurred',alt:'Private home landmark'};
+  const form=()=>{const f=new FormData();f.set('report',JSON.stringify(draft));f.set('photo',new Blob([new Uint8Array(photo)],{type:'image/jpeg'}),'fixture.jpg');return f;};
+  const key=randomUUID();
+  const accepted=await call('/api/incidents','POST',form(),resident,{'idempotency-key':key});
+  assert.equal(accepted.status,201);const {id}=await accepted.json() as {id:string};
+  const retry=await call('/api/incidents','POST',form(),resident,{'idempotency-key':key});
+  assert.equal(retry.status,200);assert.equal((await retry.json() as {id:string}).id,id);
+  assert.equal((await call('/api/incidents/'+id)).status,404);
+  const own=await (await call('/api/incidents/'+id,'GET',undefined,resident)).json() as any;
+  assert.deepEqual(own.incident.point,{lat:15.485,lng:73.815});
+  assert.ok(!JSON.stringify(own).includes('Private home'));
+  assert.equal((await call(own.incident.photo)).status,404);
+  const review=await (await call('/api/admin/incidents/'+id,'GET',undefined,moderator)).json() as any;
+  assert.deepEqual(review.privatePoint,draft.point);
+  const update={status:'verified',version:1,reason:'Photo checked for personal details',description:'Waste needs attention',
+    locationLabel:'Panaji area',responsibleBody:null,photoSafe:true};
+  assert.equal((await call('/api/admin/incidents/'+id,'PATCH',update,moderator)).status,200);
+  const publicReport=await (await call('/api/incidents/'+id)).json() as any;
+  assert.deepEqual(publicReport.incident.point,{lat:15.485,lng:73.815});
+  assert.equal((await call(own.incident.photo)).status,200);
+  assert.equal((await call('/api/admin/incidents/'+id,'PATCH',update,moderator)).status,409);
+  assert.equal((await call('/api/admin/incidents/'+id,'PATCH',{...update,version:2},moderator)).status,200);
+  const ledger=(await pool.query('SELECT * FROM points_ledger WHERE user_id=$1 AND source_id=$2',[resident.id,id])).rows;
+  assert.equal(ledger.length,1);assert.equal(ledger[0].points,10);
+  await assert.rejects(()=>pool.query('UPDATE points_ledger SET points=999 WHERE id=$1',[ledger[0].id]),/Append-only/);
+  await assert.rejects(()=>pool.query('DELETE FROM audit_log WHERE target_id=$1',[id]),/Append-only/);
+  assert.equal((await call('/api/admin/incidents/'+id+'/privacy','POST',{version:3,reason:'Cannot undo reporter privacy',precision:'exact'},moderator)).status,403);
+  assert.equal((await call('/api/admin/incidents/'+id+'/photo/redact','POST',{version:3,reason:'Cover identifying sign',box:{x:0,y:0,width:.25,height:.25}},moderator)).status,200);
+  assert.equal((await call('/api/incidents/'+id)).status,404);
+  assert.equal((await call(own.incident.photo)).status,404);
+});
+
+test('RSVP locking prevents oversubscription; check-in and bookmarks appear on the private profile',async()=>{
+  const input={title:'QA cleanup',description:'Fictional cleanup for integration testing',activity:'cleanup_walk',
+    point:{lat:15.49,lng:73.82},locationLabel:'Panaji',meetup:'Meet beside the public gate',
+    startsAt:new Date(Date.now()+30*60000).toISOString(),endsAt:new Date(Date.now()+90*60000).toISOString(),capacity:1,materials:''};
+  const created=await call('/api/events','POST',input,organizer);assert.equal(created.status,201);
+  const {id}=await created.json() as {id:string};
+  const responses=await Promise.all([resident,other].map(a=>call('/api/events/'+id+'/rsvp','POST',{email:false,sms:false},a)));
+  assert.deepEqual(responses.map(r=>r.status).sort(),[200,409]);
+  const winner=responses[0].status===200?resident:other;
+  assert.equal((await call('/api/events/'+id+'/rsvp','POST',{email:false,sms:false},winner)).status,200);
+  assert.equal((await call('/api/events/'+id+'/check-in','POST',{userId:winner.id},organizer)).status,200);
+  assert.equal((await call('/api/events/'+id+'/check-in','POST',{userId:winner.id},organizer)).status,200);
+  assert.equal((await call('/api/account/bookmarks/'+id,'POST',{},winner)).status,200);
+  const profile=await (await call('/api/account','GET',undefined,winner)).json() as any;
+  assert.ok(profile.rsvps.some((e:any)=>e.id===id&&e.checkedIn));
+  assert.ok(profile.bookmarked.some((e:any)=>e.id===id));
+  assert.equal(profile.points.filter((p:any)=>p.reason==='event_attendance'&&p.source_id===id).length,1);
+  assert.match(await (await call('/api/events/'+id+'/calendar.ics')).text(),/BEGIN:VCALENDAR/);
+  assert.equal(await queueUpdate(pool,id,'Test','No unconsented messages',randomUUID()),0);
+  await call('/api/events/'+id+'/rsvp','DELETE',undefined,winner);
+  const loser=winner===resident?other:resident;
+  assert.equal((await call('/api/events/'+id+'/rsvp','POST',{email:false,sms:false},loser)).status,200);
+  const pending=await call('/api/events','POST',input,resident);
+  const pendingId=(await pending.json() as {id:string}).id;
+  assert.equal((await call('/api/events/'+pendingId)).status,404);
+  assert.equal((await call('/api/admin/events/'+pendingId+'/approve','POST',{reason:'Reviewed fictional event safety'},moderator)).status,200);
+  assert.equal((await call('/api/events/'+pendingId)).status,200);
+});
+
+test('source sync keeps the last good snapshot after upstream schema failure',async()=>{
+  const valid=(async(url:unknown)=>new Response(JSON.stringify(String(url).endsWith('catalog.json')?
+    [{id:'qa-guide',title:'Waste guide',kind:'resource'}]:{version:'qa',records:[{record_id:'qa-office',name:'Waste office',record_type:'organization'}]}),
+    {status:200,headers:{etag:'qa-revision','content-type':'application/json'}})) as typeof fetch;
+  await syncResources(valid);
+  const count=(await pool.query('SELECT count(*)::int AS n FROM resources WHERE active')).rows[0].n;
+  assert.ok(count>=2);
+  await syncResources((async()=>new Response('{"bad":"shape"}',{status:200})) as typeof fetch);
+  assert.equal((await pool.query('SELECT count(*)::int AS n FROM resources WHERE active')).rows[0].n,count);
+  assert.ok((await pool.query('SELECT * FROM sync_state')).rows.every(r=>r.last_error==='Upstream schema changed'));
+});

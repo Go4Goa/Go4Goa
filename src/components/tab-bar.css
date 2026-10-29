@@ -1,0 +1,72 @@
+/* Navigation material is deliberately distinct from the opaque content layer.
+   Reference: developer.apple.com/design/human-interface-guidelines/tab-bars */
+.tab-bar {
+  position: fixed;
+  z-index: 1100;
+  bottom: calc(10px + env(safe-area-inset-bottom, 0px));
+  left: 50%;
+  transform: translateX(-50%);
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  width: min(352px, calc(100% - 32px));
+  min-height: 64px;
+  padding: 5px;
+  border: 1px solid rgb(255 255 255 / 65%);
+  border-radius: 34px;
+  background: rgb(248 249 246 / 72%);
+  -webkit-backdrop-filter: blur(24px) saturate(150%);
+  backdrop-filter: blur(24px) saturate(150%);
+  box-shadow: 0 4px 20px rgb(18 36 27 / 12%), inset 0 1px 0 rgb(255 255 255 / 70%);
+  font-family: -apple-system, BlinkMacSystemFont, system-ui, sans-serif;
+}
+
+.tab-bar-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 3px;
+  min-width: 0;
+  min-height: 52px;
+  padding: 3px 6px;
+  border-radius: 28px;
+  color: #505651;
+  font-size: 11px;
+  line-height: 13px;
+  font-weight: 600;
+  letter-spacing: 0;
+  text-decoration: none;
+  -webkit-tap-highlight-color: transparent;
+  transition: background-color 160ms ease-out, color 160ms ease-out;
+}
+
+.tab-bar-icon { flex: none; }
+.tab-bar-item[aria-current="page"] {
+  color: var(--green);
+  background: rgb(30 55 43 / 9%);
+}
+.tab-bar-item:active { background: rgb(30 55 43 / 14%); }
+.tab-bar-item:focus-visible { outline: 2px solid var(--green); outline-offset: -2px; }
+
+@media (hover: hover) {
+  .tab-bar-item:hover { background: rgb(30 55 43 / 7%); }
+  .tab-bar-item[aria-current="page"]:hover { background: rgb(30 55 43 / 12%); }
+}
+
+@media (min-width: 761px), (orientation: landscape) and (max-height: 500px) {
+  .tab-bar { width: 424px; min-height: 52px; padding: 3px; bottom: 16px; }
+  .tab-bar-item { flex-direction: row; gap: 7px; min-height: 44px; font-size: 13px; line-height: 18px; }
+  .tab-bar-icon { width: 20px; height: 20px; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .tab-bar-item { transition: none; }
+}
+@media (prefers-reduced-transparency: reduce), (prefers-contrast: more) {
+  .tab-bar { background: #f8f9f6; -webkit-backdrop-filter: none; backdrop-filter: none; border-color: #a1aaa1; }
+  .tab-bar-item { color: #343c35; }
+  .tab-bar-item[aria-current="page"] { background: #dce3da; }
+}
+@supports not (backdrop-filter: blur(1px)) {
+  .tab-bar { background: #f8f9f6; }
+}

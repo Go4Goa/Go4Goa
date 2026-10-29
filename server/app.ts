@@ -1,0 +1,36 @@
+import express from 'express';
+import cookieParser from 'cookie-parser';
+import { resolve } from 'node:path';
+import { existsSync } from 'node:fs';
+import { z } from 'zod';
+import { config } from './config.ts';
+import { pool } from './db.ts';
+import { assertSameOrigin,fail,HttpError,rate,clientIp } from './security.ts';
+import { auth,loadAccount,requireModerator } from './auth.ts';
+import { incidents,moderation,mediaRoutes } from './incidents.ts';
+import { events,eventAdmin } from './events.ts';
+import { resourceRoutes } from './actforgoa.ts';
+import { account } from './account.ts';
+import { explore } from './explore.ts';
+import { notificationRoutes } from './notifications.ts';
+import { categories } from '../shared/model.ts';
+export function createApp() {
+ const app=express();app.disable('x-powered-by');
+ app.use((req,res,next)=>{res.set({'X-Content-Type-Options':'nosniff','Referrer-Policy':'strict-origin-when-cross-origin','X-Frame-Options':'DENY','Permissions-Policy':'camera=(self), geolocation=(self), microphone=()'});if(config.production)res.set({'Strict-Transport-Security':'max-age=31536000; includeSubDomains','Content-Security-Policy':"default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' blob: data:; font-src 'self'; connect-src 'self'; worker-src 'self'; manifest-src 'self'; object-src 'none'; frame-ancestors 'none'; base-uri 'self'; form-action 'self'"});next();});
+ app.use('/api',async(req,res,next)=>{res.set('Cache-Control','no-store');try{if(!['GET','HEAD'].includes(req.method)&&!['/notifications/twilio-status','/notifications/resend-status'].includes(req.path))assertSameOrigin(req);await rate('api:'+clientIp(req),240,60);next();}catch(e){next(e);}});
+ app.use('/api',cookieParser(),loadAccount);
+ app.use('/api/incidents',express.raw({type:'multipart/form-data',limit:'11mb'}));
+ app.use('/api/notifications/resend-status',express.raw({type:'application/json',limit:'256kb'}));
+ app.use(express.json({limit:'32kb'}),express.urlencoded({extended:false,limit:'32kb'}));
+ app.get('/api/health',async(_req,res)=>{await pool.query('SELECT 1');res.json({ok:true,mode:config.demo?'local-demo':'live'});});
+ app.get('/api/config',async(_req,res)=>{const enabled=(await pool.query('SELECT id,label,group_name FROM taxonomy WHERE enabled')).rows;res.json({demo:config.demo,phoneVerification:!!(config.verifySid&&config.twilioSid&&config.twilioToken),email:!!(config.resend&&config.emailFrom),sms:!!config.messagingSid,categories:categories.filter(c=>enabled.some(e=>e.id===c.id)).map(c=>({...c,label:enabled.find(e=>e.id===c.id).label})),map:{tiles:config.mapKey?'/api/maps/tiles/{z}/{x}/{y}':'https://tile.openstreetmap.org/{z}/{x}/{y}.png',attribution:config.mapKey?'© MapTiler © OpenStreetMap contributors':'© OpenStreetMap contributors'}});});
+ app.use('/api/auth',auth);app.use('/api/incidents',incidents);app.use('/api/media',mediaRoutes);app.use('/api/events',events);app.use('/api/explore',explore);app.use('/api/resources',resourceRoutes);app.use('/api/account',account);app.use('/api/notifications',notificationRoutes);app.use('/api/admin',moderation,eventAdmin);
+ app.get('/api/admin/operations',requireModerator,async(_req,res)=>res.json({sync:(await pool.query('SELECT * FROM sync_state')).rows,runs:(await pool.query('SELECT * FROM sync_runs ORDER BY id DESC LIMIT 20')).rows,audit:(await pool.query('SELECT action,target_id,reason,created_at FROM audit_log ORDER BY id DESC LIMIT 50')).rows}));
+ app.get('/api/maps/tiles/:z/:x/:y',async(req,res)=>{if(!config.mapKey)fail(503,'Map provider is not configured.');const zoom=z.coerce.number().int().min(0).max(19).parse(req.params.z),x=z.coerce.number().int().min(0).max(2**zoom-1).parse(req.params.x),y=z.coerce.number().int().min(0).max(2**zoom-1).parse(req.params.y);const response=await fetch(`https://api.maptiler.com/maps/streets-v2/256/${zoom}/${x}/${y}.png?key=${encodeURIComponent(config.mapKey)}`,{signal:AbortSignal.timeout(10000)});if(!response.ok)fail(502,'Map tile unavailable.');res.set({'Cache-Control':'public, max-age=86400','Content-Type':'image/png'}).send(Buffer.from(await response.arrayBuffer()));});
+ app.get('/api/maps/search',async(req,res)=>{const q=z.string().trim().min(2).max(100).parse(req.query.q);await rate('geocode:'+clientIp(req),20,60);if(!config.mapKey)fail(503,'Use a landmark and move the pin. Place search is not configured.');const params=new URLSearchParams({key:config.mapKey,bbox:'73.6,14.8,74.4,15.85',limit:'5'});const r=await fetch(`https://api.maptiler.com/geocoding/${encodeURIComponent(q)}.json?${params}`,{signal:AbortSignal.timeout(10000)});if(!r.ok)fail(502,'Place search is unavailable.');const j=await r.json() as {features:{id:string;place_name:string;center:number[]}[]};res.json({places:j.features.map(f=>({id:f.id,label:f.place_name,point:{lng:f.center[0],lat:f.center[1]}}))});});
+ app.get('/api/maps/static',async(req,res)=>{if(!config.mapKey)fail(503,'Static previews are not configured.');const lat=z.coerce.number().min(14.8).max(15.85).parse(req.query.lat),lng=z.coerce.number().min(73.6).max(74.4).parse(req.query.lng);const r=await fetch(`https://api.maptiler.com/maps/streets-v2/static/${lng},${lat},13/600x300.png?key=${encodeURIComponent(config.mapKey)}`,{signal:AbortSignal.timeout(10000)});if(!r.ok)fail(502,'Map preview unavailable.');res.type('png').send(Buffer.from(await r.arrayBuffer()));});
+ app.use('/api',(_req,_res)=>fail(404,'This endpoint does not exist.'));
+ const dist=resolve('dist');if(existsSync(dist)){app.use(express.static(dist,{maxAge:0,dotfiles:'deny'}));app.get('/{*path}',(_req,res)=>res.sendFile(resolve(dist,'index.html')));}
+ app.use((error:unknown,_req:express.Request,res:express.Response,_next:express.NextFunction)=>{const e=error as {status?:number;code?:string;type?:string};const status=error instanceof z.ZodError?400:e.code==='23505'?409:e.type==='entity.too.large'?413:e.status||500;const message=error instanceof z.ZodError?error.issues[0]?.message:e.code==='23505'?'This username or record already exists.':error instanceof HttpError||e.status?String((error as Error).message):'Something went wrong. Your data has not been confirmed. Please retry.';if(status>=500)console.error('API error',error instanceof Error?error.name:'unknown',e.code||'');res.status(status).json({error:message});});
+ return app;
+}

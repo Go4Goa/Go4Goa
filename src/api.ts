@@ -1,0 +1,8 @@
+import { useCallback,useEffect,useState } from 'react';
+let csrf='';export const setCsrf=(value:string)=>{csrf=value;};
+export async function api<T>(path:string,options:RequestInit={}):Promise<T>{
+ const headers=new Headers(options.headers);if(options.body&&!(options.body instanceof FormData))headers.set('Content-Type','application/json');if(options.method&&!['GET','HEAD'].includes(options.method))headers.set('X-CSRF-Token',csrf);
+ const res=await fetch('/api'+path,{...options,credentials:'same-origin',headers});const data=await res.json().catch(()=>({error:'The server could not be reached. Please retry.'}));if(!res.ok)throw new Error(data.error||'Something went wrong. Please retry.');return data as T;
+}
+export function useData<T>(path:string|null){const [data,setData]=useState<T|null>(null),[error,setError]=useState(''),[loading,setLoading]=useState(true),[rev,setRev]=useState(0);const reload=useCallback(()=>setRev(v=>v+1),[]);useEffect(()=>{if(!path){setLoading(false);return;}const controller=new AbortController();setLoading(true);setError('');api<T>(path,{signal:controller.signal}).then(setData).catch(e=>{if(e.name!=='AbortError')setError(e.message);}).finally(()=>{if(!controller.signal.aborted)setLoading(false);});return()=>controller.abort();},[path,rev]);return{data,error,loading,reload,setData};}
+export function useAction(){const[busy,setBusy]=useState(false),[error,setError]=useState('');const run=async(fn:()=>Promise<void>)=>{setBusy(true);setError('');try{await fn();}catch(e){setError(e instanceof Error?e.message:'Please try again.');}finally{setBusy(false);}};return{busy,error,run,setError};}

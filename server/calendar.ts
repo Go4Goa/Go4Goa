@@ -1,0 +1,5 @@
+import type { CivicEvent } from '../shared/model.ts';
+const escape=(s:string)=>s.replace(/\\/g,'\\\\').replace(/\r?\n/g,'\\n').replace(/;/g,'\\;').replace(/,/g,'\\,');
+const utc=(s:string)=>new Date(s).toISOString().replace(/[-:]/g,'').replace(/\.\d{3}/,'');
+function fold(line:string) {const out:string[]=[];let current='';for(const char of line){if(Buffer.byteLength(current+char)>75){out.push(current);current=' ';}current+=char;}out.push(current);return out.join('\r\n');}
+export function eventICS(e:CivicEvent) {return ['BEGIN:VCALENDAR','VERSION:2.0','PRODID:-//GO-GOA//Civic events//EN','CALSCALE:GREGORIAN','METHOD:PUBLISH','BEGIN:VEVENT',`UID:${e.id}@go-goa`,`DTSTAMP:${utc(new Date().toISOString())}`,`SEQUENCE:${e.version}`,`DTSTART:${utc(e.startsAt)}`,`DTEND:${utc(e.endsAt)}`,`SUMMARY:${escape(e.title)}`,`DESCRIPTION:${escape(e.description+'\n'+e.meetup)}`,`LOCATION:${escape(e.locationLabel)}`,`GEO:${e.point.lat};${e.point.lng}`,`STATUS:${e.status==='cancelled'?'CANCELLED':'CONFIRMED'}`,'END:VEVENT','END:VCALENDAR'].map(fold).join('\r\n')+'\r\n';}
