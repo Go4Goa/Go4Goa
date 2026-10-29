@@ -33,7 +33,7 @@ try{
    if(name==='map'){await page.locator('.maplibregl-canvas').waitFor();await page.locator('.radar-map-loading').waitFor({state:'hidden',timeout:60000});assert.equal(await page.locator('.radar-map-failure').count(),0,'Live map provider must render');await page.getByRole('button',{name:/\d+ places? · View list/}).waitFor();}
    if(name==='events')await page.locator('.event-feed .event-row').first().waitFor();
    if(name==='directory')await page.locator('.directory-results').waitFor();
-   if(name==='profile'){await page.locator('.private-profile').waitFor();assert.equal(await page.getByText('Sign out',{exact:true}).count(),0);assert.equal(await page.getByLabel('Phone number',{exact:true}).count(),0);const who=await(await context.request.get(origin+'/api/auth/me')).json();assert.equal(who.account.role,'resident');assert.match(who.account.username,/^guest_/);guestIds.add(who.account.id);}
+   if(name==='profile'){await page.locator('.private-profile').waitFor();assert.equal(await page.getByText('Sign out',{exact:true}).count(),0);assert.equal(await page.getByLabel('Phone number',{exact:true}).count(),0);const who=await(await context.request.get(origin+'/api/auth/me')).json();assert.equal(who.account.role,'resident');assert.match(who.account.username,/^guest_/);guestIds.add(who.account.id);await page.goto(origin+'/profile/preferences');await page.getByRole('heading',{name:'Preferences',exact:true}).waitFor();assert.equal(await page.getByText('Sign out',{exact:true}).count(),0);assert.equal(await page.getByLabel('Email address',{exact:true}).count(),0);await settle();const preferences=`${width}-preferences.png`;await page.screenshot({path:'test-results/live/'+preferences,fullPage:true,animations:'disabled'});captures.push(preferences);await page.goto(origin+'/profile');await page.locator('.private-profile').waitFor();}
    await settle();
    const bad=await page.evaluate(()=>[...document.querySelectorAll('body *')].filter(e=>{const r=e.getBoundingClientRect();return r.width&&r.height&&/italic|oblique/.test(getComputedStyle(e).fontStyle);}).map(e=>e.tagName));assert.deepEqual(bad,[],'Live typography');
    const file=`${width}-${name}.png`;await page.screenshot({path:'test-results/live/'+file,fullPage:true,animations:'disabled'});captures.push(file);
@@ -52,4 +52,4 @@ try{
  assert.equal(guestIds.size,3,'Every fresh browser gets its own guest identity');
 }finally{await browser.close();}
 await writeFile('test-results/live/provenance.json',JSON.stringify({sha,health,origin,captures,runId:process.env.GITHUB_RUN_ID},null,2));
-console.log('Live identity, public guest use without sign-in, restricted test accounts and 27 rendered views verified; manual rendered approval remains required.');
+console.log('Live identity, public guest use without sign-in, restricted test accounts and 30 rendered views verified; manual rendered approval remains required.');

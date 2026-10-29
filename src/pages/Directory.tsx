@@ -50,14 +50,14 @@ export default function Directory(){
   const selectOptions=(values:Record<string,string>,all:string)=>[{value:'all',label:all},...Object.entries(values).map(([value,label])=>({value,label}))];
   const types=Object.fromEntries([...new Set(records.map(r=>r.record_type))].sort().map(value=>[value,words(value)]));
   const importFile=async(file?:File)=>{setImportError('');if(!file)return;try{if(file.size>5*1024*1024)throw new Error('Choose a backup smaller than 5 MB.');setImported(parseBackup(await file.text()));}catch(e){setImportError(e instanceof Error?e.message:'The backup could not be read.');}finally{if(upload.current)upload.current.value='';}};
-  return <div className="page directory-page">
+  return <div className={"page directory-page"+(id?" directory-detail-page":"")}>
     {id&&<Link className="back-link" to={back}><ArrowLeft size={17}/>Directory</Link>}
     <header className="directory-header">
       <div><h1 ref={heading} tabIndex={-1}>{current?.name||'Directory'}</h1><External href={origin+'/directory'}>Directory provided by ActForGoa</External></div>
       {!id&&<Button variant={params.get('saved')==='1'?'primary':'secondary'} onClick={()=>setFilter('saved',params.get('saved')==='1'?'':'1')} aria-pressed={params.get('saved')==='1'}><Bookmark size={17} aria-hidden="true"/>Saved{savedCount?' · '+savedCount:''}</Button>}
     </header>
     {!id&&<><p className="directory-intro">Find people, organisations and services for trash and infrastructure in Goa.</p>
-      <form className="directory-search" role="search" onSubmit={e=>{e.preventDefault();setFilter('q',draft.trim());}}><SearchField label="Search directory" placeholder="Try waste collection, roads or a name" hideLabel value={draft} onValueChange={value=>{setDraft(value);if(!value)setFilter('q','');}}/><Button type="submit">Search<ArrowRight size={16} aria-hidden="true"/></Button></form>
+      <form className="directory-search" role="search" onSubmit={e=>{e.preventDefault();setFilter('q',draft.trim());}}><SearchField label="Search directory" placeholder="Search directory" hideLabel value={draft} onValueChange={value=>{setDraft(value);if(!value)setFilter('q','');}}/><Button type="submit" className="directory-search-submit" aria-label="Search directory"><ArrowRight size={18} aria-hidden="true"/></Button></form>
       <div className="directory-groups" role="group" aria-label="Directory categories">{Object.entries(directoryGroups).filter(([value])=>['all','trash','infrastructure'].includes(value)).map(([value,label])=><Button key={value} variant="ghost" size="sm" aria-pressed={(params.get('group')||'all')===value} onClick={()=>setFilter('group',value)}>{value==='all'?'All contacts':label}</Button>)}</div>
       <details className="directory-filters"><summary><SlidersHorizontal size={17} aria-hidden="true"/>More filters</summary><div className="directory-filter-grid">
         <Select label="Find" value={params.get('audience')||'all'} onValueChange={v=>setFilter('audience',v)} options={[{value:'all',label:'Everyone'},{value:'government',label:'Government contacts'},{value:'services',label:'Practical services'},{value:'community',label:'Organisations'}]}/><Input label="Location or jurisdiction" value={params.get('location')||''} onChange={e=>setFilter('location',e.target.value)} placeholder="e.g. Panaji or Salcete"/>

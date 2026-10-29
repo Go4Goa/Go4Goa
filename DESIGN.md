@@ -157,6 +157,17 @@ spacing:
   space-6: "1.5rem"
   space-8: "2rem"
   space-10: "2.5rem"
+  page-width: "800px"
+  workspace-width: "1120px"
+  page-gutter: "40px"
+  page-gutter-mobile: "20px"
+  page-gutter-narrow: "16px"
+  page-padding-top: "32px"
+  page-padding-top-mobile: "24px"
+  section-gap: "32px"
+  section-gap-mobile: "28px"
+  title-description-gap: "8px"
+  page-title-gap: "28px"
 components:
   button-primary:
     backgroundColor: "{colors.accent}"
@@ -323,7 +334,7 @@ GO-GOA keeps Act For Goa's civic green identity while intentionally replacing th
 
 Open rows and clear sections carry civic information. Action green identifies major next actions, while the deeper civic green remains the identity, navigation and map-selection color. Soft offset shadows separate controls and temporary layers without wrapping every section in a card.
 
-This record captures the implemented local development revision of 29 October 2026, including the compact full-width dock and the compact map search/filter row. The user requested this direction; acceptance of this particular rendered result remains pending. Documentation is not release approval. No deployment, push or release is implied.
+This record captures the 29 October 2026 extension of the accepted Resources layout and spacing across the app, retaining the compact full-width dock and map search/filter row. The user explicitly requested this extension and shipment to production, superseding the earlier local-preview restriction. The independent finish review returned `ship` for the nine-file implementation without material fixes. The subsequent Profile refinement prioritizes reports and meetups, with account controls on a separate preferences page; its independent finish review also returned `ship` without material fixes. This records the reviewed release candidate; it does not claim deployment has completed.
 
 The map retains its code-led reuse of Dizko's map composition and behavior, with GO-GOA civic content. Its surface contract is `.impeccable/surfaces/map.md`; the latest shared treatment is recorded in `.impeccable/surfaces/app.md`. This refresh updates the intentional UI changes and preserves the map's behavior and provenance.
 
@@ -332,6 +343,7 @@ The map retains its code-led reuse of Dizko's map composition and behavior, with
 - White canvas, dark readable text and retained civic-green identity.
 - Upright Helvetica Neue with regular body, medium labels and stronger key headings.
 - Open rows and section spacing instead of repeated nested containers.
+- Shared page widths, responsive gutters and title-copy grouping across lists, forms, profile and reading surfaces.
 - Round UIArc actions, green major CTAs and soft offset shadows.
 - A compact full-width bottom dock with visible labels.
 - Visible provenance, example labels and accessible map/list alternatives.
@@ -343,6 +355,10 @@ Source evidence: `src/styles.css`, `src/components/common.tsx`, `src/components/
 The shared meetup poster and detail-page evidence is `src/components/MeetupPoster.tsx`, `src/components/meetup-poster.css`, `src/components/ShareMeetup.tsx`, `src/pages/Events.tsx` and `src/pages/meetup-detail.css`. The approved creation direction is `.impeccable/surfaces/meetup-create.md`. Saved detail renders are `.impeccable/review/meetup-detail-desktop.png`, `meetup-detail-mobile.png` and `meetup-detail-narrow.png`.
 
 Graphic customization is defined by `shared/meetup-poster.ts`, `src/components/PosterControls.tsx`, `src/components/poster-controls.css` and `src/components/MeetupGraphicEditor.tsx`. The source-backed color and pattern choices extend the same poster; they do not change the app theme. Control captures are `.impeccable/review/poster-controls-desktop.png`, `poster-controls-mobile.png` and `poster-controls-narrow.png`.
+
+The app-wide layout extension is grounded in `src/styles.css`, `src/components/common.tsx`, `src/pages/Events.tsx`, `src/pages/Report.tsx`, `src/pages/ReportDetail.tsx`, `src/pages/Directory.tsx`, `src/pages/directory.css`, `src/pages/resources.css` and `src/pages/event-create.css`. Its current ignored review evidence lives in `.impeccable/review/ui-refinement/` in the authoring checkout: the `release-*.jpg` captures cover Directory, creation and its calendar, report selection and detail, events, profile, Resources, privacy and sign-in; `app-events-mobile.jpg` and `app-report-mobile.jpg` cover the 378px phone. The independent finish review covered 320px, 378px and 390px phones, 768px tablet and 1280px desktop. `app-layout-checks.json` records Helvetica Neue, no horizontal overflow and zero italic elements on Events, Directory, Resources and Profile at 320px, 768px and 1280px. Earlier capture references above remain historical snapshots, not evidence of this extension's deployment.
+
+The final Profile organization is implemented in `src/pages/Profile.tsx`, `src/App.tsx` and the scoped styles in `src/styles.css`. Its current captures in the same ignored review folder are `profile-activity-mobile.jpg` and `profile-preferences-mobile.jpg` at 390px by 844px, `profile-preferences-expanded-320.jpg` in its scrolled state, and `profile-activity-desktop.jpg` and `profile-preferences-desktop.jpg` at 1280px by 900px. Source checks and the build passed; the review verified that Back preserves the selected activity tab and export controls are absent from the main Profile DOM.
 
 ## Colors
 
@@ -375,13 +391,13 @@ Meetup posters offer six predefined palettes. Forest reuses civic green; Ocean, 
 
 ## Typography
 
-**Content and Navigation Font:** Helvetica Neue, with Helvetica, Arial and sans-serif fallbacks. The approved meetup editor and shared poster are scoped exceptions: the poster uses upright Geist Variable headings and Inter Variable supporting copy in both creation and the dedicated page. Shared navigation and the surrounding detail-page controls retain Helvetica Neue.
+**Content and Navigation Font:** Helvetica Neue, with Helvetica, Arial and sans-serif fallbacks, including the meetup composer and its controls. Only the shared poster artwork remains a scoped exception: it uses upright Geist Variable headings and Inter Variable supporting copy in both creation and the dedicated page.
 
 Regular body text, medium labels and stronger key headings keep the interface readable without the previous uniformly heavy treatment. The core weight roles are regular (400), medium (500) and semibold (600); the current destination in the compact dock is a scoped bold (700) exception.
 
 ### Hierarchy
 
-- **Headline:** the frontmatter roles record general desktop and mobile h1 sizing. The event-page mobile heading is a scoped exception at 32px with a 1.12 line height and a 12ch maximum measure.
+- **Headline:** the frontmatter roles record general desktop and mobile h1 sizing. The event-page mobile heading now uses the mobile headline role and wraps across the available measure. Page descriptions stay with their heading at the title-description gap; the action remains a separate sibling.
 - **Title:** section headings use the title role. Most mobile h2 elements reduce to 21px; map results and selected-place previews retain their scoped roles at every width.
 - **Section title:** h3 and form legends use the section-title scale.
 - **Body:** the base role has a maximum paragraph measure of 70ch.
@@ -390,11 +406,15 @@ Regular body text, medium labels and stronger key headings keep the interface re
 - **Map hierarchy:** list headings, selected-place titles, report row titles, supporting copy, list controls and example metadata retain scoped `map-*` roles. Activity labels keep the same compact size inside the filter panel at every width; the search input remains 16px. Calendar markers use distinct month and day roles, with dates formatted in Asia/Kolkata.
 - **Meetup poster:** scoped `meetup-poster-*` roles preserve the existing preview hierarchy. The title uses the mobile role at 700px and below. Secondary date, time, location and materials text is 12px; activity text is 13px. Long titles and supporting text wrap, and intentional line breaks remain visible.
 
-**The Upright Type Rule.** Use upright type throughout: Helvetica Neue for the shared app, with the approved scoped Geist and Inter meetup treatment. Weight, size and spacing carry emphasis; never use italic or oblique styling.
+**The Upright Type Rule.** Use upright type throughout: Helvetica Neue for the shared app and composer, with scoped Geist and Inter only in meetup poster artwork. Weight, size and spacing carry emphasis; never use italic or oblique styling.
 
 ## Layout
 
-General pages use a centered 1200px maximum width, with a 720px narrow form variant. Outside the map route, the header expands to 1440px. Desktop page padding is 48px above and 40px at the sides; mobile pages use 30px above and 20px at the sides, reducing side padding to 16px at 360px and below.
+General pages use the centered `page-width` maximum, including narrow forms, profile, the admin queue, Resources and the Directory list. Report and meetup detail pages, a report moderation workspace and Directory detail use the wider `workspace-width` maximum. The meetup composer retains the same wide maximum and adopts the shared page padding. Outside the map route, the header still expands to 1440px.
+
+The frontmatter's `page-gutter`, `page-padding-top` and `section-gap` entries describe the default shared custom properties. Their mobile variants apply at 760px and below, with the narrow gutter applying at 360px and below. General pages retain 24px bottom padding. The shared title-description gap keeps introductory copy with the page identity; the page-title gap separates that group from controls. Events stack the title group and primary action on phones and use a 24px gap below the title group; Profile uses an 8px title gap for the adjacent privacy note.
+
+**The Shared Page Rhythm Rule.** Use the shared page-width, workspace-width, page-gutter, page-padding-top and section-gap tokens for app content. Apply their mobile and narrow variants at the documented breakpoints, group each description with its heading, and keep lists open on the page canvas.
 
 The map route occupies the viewport beneath a 48px header and above `--bottom-nav-height`, without the general page container or bottom padding. Results are closed by default at every width. A 44px minimum-height View list button sits 12px from the left and 28px above the map bottom. Opening it above 600px width adds a 340px sibling pane with a structural divider, no gap and independent scrolling beneath a sticky heading.
 
@@ -406,9 +426,11 @@ Search and the filter trigger occupy one 46px-high white row, up to 400px wide, 
 
 The full-width bottom dock sits flush with the viewport. Five equal destinations occupy a centered row up to 560px wide. Each link is 46px tall, above the larger of the safe-area inset and 6px; a 1px structural rule separates navigation from content. General pages reserve the dock height plus 40px of bottom clearance. The portable tab-bar height token includes that rule and safe-area clearance.
 
-Spacing follows the inherited 4px rhythm where practical. Open incident and resource rows use structural top borders and 20px to 24px vertical padding. Event rows use 30px vertical padding on desktop and 26px on mobile. Evidence thumbnails have rounded corners; current incident thumbnails are rectangular rather than a mandated square aspect ratio.
+Spacing follows the inherited 4px rhythm where practical. Open incident and resource rows use structural top borders and 20px to 24px vertical padding. Event rows use 24px vertical padding, medium titles and a 44px row-arrow target at every width; the first feed row keeps its open leading edge. Evidence thumbnails have rounded corners; current incident thumbnails are rectangular rather than a mandated square aspect ratio. Report detail images stay within the content column, with a 16px radius, and the report description is readable 18px body copy rather than a heading.
 
-The dedicated meetup page places the shared green poster beside the existing participation panel using the detail page's 1.35fr / 0.85fr columns and 64px gap. At 760px and below, the poster, host information, directions and participation section stack with a 36px column gap. Back and Share meetup actions sit above the content in a wrapping row. The poster's padding reduces to 24px at 900px and below; its minimum height remains 360px on the dedicated page. The creation preview keeps its existing 300px intermediate and 320px mobile minimum heights, and stacks below the editor at 700px.
+The dedicated meetup page places the shared green poster beside the existing participation panel using the detail page's columns and a 48px gap. At 760px and below, the poster, host information, directions and participation section stack with a 32px column gap. Back and Share meetup actions sit above the content in a wrapping row. The poster's padding reduces to 24px at 900px and below; its minimum height remains 360px on the dedicated page. The creation preview keeps its existing 300px intermediate and 320px mobile minimum heights, and stacks below the editor at 700px. The composer uses a 48px desktop column gap, reducing to 36px at 900px and below, then a 40px stacked gap at 700px and below. Composer sections use 32px spacing, reducing to 28px at its stacking breakpoint.
+
+Profile begins with the username and private-profile context, then activity tabs and their report or meetup results. Contribution points and history follow the results. Account settings occupy the separate preferences page, using the existing open sections and shared spacing. Sign-in fields use a 24px stack gap. Privacy headings use the responsive section-gap token with 12px between heading and body. These align the supporting account and reading flows with the primary app rhythm.
 
 ## Elevation & Depth
 
@@ -416,7 +438,7 @@ Open content sections stay on the white canvas. Soft offset shadows distinguish 
 
 ### Shadow Vocabulary
 
-- **Resting control:** `0 2px 5px rgb(22 37 29 / 5%), 0 7px 20px rgb(22 37 29 / 7%)`, used by primary actions, applicable secondary hover states, shared search surfaces and the desktop participation panel.
+- **Resting control:** `0 2px 5px rgb(22 37 29 / 5%), 0 7px 20px rgb(22 37 29 / 7%)`, used by primary actions, applicable secondary hover states, shared search surfaces, unselected report category choices and the desktop participation panel.
 - **Floating panel:** `0 8px 28px rgb(22 37 29 / 13%)`, used by select menus and the map filter panel.
 - **Map utility control:** uses the resting-control shadow for zoom, location, View list and search-this-area.
 - **Map marker and cluster:** `0 2px 6px rgb(25 62 50 / 18%)`, used for compact square markers and circular count clusters. The draggable location pin uses `drop-shadow(0 3px 3px rgb(25 62 50 / 22%))`.
@@ -446,15 +468,21 @@ Status labels use UIArc Badge with compact upright medium text and existing writ
 
 Use open, horizontally separated rows for reports, resources and activity. A desktop participation panel is a bounded exception: white surface, rounded corners, resting shadow, 28px padding and an 18px content gap. On mobile it becomes an open section with a top rule and no shadow. Informational notices and receipts sit in the content flow without side stripes.
 
+Report category choices remain functional selection buttons: icon beside a left-aligned title and supporting line, with 112px minimum height and 20px padding on desktop. At 760px and below, the two choices stack with a 12px gap, 88px minimum height and 16px padding. Unselected choices use the resting shadow; the chosen state removes it and keeps the existing selected treatment.
+
 ### Inputs / Fields
 
 Official UIArc Input, Textarea, Select and SearchField share the Helvetica theme. Form fields use white, a light border, the control radius and 48px minimum height. Explicit labels sit above the field unless an accessible hidden label is appropriate for search. The current input focus treatment darkens its border and exposes a green focus outline; SearchField draws focus around its inner shell. Invalid fields use danger borders and written errors. Select options use the shared floating-panel shadow. Disabled and reduced-motion states remain from UIArc.
+
+Resources and Directory list search share a pill-shaped search surface with resting depth. Directory's submit action is an accessible, labeled 44px icon button within that surface. The meetup composer and its portal menus inherit the shared Helvetica Neue, civic-green theme and UIArc 44px / 48px / 52px control heights; its poster artwork retains its separate font and palette choices.
 
 ### Navigation
 
 Five link destinations are Map, Report, Meetups, Resources and Profile. A Directory button in Resources opens `/directory`; Directory routes keep Resources selected in the dock. Current-page semantics use `aria-current="page"`; the label stays visible. Selection uses green icon and text tint with stronger label weight. Hover and press use a pale surface. Color transitions run for 150ms with ease-out and are removed for reduced motion. Increased contrast strengthens the divider and current-page underline; forced colors retain explicit selection.
 
 The sidecar navigation specimen uses the current dock in normal document flow so it can render inside the design panel. The app positions it at the viewport bottom.
+
+The Profile header's UIArc-styled cog link is labeled Account preferences and opens `/profile/preferences`. That page contains notification toggles, email changes, data export, account deletion, sign-out, privacy and the role-gated moderation workspace. Back returns to Profile with the selected activity tab preserved. The original account handlers, verification conditions and username-confirmation requirement for deletion remain in place; these controls are not mounted in the main activity view.
 
 ### Segmented controls and selection controls
 
@@ -494,6 +522,7 @@ Source ownership is documented in `docs/repository-intake.md`, `src/components/a
 - **Do** load the active theme from src/styles.css after the UIArc foundation.
 - **Do** use official UIArc controls, including its accessible Radix internals, and retain their provenance.
 - **Do** use Helvetica Neue, white sections, pill actions and spacing to establish hierarchy.
+- **Do** apply the shared page rhythm to lists, forms, profile and reading surfaces, reserving the wider workspace measure for detail and editing layouts.
 - **Do** keep the map search/filter row compact, put activity modes inside filters and open results only on request.
 - **Do** reuse MeetupPoster between creation and the dedicated page, keeping its saved palette, background, scoped typography and content in sync.
 - **Do** retain concise labels, visible keyboard focus and reduced-motion handling.
@@ -507,4 +536,4 @@ Source ownership is documented in `docs/repository-intake.md`, `src/components/a
 - **Don't** expand the selected tab into a large dark green block.
 - **Don't** promote unused foundation gradients, alternate accents or dark themes into the GO-GOA palette.
 - **Don't** replace open lists with decorative card grids, nest decorative containers or use glyphs as substitute icons.
-- **Don't** treat this local documentation or captured renders as user acceptance or production approval.
+- **Don't** treat design documentation or captured renders as evidence that an authorized production deployment has completed.
