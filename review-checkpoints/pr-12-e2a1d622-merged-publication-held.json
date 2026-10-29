@@ -1,0 +1,66 @@
+{
+  "schemaVersion": 1,
+  "status": "merged_publication_held",
+  "recordedAt": "2026-10-29T16:36:17.467Z",
+  "repository": "actforgoa2026/Go4Goa",
+  "pr": {
+    "number": 12,
+    "url": "https://github.com/actforgoa2026/Go4Goa/pull/12",
+    "author": {
+      "login": "layalabs",
+      "id": 261854875
+    },
+    "state": "closed",
+    "merged": "e2a1d622b3aac809ae687ecfb48fac7b7b008c1e",
+    "head": "c34e53e1f35c1be5a7427e8a400cc0803e087d5e",
+    "base": "26515cdc5a2cdcd08137c2738d1fbf283a8bba60"
+  },
+  "triggeringReview": {
+    "deliveryId": "98543556-d3b6-11f1-914c-976902364bf0",
+    "reviewer": "ZakKrevitt",
+    "state": "COMMENTED",
+    "submittedAt": "2026-10-29T16:34:21Z",
+    "body": "love it, ship it ",
+    "interpretation": "Later owner approval of the PR content and manual merge. It supersedes the earlier no-sign-in hold for this PR only; it does not waive any trusted execution, visual evidence, artifact, expected-SHA, publication, or live-verification gate."
+  },
+  "sourceAndChecks": {
+    "reviewCheckpoint": "review-checkpoints/pr-12-c34e53e1f35c-held.json",
+    "sourceReceipt": "absent",
+    "sourceGate": {
+      "run": 40912212185,
+      "conclusion": "failure"
+    },
+    "verify": "skipped",
+    "visualEvidence": "skipped",
+    "postMergeQa": {
+      "run": 40912966195,
+      "status": "in_progress"
+    },
+    "note": "No source receipt, rerun, isolated trusted execution, design artifact, or live artifact exists for the merged SHA."
+  },
+  "releaseState": {
+    "main": "e2a1d622b3aac809ae687ecfb48fac7b7b008c1e",
+    "cloudRelease": "26515cdc5a2cdcd08137c2738d1fbf283a8bba60",
+    "cloudReleaseAdvanced": false,
+    "deploymentRequestedByAutomation": false,
+    "publication": "held"
+  },
+  "unresolvedGates": [
+    "The manually merged commit has not passed the commissioned source-gated trusted workflow.",
+    "Required visual evidence and actual artifact inspection for the exact merged/integrated commit are absent.",
+    "Release provenance and live verification for this commit are absent.",
+    "The push QA run is pending and cannot substitute for the source receipt, trusted integrated execution, visual evidence, publication guard, or live verification."
+  ],
+  "actionsTaken": [
+    "Re-fetched PR and submitted review.",
+    "Verified main merge identity and cloud-release identity.",
+    "Verified pending post-merge QA workflow.",
+    "Recorded the owner-authorized manual merge and publication hold."
+  ],
+  "actionsNotTaken": [
+    "No source receipt or workflow rerun.",
+    "No code execution or artifact review.",
+    "No cloud-release advance, deployment, rollback, GitHub comment/review, or collaborator message."
+  ],
+  "disposition": "Manual merge is recorded; automatic publication remains held."
+}
