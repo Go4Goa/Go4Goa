@@ -1,0 +1,8 @@
+{
+  "recordedAt": "2026-10-29T15:51:10.727Z",
+  "ownerRequest": "no sign ins anywhere idk i don't think we need it right now",
+  "policy": "The public preview must start without any sign-in screen, password challenge, phone/email entry, persona choice or team sign-in URL. Use separate automatic guest resident sessions for preview actions. Never grant guests moderator privileges or share private report identities.",
+  "supersedes": "The earlier proposal to retain a manual team sign-in path, and any requirement to add Twilio sign-in to the current hosted preview. Other design/privacy/test/release gates remain.",
+  "conflictingWork": "Layalabs PR8 enables hosted Twilio sign-in and must remain held under this owner decision unless the owner later changes direction.",
+  "implementation": "https://github.com/actforgoa2026/Go4Goa/pull/9"
+}
