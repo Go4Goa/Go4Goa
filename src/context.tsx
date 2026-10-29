@@ -1,4 +1,4 @@
-import { createContext,useContext,useEffect,useState,type ReactNode } from 'react';
+import { createContext,useContext,useEffect,useRef,useState,type ReactNode } from 'react';
 import type { Account,AppConfig } from '../shared/model.ts';
 import { api,setCsrf } from './api.ts';
 import { clearMeetupDrafts } from './services/meetup-draft';
@@ -7,7 +7,8 @@ let guestRequest:Promise<unknown>|null=null;
 function startGuest(){return guestRequest??=api('/auth/guest',{method:'POST',body:'{}'}).finally(()=>{guestRequest=null;});}
 export function AppProvider({children}:{children:ReactNode}){
  const[account,setAccount]=useState<Account|null>(null),[config,setConfig]=useState<AppConfig|null>(null),[ready,setReady]=useState(false);
- function applyAccount(next:Account|null){if(!next)clearMeetupDrafts();setAccount(next);setCsrf(next?.csrf||'');}
+ const accountId=useRef<string|null>(null);
+ function applyAccount(next:Account|null){if(!next||(accountId.current&&accountId.current!==next.id))clearMeetupDrafts();accountId.current=next?.id??null;setAccount(next);setCsrf(next?.csrf||'');}
  async function refresh(){let d=await api<{account:Account|null}>('/auth/me');if(!d.account&&config?.qa){await startGuest();d=await api<{account:Account|null}>('/auth/me');}applyAccount(d.account);}
  useEffect(()=>{
   async function initialize(){
