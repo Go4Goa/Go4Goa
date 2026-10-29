@@ -8,7 +8,7 @@ Only layalabs (numeric GitHub ID 261854875) is eligible for unattended Reporting
 
 ## Cloud checks
 
-`QA checks` uses GitHub-hosted Linux runners with Node 24, a disposable PostgreSQL service and no application/provider secrets. It tests the PR merge ref, not just the contributor branch. It runs unit/access tests, isolated database/API tests and the production build.
+`QA checks` runs its PR orchestration with `pull_request_target` from the trusted base, with explicitly read-only tokens, no shared caches and no application secrets. Candidate code runs only in fresh dependent jobs after source review; checkout never persists credentials. It uses GitHub-hosted Linux runners with Node 24, a disposable PostgreSQL service and no application/provider secrets. It tests the PR merge ref, not just the contributor branch. It runs unit/access tests, isolated database/API tests and the production build.
 
 Before layalabs code executes, the cloud reviewer must inspect the entire diff, dependencies, test/workflow changes, auth, APIs and migrations. It then creates/updates `reviews/pr-N.json` on the separate `automation/source-review` branch with the exact `head`, `base`, `sourceReviewed: true`, `reviewedAt` ISO timestamp and a prose review record. The receipt expires after 24 hours and is invalidated by either SHA changing. Rerun the previously held CI job using the connector's rerun control. This receipt approves isolated test execution only, never merging or deployment.
 
