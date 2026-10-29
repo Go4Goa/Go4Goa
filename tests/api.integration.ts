@@ -9,6 +9,7 @@ import { config } from '../server/config.ts';
 import { hash } from '../server/security.ts';
 import { syncResources } from '../server/actforgoa.ts';
 import { queueUpdate } from '../server/events.ts';
+import { scheduleReminders } from '../server/notifications.ts';
 
 if(new URL(config.database).pathname!=='/go_goa_test') throw new Error('Refusing integration tests outside go_goa_test.');
 let server:Server, base:string;
@@ -160,4 +161,20 @@ test('meetup graphics persist publicly and only their owner or moderator can upd
  const saved=await (await call('/api/events/'+id)).json() as any;assert.deepEqual(saved.event.poster,update.poster);assert.equal(saved.event.version,initial.event.version+1);
  assert.equal((await call('/api/events/'+id+'/graphic','PATCH',update,creator)).status,409);
  const legacy=(await pool.query('SELECT poster FROM events WHERE organizer_id=$1 LIMIT 1',[resident.id])).rows[0];assert.deepEqual(legacy.poster,{color:'forest',pattern:'solid'});
+});
+
+
+test('graphic edits preserve reminder deduplication while rescheduling permits a new reminder',async()=>{
+ const creator=await actor('resident'),attendee=await actor('resident');
+ const startsAt=new Date(Date.now()+6*3600000).toISOString(),endsAt=new Date(Date.now()+7*3600000).toISOString();
+ const input={title:'Reminder QA meetup',description:'Fictional reminder deduplication check.',activity:'cleanup_walk',point:{lat:15.49,lng:73.82},locationLabel:'Panaji',meetup:'Public entrance',startsAt,endsAt,capacity:20};
+ const created=await call('/api/events','POST',input,creator);assert.equal(created.status,201);const {id}=await created.json() as {id:string};
+ await pool.query('UPDATE users_private SET email_verified=true,email_opt_in=true WHERE id=$1',[attendee.id]);
+ await pool.query("INSERT INTO rsvps(event_id,user_id,status,email_consent) VALUES($1,$2,'confirmed',true)",[id,attendee.id]);
+ const count=async()=>Number((await pool.query("SELECT count(*) FROM notifications WHERE event_id=$1 AND dedupe_key LIKE 'reminder:%'",[id])).rows[0].count);
+ await scheduleReminders();assert.equal(await count(),1);
+ assert.equal((await call('/api/events/'+id+'/graphic','PATCH',{version:1,poster:{color:'plum',pattern:'grid'}},creator)).status,200);
+ await scheduleReminders();assert.equal(await count(),1);
+ assert.equal((await call('/api/events/'+id,'PATCH',{version:2,status:'published',startsAt:new Date(Date.now()+8*3600000).toISOString(),endsAt:new Date(Date.now()+9*3600000).toISOString(),reason:'Fictional reschedule test'},creator)).status,200);
+ await scheduleReminders();assert.equal(await count(),2);
 });

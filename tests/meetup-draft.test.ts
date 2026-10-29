@@ -6,6 +6,7 @@ test('draft recovery retains the full form and separates accounts and linked rep
  const map=new Map<string,string>(),storage={getItem:(key:string)=>map.get(key)||null,setItem:(key:string,value:string)=>{map.set(key,value);}};
  const key=draftKey('resident-a',null);saveMeetupDraft(storage,key,draft);
  assert.deepEqual(readMeetupDraft(storage,key),draft);
+ const invalidDraft={...draft,title:'X'.repeat(101)};saveMeetupDraft(storage,key,invalidDraft);assert.deepEqual(readMeetupDraft(storage,key),invalidDraft,'Invalid text is still recoverable for correction');
  assert.equal(readMeetupDraft(storage,draftKey('resident-b',null)),null);
  assert.equal(readMeetupDraft(storage,draftKey('resident-a','report-id')),null);
 });

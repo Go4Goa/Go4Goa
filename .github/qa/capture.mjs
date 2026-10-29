@@ -96,7 +96,12 @@ try {
     await page.reload();await page.getByRole('heading',{name:'Fictional recovered meetup',exact:true}).waitFor();
     assert.equal(await page.locator('.event-preview-poster').getAttribute('data-poster-color'),'ocean');
     assert.equal(await page.locator('.event-preview-poster').getAttribute('data-poster-pattern'),'waves');
-    evidence.checks.push({width,meetupDraftAcrossNavigationAndReload:true,posterRecovery:true});
+    await page.getByRole('button',{name:'Meetup name: Fictional recovered meetup',exact:true}).click();
+    await page.getByRole('textbox',{name:'Meetup name',exact:true}).fill('X'.repeat(101));
+    await page.getByRole('button',{name:'Create meetup',exact:true}).click();
+    await page.getByText('Keep the name under 100 characters.',{exact:true}).first().waitFor();
+    assert.match(page.url(),/events\/new/,'Invalid active draft cannot publish an older saved value');
+    evidence.checks.push({width,meetupDraftAcrossNavigationAndReload:true,posterRecovery:true,invalidInlineDraftBlocked:true});
    }
   }
   const event=(await db.query(`SELECT id FROM "${schema}".events ORDER BY title LIMIT 1`)).rows[0];

@@ -82,15 +82,19 @@ function MeetupComposer({accountId}:{accountId:string}){
  async function submit(){
   if(busy)return;
   await run(async()=>{
-   if(title.trim().length<4)invalid('Give your meetup a name of at least 4 characters.','.event-name-editor button');
+   const currentTitle=titleDraft.trim(),currentDescription=descriptionDraft.trim(),currentMeetup=meetupDraft.trim();
+   if(currentTitle.length>100)invalid('Keep the name under 100 characters.','.event-name-editor textarea');
+   if(currentDescription.length>2500)invalid('Keep the description under 2,500 characters.','.event-description-editor textarea');
+   if(currentMeetup.length>500)invalid('Keep meeting instructions under 500 characters.','.event-meetup-editor textarea');
+   if(currentTitle.length<4)invalid('Give your meetup a name of at least 4 characters.','.event-name-editor button');
    if(!startsAt||!endsAt)invalid('Choose the date for your meetup.','.event-date-row button');
    eventOccurrences(startsAt,endsAt,recurrence);
    if(Date.parse(startsAt)<Date.now()+60000)invalid('Choose a future start time.','.event-date-row button');
    if(!point){setShowMap(true);invalid('Choose a place from search or place a pin on the map.','.event-location-details summary');}
    if(location.trim().length<2){setShowMap(true);invalid('Add the name of the meetup place.','.event-location-details input[maxlength="120"]');}
-   if(meetup.trim().length<5)invalid('Add a few words about where people should meet.','.event-meetup-editor button');
-   if(description.trim().length<10)invalid('Add a short description so people know what to expect.','.event-description-editor button');
-   const payload=eventSchema.parse({title,description,activity,point,locationLabel:location,meetup,startsAt,endsAt,capacity,linkedIncident:linked,materials:[...materials,extraMaterial.trim()].filter(Boolean).join(', '),recurrence,poster});
+   if(currentMeetup.length<5)invalid('Add a few words about where people should meet.','.event-meetup-editor button');
+   if(currentDescription.length<10)invalid('Add a short description so people know what to expect.','.event-description-editor button');
+   const payload=eventSchema.parse({title:currentTitle,description:currentDescription,activity,point,locationLabel:location,meetup:currentMeetup,startsAt,endsAt,capacity,linkedIncident:linked,materials:[...materials,extraMaterial.trim()].filter(Boolean).join(', '),recurrence,poster});
    const result=await api<{id:string}>('/events',{method:'POST',body:JSON.stringify(payload)});
    try{sessionStorage.removeItem(key);}catch{/* Storage unavailable. */}
    navigate('/events/'+result.id+'?created=1');
