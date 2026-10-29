@@ -12,6 +12,9 @@ concurrency:
   cancel-in-progress: true
 jobs:
   source-review:
+    permissions:
+      contents: read
+      pull-requests: read
     runs-on: ubuntu-latest
     timeout-minutes: 3
     outputs:
