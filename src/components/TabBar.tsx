@@ -17,7 +17,7 @@ export default function TabBar() {
     : pathname.startsWith('/events') ? '/events'
     : pathname === '/resources' || pathname.startsWith('/resources/') ? '/resources'
     : pathname === '/directory' || pathname.startsWith('/directory/') ? '/resources'
-    : ['/profile', '/admin', '/privacy'].includes(pathname) ? '/profile'
+    : pathname.startsWith('/profile/') || ['/profile', '/admin', '/privacy'].includes(pathname) ? '/profile'
     : pathname === '/' || pathname.startsWith('/reports/') ? '/' : null;
 
   return (
