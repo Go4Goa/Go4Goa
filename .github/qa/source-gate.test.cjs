@@ -1,5 +1,5 @@
 const test=require('node:test'),assert=require('node:assert/strict'),gate=require('./source-gate.cjs');
-const pr={number:12,user:{login:'layalabs',id:261854875},head:{sha:'a'.repeat(40)},base:{sha:'b'.repeat(40)},draft:false};
+const pr={number:12,user:{login:'layalabs',id:261854875},head:{sha:'a'.repeat(40)},base:{sha:'b'.repeat(40)},draft:false,mergeable:true,merge_commit_sha:'e'.repeat(40)};
 function call(receipt,patch={}) {
  const getContent=async()=>{
   if(!receipt)throw new Error('404');
@@ -7,7 +7,7 @@ function call(receipt,patch={}) {
  };
  return gate({
   context:{repo:{owner:'actforgoa2026',repo:'Go4Goa'},payload:{pull_request:{...pr,...patch}}},
-  core:{setOutput(){}},github:{rest:{repos:{getContent}}}
+  core:{setOutput(){}},github:{rest:{repos:{getContent},pulls:{get:async()=>({data:{...pr,...patch}})}}}
  });
 }
 const valid=()=>({head:pr.head.sha,base:pr.base.sha,sourceReviewed:true,reviewedAt:new Date().toISOString()});

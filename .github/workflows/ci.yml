@@ -17,12 +17,13 @@ jobs:
     outputs:
       base: ${{ steps.gate.outputs.base }}
       head: ${{ steps.gate.outputs.head }}
+      candidate: ${{ steps.gate.outputs.candidate }}
     steps:
       - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
         with:
           persist-credentials: false
           # Use the base policy for contributor PRs, never their proposed harness.
-          ref: ${{ github.event.pull_request.user.login == 'layalabs' && github.event.pull_request.base.sha || github.sha }}
+          ref: ${{ github.event.pull_request.user.login == 'layalabs' && github.event.pull_request.base.ref || github.sha }}
       - uses: actions/github-script@60a0d83039c74a4aee543508d2ffcb1c3799cdea9 # v7
         id: gate
         with:
@@ -48,6 +49,7 @@ jobs:
       - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
         with:
           persist-credentials: false
+          ref: ${{ needs.source-review.outputs.candidate }}
       - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4
         with:
           node-version: 24
@@ -77,7 +79,7 @@ jobs:
         with:
           path: harness
           persist-credentials: false
-          ref: ${{ github.event.pull_request.user.login == 'layalabs' && github.event.pull_request.base.sha || github.sha }}
+          ref: ${{ github.event.pull_request.user.login == 'layalabs' && github.event.pull_request.base.ref || github.sha }}
       - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
         with:
           path: baseline
@@ -87,6 +89,7 @@ jobs:
         with:
           path: candidate
           persist-credentials: false
+          ref: ${{ needs.source-review.outputs.candidate }}
       - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4
         with:
           node-version: 24

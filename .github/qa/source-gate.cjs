@@ -1,7 +1,11 @@
 // Only metadata is read before source review. Never check out or execute PR code here.
 module.exports=async({github,context,core})=>{
- const {owner,repo}=context.repo;const pr=context.payload.pull_request;
- if(!pr){core.setOutput('base',context.sha);core.setOutput('head',context.sha);return;}
+ const {owner,repo}=context.repo;const eventPr=context.payload.pull_request;
+ const pr=eventPr?(await github.rest.pulls.get({owner,repo,pull_number:eventPr.number})).data:null;
+ if(!pr){core.setOutput('base',context.sha);core.setOutput('head',context.sha);core.setOutput('candidate',context.sha);return;}
+ if(pr.head.sha!==eventPr.head.sha)throw new Error('Outdated run: PR head changed');
+ if(pr.mergeable===false||!pr.merge_commit_sha)throw new Error('Integrated merge ref is not ready');
+ core.setOutput('candidate',pr.merge_commit_sha);
  core.setOutput('base',pr.base.sha);core.setOutput('head',pr.head.sha);
  if(pr.user.login!=='layalabs')return; // Ordinary CI for owner/other contributors; no release authority.
  if(pr.user.id!==261854875)throw new Error('Author identity mismatch');
