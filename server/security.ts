@@ -1,5 +1,6 @@
 import { createCipheriv, createDecipheriv, createHash, createHmac, randomBytes, timingSafeEqual } from 'node:crypto';
 import type { Request } from 'express';
+import { isIP } from 'node:net';
 import { config } from './config.ts';
 import { pool, type DB } from './db.ts';
 export class HttpError extends Error { constructor(public status: number, message: string) { super(message); } }
@@ -15,7 +16,15 @@ export async function rate(key: string, maximum: number, seconds: number, db: DB
   const { rows }=await db.query('INSERT INTO rate_limits(key,hits,expires_at) VALUES ($1,1,now()+$2*interval \'1 second\') ON CONFLICT(key) DO UPDATE SET hits=rate_limits.hits+1 RETURNING hits',[id,seconds*2]);
   if(rows[0].hits>maximum) fail(429,'Too many attempts. Please wait and try again.');
 }
-export function clientIp(req: Request) { return req.ip || req.socket.remoteAddress || 'unknown'; }
+export function clientIp(req: Request) {
+  // Vercel overwrites this header at its trusted edge. Never trust forwarded
+  // headers on a directly reachable local/server deployment.
+  if (process.env.VERCEL === '1') {
+    const forwarded=req.headers['x-vercel-forwarded-for'] ?? req.headers['x-forwarded-for'];
+    if(typeof forwarded==='string' && isIP(forwarded.trim()))return forwarded.trim();
+  }
+  return req.socket.remoteAddress || 'unknown';
+}
 export function assertSameOrigin(req: Request) {
  const localOrigins=!config.production&&!config.qa?['http://127.0.0.1:4310','http://127.0.0.1:4312']:[];
  const origins=[config.origin,...localOrigins,...(config.qa?[process.env.VERCEL_URL,process.env.VERCEL_BRANCH_URL].filter(Boolean).map(host=>'https://'+host):[])];

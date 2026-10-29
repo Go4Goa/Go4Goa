@@ -2,7 +2,8 @@ import { Router } from 'express';
 import { randomUUID } from 'node:crypto';
 import { z } from 'zod';
 import { pool,tx,audit,award,type DB } from './db.ts';
-import { fail,rate } from './security.ts';
+import { config } from './config.ts';
+import { fail,rate,clientIp } from './security.ts';
 import { requireAccount,requireModerator } from './auth.ts';
 import { eventSchema } from '../shared/model.ts';
 import { eventSelect,eventView } from './projections.ts';
@@ -17,6 +18,7 @@ export async function queueUpdate(db:DB,eventId:string,subject:string,body:strin
  let count=0;for(const a of attendees)for(const channel of ['email','sms'] as const){if(!(a[channel+'_consent']&&a[channel+'_opt_in']&&a[channel==='sms'?'phone_verified':'email_verified']))continue;const result=await db.query(`INSERT INTO notifications(id,event_id,user_id,channel,subject,body,dedupe_key) VALUES ($1,$2,$3,$4,$5,$6,$7) ON CONFLICT(dedupe_key) DO NOTHING`,[randomUUID(),eventId,a.user_id,channel,subject,body,`${key}:${a.user_id}:${channel}`]);count+=result.rowCount||0;}return count;
 }
 events.post('/',requireAccount,async(req,res)=>{
+ if(config.qa)await rate('preview-event-ip:'+clientIp(req),10,3600);
  const v=eventSchema.parse(req.body);if(Date.parse(v.startsAt)<Date.now()+60000)fail(400,'Choose a future start time.');let schedule;try{schedule=eventOccurrences(v.startsAt,v.endsAt,v.recurrence);}catch(error){fail(400,error instanceof Error?error.message:'Check the meetup schedule.');}await rate('event-create:'+req.account!.id,5,86400);
  if(v.linkedIncident){const r=(await pool.query('SELECT status,category FROM incidents WHERE id=$1',[v.linkedIncident])).rows[0];if(!r||!['verified','in_progress','resolved'].includes(r.status))fail(400,'Link an approved public report.');if(r.category==='electrical')fail(400,'Electrical hazards need qualified responders. Do not organize a cleanup at this report.');}
  const status='published',seriesId=v.recurrence?randomUUID():null;

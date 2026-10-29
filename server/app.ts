@@ -14,13 +14,12 @@ import { directoryRoutes } from './directory.ts';
 import { account } from './account.ts';
 import { explore } from './explore.ts';
 import { notificationRoutes } from './notifications.ts';
-import { qaAuthorized } from '../shared/qa-access.ts';
 import { categories } from '../shared/model.ts';
 import { searchPlaces,suggestPlaces,resolvePlace } from './places.ts';
 import { phoneVerificationEnabled } from './twilio-credentials.ts';
 export function createApp() {
  const app=express();app.disable('x-powered-by');
- app.use(async(req,res,next)=>{if(config.qa&&!await qaAuthorized(req.get('authorization')||null,config.qaAccessCode)){res.set({'WWW-Authenticate':'Basic realm="GO-GOA QA"','Cache-Control':'no-store'}).status(401).json({error:'QA access required.'});return;}if(config.qa)res.set('X-Robots-Tag','noindex, nofollow, noarchive');next();});
+ app.use((_req,res,next)=>{if(config.qa)res.set('X-Robots-Tag','noindex, nofollow, noarchive');next();});
  app.use((req,res,next)=>{res.set({'X-Content-Type-Options':'nosniff','Referrer-Policy':'strict-origin-when-cross-origin','X-Frame-Options':'DENY','Permissions-Policy':'camera=(self), geolocation=(self), microphone=()'});if(config.production)res.set({'Strict-Transport-Security':'max-age=31536000; includeSubDomains','Content-Security-Policy':("default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' blob: data:; font-src 'self'; connect-src 'self' https://tiles.openfreemap.org; worker-src 'self'; manifest-src 'self'; object-src 'none'; frame-ancestors 'none'; base-uri 'self'; form-action 'self'").replace("img-src 'self' blob: data:",config.qa?"img-src 'self' blob: data: https://tile.openstreetmap.org":"img-src 'self' blob: data:")});next();});
  app.use('/api',async(req,res,next)=>{res.set('Cache-Control','no-store');try{if(!['GET','HEAD'].includes(req.method)&&!['/notifications/twilio-status','/notifications/resend-status'].includes(req.path))assertSameOrigin(req);await rate('api:'+clientIp(req),240,60);next();}catch(e){next(e);}});
  app.use('/api',cookieParser(),loadAccount);

@@ -7,6 +7,7 @@ import { clientIp, fail, hash, lookupHash, seal, unseal, rate, equal } from './s
 import type { Account } from '../shared/model.ts';
 import { phoneVerificationEnabled } from './twilio-credentials.ts';
 import { requestTwilioVerification } from './twilio-verify.ts';
+import { qaAuthorized } from '../shared/qa-access.ts';
 
 declare global { namespace Express { interface Request { account?: Account } } }
 export const auth = Router();
@@ -23,6 +24,19 @@ async function verifyApi(path:'Verifications'|'VerificationCheck',data:Record<st
  return requestTwilioVerification(phoneVerificationCredentials,path,data);
 }
 auth.get('/me',(req,res)=>res.json({account:req.account||null}));
+// Each public-preview visitor gets a separate resident identity without signing in.
+auth.post('/guest',async(req,res)=>{
+ if(!config.qa)fail(404,'Not found.');
+ z.object({}).strict().parse(req.body||{});
+ if(req.account){res.json({ok:true});return;}
+ await rate('guest:'+clientIp(req),40,3600);
+ const id=randomUUID();
+ await tx(async db=>{
+  await db.query("INSERT INTO users_private(id,role,demo) VALUES ($1,'resident',true)",[id]);
+  await db.query('INSERT INTO profiles(id,username) VALUES ($1,$2)',[id,'guest_'+id.replaceAll('-','').slice(0,16)]);
+ });
+ await session(res,id);res.json({ok:true});
+});
 auth.post('/request-code',async(req,res)=>{
  const {phone}=z.object({phone:phoneSchema}).strict().parse(req.body);await rate('otp-ip:'+clientIp(req),10,600);await rate('otp-phone:'+phone,3,600);
  await verifyApi('Verifications',{To:phone,Channel:'sms'});
@@ -36,6 +50,8 @@ auth.post('/verify-code',async(req,res)=>{
 });
 auth.post('/demo',async(req,res)=>{
  if(!config.demo||(!config.qa&&(config.production||!['127.0.0.1','::1','::ffff:127.0.0.1'].includes(req.socket.remoteAddress||''))))fail(404,'Not found.');
+ // Public browsing must not grant a shared resident or moderator identity.
+ if(config.qa&&!await qaAuthorized(req.get('authorization')||null,config.qaAccessCode))fail(403,'Shared test accounts are reserved for automated verification.');
  const role=z.enum(['resident','organizer','moderator']).parse(req.body.role);await rate('demo:'+clientIp(req),30,600);const user=(await pool.query('SELECT id FROM users_private WHERE demo=true AND role=$1 ORDER BY created_at LIMIT 1',[role])).rows[0];if(!user)fail(503,'Run the local seed command first.');await session(res,user.id);res.json({ok:true});
 });
 auth.post('/logout',requireAccount,async(req,res)=>{await pool.query('DELETE FROM sessions WHERE token_hash=$1',[hash(req.cookies.go_goa_session)]);res.clearCookie('go_goa_session',{path:'/'});res.json({ok:true});});
