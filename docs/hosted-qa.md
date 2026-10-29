@@ -2,15 +2,17 @@
 
 URL: https://go-goa-qa.vercel.app
 
-This is an isolated testing environment. It uses its own Neon Postgres/PostGIS database and a private Vercel Blob store. It contains fictional personas and example records. Use sample photos and places only. Phone verification, SMS and email delivery are disabled in hosted QA.
+This is an isolated testing environment. It uses its own Neon Postgres/PostGIS database and a private Vercel Blob store. It contains fictional personas and example records. Use sample photos and places only. SMS notifications and email delivery are disabled in hosted QA.
+
+Phone sign-in needs `GO_GOA_PHONE_VERIFICATION=true` and the Verify credentials in Vercel. Use the restricted API key when it is available. The owner authorized temporary Watchdoggs Verify reuse for the 30 October 2026 hackathon test. Replace the shared credentials after the test. Test both new credential sets before you revoke the shared credentials.
 
 ## Give the Reporting QA partner access
 
 Share the URL directly. On 29 October 2026 Zachary explicitly authorized public browsing without a site password or Vercel login. No GitHub access or Vercel membership is needed to view the site.
 
-The preview starts a separate guest resident session automatically in each browser. There is no sign-in screen, phone/email form, team-entry URL or browser password challenge. Reports, meetup creation, RSVP and bookmarks use that guest identity. The private session cookie keeps each visitor's activity separate; clearing cookies loses access to that guest activity.
+The preview starts a separate guest resident session automatically in each browser. The private session cookie keeps each visitor's activity separate. Clearing cookies removes access to that guest activity.
 
-Guest creation cannot select a role or obtain moderator permissions. Shared seeded personas remain available only to authorized automated QA through the encrypted credential at the test-account API; no persona chooser is shown to visitors. Phone verification and live notifications stay disabled.
+Guests can browse, create meetups, RSVP and use bookmarks without signing in. A guest must verify a phone number before submitting a report when phone verification is enabled. Guest creation cannot select a role or obtain moderator permissions. Shared seeded personas remain available only to authorized automated QA through the encrypted test-account API.
 
 Follow [Reporting QA handoff](reporting-qa-handoff.md). Report issues with the tested URL and commit, browser, steps and scrubbed screenshots. Do not put the QA password, cookies, personal information or provider keys into issues.
 

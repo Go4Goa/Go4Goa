@@ -17,3 +17,33 @@ Notifications use a transactional outbox. The creator of a published meetup can 
 The service worker precaches only the public shell. Auth, account, reports, photos, API results and tiles are never cached by it. In-flight drafts remain in memory; optional local persistence is not enabled, avoiding storing private GPS and photos on shared devices. Upload retries reuse the same idempotency key and display pending until accepted.
 
 Production requires dedicated secrets, database role separation, PostGIS, private object storage, verified notification senders, map service configuration, moderator staffing, retention approval and deployment checks in the runbook. No deployment is part of this task.
+
+## Automated report moderation
+
+Status: accepted, 29 October 2026. Owner decision: no human moderator approves reports. An AI model judges each new issue report and fixed code rules decide. People handle only the held reports (the escalation queue). Meetups are not reviewed.
+
+The check runs when `GO_GOA_AI_REVIEW=1` and `ANTHROPIC_API_KEY` are set. `AI_REVIEW_MODEL` overrides the default model `claude-sonnet-5`; `ANTHROPIC_WORKSPACE_ID` is sent as a header when set. When the check is off, reports stay `new` as before. Code: `server/ai-review.ts`. Rubric version: `gr-1`.
+
+**Trigger.** After the report transaction commits, the API starts the review without delaying the response (`waitUntil` on Vercel). The worker calls `runPendingReviews` every loop for `new` reports with no `gr-1` row. Moderators can run the same function with `POST /api/admin/ai-review/run`. Vercel stops a function after 60 s and does not run the worker, so on Vercel a report whose run was cut off waits until the worker or the manual run picks it up. An `unavailable` attempt is retried after 60 minutes by the worker, at once by the manual run.
+
+**Sent to Anthropic.** One request per report: the new photo (re-encoded WebP, EXIF removed), the category label and help text, the reporter's private description, the public location label for exact-location reports only (blurred reports show the fixed "Approximate location, Goa"), and up to four thumbnails of earlier reports labelled "Candidate 1" to "Candidate 4". The description and label are marked as data, never instructions. Candidates are public reports only, so a merge cannot reveal an unpublished report: same category, created in the last 30 days and before the new report, status `verified` or `in_progress`, not merged, and with a true pin less than 250 m away (both pins are decrypted on the server; nearest first).
+
+**Never sent.** Coordinates or pins, the private landmark of blurred reports, usernames, account, incident or media ids, phone numbers and email addresses.
+
+**Decision table** (first matching row wins; thresholds are inclusive):
+
+| # | Condition | Decision | Effect |
+|---|---|---|---|
+| a | Model unavailable, refusal, unparseable answer or error | hold | Status stays `new`; `unavailable` code recorded |
+| b | `duplicate_of_candidate` set, `duplicate_confidence` >= 80 and `matches_category` is not `no` | merge | Status `duplicate`, `duplicate_of` = candidate, which is always a public (`verified` or `in_progress`) report (target must still be active and the same category, else hold). No points |
+| c | `matches_category` = `no` and `confidence` >= 80 | reject | Status `rejected`; the reporter sees the model's reason in the status history |
+| d | `matches_category` = `yes`, `confidence` >= 80, `public_civic_scene`, `looks_like_screen_or_generated` is not `yes`, no identifying details in the photo, no personal information in the description or label, and the text filter found nothing | publish | Status `verified`, photo `approved`, photo alt text replaced with "<category> reported in Goa", +10 `report_approved` points once |
+| e | Anything else | hold | Status stays `new` with the hold reason |
+
+**Text filter.** Before rule d, fixed code checks the description and the sent label. A link (`http`, `www.`), an `@`, a run of 7 or more digits (spaces or dashes allowed between them, so long dates also match) or text that reads like instructions to the model (for example "ignore previous", "you are", "system prompt", "respond with", a judgement field name) forces a hold. The filter never blocks reject or merge.
+
+The decision is applied under a row lock and only if the report is still `new` at the version that was judged. A moderator change made while the model runs wins. The `ai_reviews` table keeps one row per report and rubric (`UNIQUE(incident_id, rubric_version)`); a second runner can replace only an `unavailable` row, so two runners never both act. Audit rows have a null actor: `incident.status` or `incident.merged` for the change and `ai_review.recorded` with model, rubric and decision.
+
+**Escalation.** Held reports are the `new` list in Moderation. The list and the report detail show the AI decision, reason and model. Typical hold reasons: faces, number plates or house numbers in the photo (the app cannot blur them automatically), personal information in the description or location label, text caught by the filter, model unsure, possible screen or generated image, not a public scene, low confidence. AI data is never returned by public endpoints. The reporter sees only the reason attached to an automated status change.
+
+**Known limits.** For exact reports the description and location label become public on publish without a person reading them; the model checks both for personal information and the text filter holds links, contact details and instruction-like text. The description and label are untrusted text inside the prompt; the prompt marks them as data, the text filter blocks the obvious injection forms from publishing, and the fixed decision rules limit what a manipulated answer can do (it can publish or reject a single report).

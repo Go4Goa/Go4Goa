@@ -1,10 +1,12 @@
 import { randomBytes } from 'node:crypto';
 import { mkdirSync, existsSync, readFileSync, writeFileSync } from 'node:fs';
 import { resolve } from 'node:path';
+import { phoneVerificationEnabled, selectTwilioVerifyCredentials } from './twilio-credentials.ts';
 
 const production = process.env.NODE_ENV === 'production';
 const qa = process.env.GO_GOA_QA === 'true';
 const demo = qa || (!production && process.env.GO_GOA_DEMO !== 'false');
+const phoneVerificationRequested = process.env.GO_GOA_PHONE_VERIFICATION === 'true';
 const local = resolve('.local');
 if (!production) mkdirSync(local, { recursive: true, mode: 0o700 });
 function key() {
@@ -17,12 +19,13 @@ function key() {
 const dataKey = key();
 if (!/^[a-f\d]{64}$/i.test(dataKey)) throw new Error('DATA_KEY must be 32 bytes encoded as 64 hex characters.');
 export const config = {
-  production, qa, demo, local, dataKey,
+  production, qa, demo, local, dataKey, phoneVerificationRequested,
   qaAccessCode: process.env.QA_ACCESS_CODE || '', blobToken: process.env.BLOB_READ_WRITE_TOKEN || '',
   port: Number(process.env.PORT || 4311), origin: process.env.PUBLIC_ORIGIN || 'http://127.0.0.1:4310',
   database: process.env.DATABASE_URL || 'postgresql:///go_goa?host=/tmp',
   afgOrigin: 'https://actforgoa-field-guide.vercel.app',
   twilioSid: process.env.TWILIO_ACCOUNT_SID || '', twilioToken: process.env.TWILIO_AUTH_TOKEN || '',
+  twilioApiKeySid: process.env.TWILIO_API_KEY_SID || '', twilioApiKeySecret: process.env.TWILIO_API_KEY_SECRET || '',
   verifySid: process.env.TWILIO_VERIFY_SERVICE_SID || '', messagingSid: process.env.TWILIO_MESSAGING_SERVICE_SID || '',
   resend: process.env.RESEND_API_KEY || '', emailFrom: process.env.RESEND_FROM || '', resendWebhook: process.env.RESEND_WEBHOOK_SECRET || '',
   s3Bucket: process.env.S3_BUCKET || '', s3Endpoint: process.env.S3_ENDPOINT || '', s3Region: process.env.S3_REGION || 'auto',
@@ -31,12 +34,19 @@ export const config = {
   // their own server secret; this value is never returned by /api/config.
   placesKey: process.env.GOOGLE_PLACES_API_KEY || process.env.GOOGLE_MAPS_API_KEY || '',
 };
+export const phoneVerificationCredentials = selectTwilioVerifyCredentials({
+  apiKeySid: config.twilioApiKeySid,
+  apiKeySecret: config.twilioApiKeySecret,
+  accountSid: config.twilioSid,
+  authToken: config.twilioToken,
+  serviceSid: config.verifySid,
+});
 export function placesApiKey() {
   if (config.placesKey) return config.placesKey;
   const file = resolve(local, 'google-places-key');
   return !production && existsSync(file) ? readFileSync(file, 'utf8').trim() : '';
 }
-if (production && !qa && (process.env.GO_GOA_DEMO === 'true' || !process.env.DATABASE_URL || !config.s3Bucket || !config.mapKey || !config.origin.startsWith('https://') || !config.verifySid || !config.twilioSid || !config.twilioToken)) {
+if (production && !qa && (process.env.GO_GOA_DEMO === 'true' || !process.env.DATABASE_URL || !config.s3Bucket || !config.mapKey || !config.origin.startsWith('https://') || !phoneVerificationEnabled(phoneVerificationRequested,phoneVerificationCredentials))) {
   throw new Error('Production requires dedicated database, HTTPS origin, private object storage, map provider and Twilio Verify. Demo mode is forbidden.');
 }
 

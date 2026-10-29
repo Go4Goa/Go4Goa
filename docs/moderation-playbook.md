@@ -2,6 +2,8 @@
 
 Local QA uses fictional reports only. Before public launch, appoint accountable moderators and an escalation contact.
 
+Report moderation is automated when `GO_GOA_AI_REVIEW=1` (see "Automated report moderation" in `docs/architecture.md`). An AI check publishes, merges or rejects new issue reports by fixed rules. People do not approve reports. People handle the held reports: the `new` list in Moderation is the escalation queue, and each item shows the AI hold reason. Work the queue with the steps below. If a report has no AI decision and the check is on, use `POST /api/admin/ai-review/run` (moderator session) to run it again. A person can still change any automated decision with a written reason.
+
 1. Review the photo, private pin and notes. Remove faces, number plates, home details and other identifying information. Keep reports pending until safe.
 2. For spam or abusive content, reject with a concise factual reason. Do not repeat sensitive content in the reason.
 3. Respect blurred location choices. Sanitize text and photo clues as well as the public coordinate. Precision may be reduced for safety; this release never upgrades a blurred reporter location to exact.
