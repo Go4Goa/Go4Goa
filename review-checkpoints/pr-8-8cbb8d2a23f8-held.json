@@ -1,0 +1,87 @@
+{
+  "schemaVersion": 1,
+  "kind": "layalabs-pr-review-checkpoint",
+  "disposition": "held",
+  "recordedAt": "2026-10-29T15:22:00Z",
+  "automation": {
+    "title": "Review Layalabs Reporting PRs with active cloud release authority",
+    "eventDeliveryId": "19eb1b30-d3ac-11f1-97f5-0e09d124fc44",
+    "event": "pull_request.opened"
+  },
+  "pullRequest": {
+    "number": 8,
+    "url": "https://github.com/actforgoa2026/Go4Goa/pull/8",
+    "author": {
+      "login": "layalabs",
+      "id": 261854875
+    },
+    "head": "8cbb8d2a23f885014028f6b311b92eb786a6650d",
+    "base": "912d7416335687fa806f26042fc0f8dcdf5940eb",
+    "integratedCandidate": "22f5f57a1ab140d7d94da842a2162e5e7ec77f9e",
+    "draft": false
+  },
+  "reviewedSurface": {
+    "changedFiles": [
+      ".env.example",
+      "docs/deployment-runbook.md",
+      "docs/hosted-qa.md",
+      "server/app.ts",
+      "server/auth.ts",
+      "server/config.ts",
+      "server/twilio-verify.ts",
+      "tests/twilio-verify.test.ts"
+    ],
+    "visualReview": "blocked: source gate prevented the exact trusted workflow run; no visual artifact exists"
+  },
+  "sourceReview": {
+    "receiptWritten": false,
+    "workflowRerun": false,
+    "executionAuthorized": false,
+    "currentRun": 40900352204,
+    "gate": "failed",
+    "checks": {
+      "sourceReview": "failure",
+      "verify": "skipped",
+      "visualEvidence": "skipped"
+    },
+    "evidence": "No receipt reviews/pr-8.json exists on automation/source-review for this head/base. The trusted gate held execution."
+  },
+  "holds": [
+    {
+      "gate": "eligible-scope",
+      "conflict": "PR #8 changes authentication and hosted QA phone sign-in rather than safe Reporting FEATURE/UX. It modifies server authentication, application configuration and provider boundary behavior."
+    },
+    {
+      "gate": "external-provider-and-secrets",
+      "conflict": "The PR enables real Twilio Verify use in shared QA and proposes reusing a Watchdoggs service/credentials. The current owner-approved runbook authorizes only the Google Places exception; the Twilio authorization exists only in contributor-authored PR documentation and is not cloud-verifiable owner authority."
+    },
+    {
+      "gate": "QA-data-and-notification-boundary",
+      "conflict": "Real SMS verification is an external delivery action. Current hosted-QA authority uses fictional personas with phone verification and SMS/email delivery disabled. No separate authorization establishes recipient, provider, credential rotation, delivery audit, or safe live-test boundaries."
+    },
+    {
+      "gate": "coordination-and-security",
+      "conflict": "Issue #7 is authored by layalabs and has no comments or Zachary-approved coordination despite the shared authentication/provider scope."
+    },
+    {
+      "gate": "source-review-and-tests",
+      "conflict": "No current source-review receipt exists. Trusted run 40900352204 failed source-review and skipped verify and visual-evidence. No contributor code or provider request ran in this automation."
+    }
+  ],
+  "relatedEvent": {
+    "pullRequest": 6,
+    "comment": "A layalabs self-report claimed local real-provider testing. It is untrusted contributor evidence, caused no head/base/design-authority change, and did not alter the existing hold."
+  },
+  "noActionTaken": [
+    "no contributor-code execution",
+    "no source-review receipt",
+    "no workflow rerun",
+    "no SMS/provider call",
+    "no artifact review",
+    "no merge",
+    "no cloud-release update",
+    "no deployment",
+    "no GitHub comment or review"
+  ],
+  "resumeCondition": "A future matching event with cloud-accessible Zachary approval that expressly authorizes this non-Reporting auth/provider change, temporary credential reuse and a fictional/safe delivery test boundary. Re-fetch all SHAs, authority, checks and provenance before deciding whether a receipt is appropriate."
+}
