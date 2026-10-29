@@ -1,0 +1,39 @@
+{
+  "schemaVersion": 1,
+  "status": "verified_cloud_release_handoff",
+  "recordedAt": "2026-10-29T15:01:22.857Z",
+  "repository": "actforgoa2026/Go4Goa",
+  "authorization": "Zachary explicitly requested cloud tests, design checks and deployment so the entire Layalabs PR workflow runs while his Mac is off; Vercel GitHub repository-only access and encrypted QA secret were explicitly approved.",
+  "cloudAutomationId": "6ae33ac8da3c8191b8476185d4c8bb70",
+  "cloudChat": "https://chatgpt.com/c/6ae33961-7a84-83ed-8316-cae5260a6098",
+  "releaseOwner": "hosted automation 6ae33ac8da3c8191b8476185d4c8bb70",
+  "localWorker": "review-layalabs-reporting-prs must be paused after hosted configuration readback to prevent duplicate releases",
+  "supersedes": "The setup-in-progress/source-review-only authority status in docs/cloud-pr-workflow.md and prior local/cloud commissioning records is superseded by this verified handoff. Every design, scope, source-review, test, privacy, expected-SHA, deployment and notification gate remains mandatory.",
+  "commissioningRecord": "releases/2026-10-29-912d741.json",
+  "commissioningRecordCommit": "e5b31ad128c5ccc124a991cc8c4737a4cdacd8a5",
+  "verifiedSource": "912d7416335687fa806f26042fc0f8dcdf5940eb",
+  "verifiedDeployment": "dpl_9HTEUA4Gt3AP61zhNR8dFr566Gsd",
+  "verifiedLiveRun": 40896333901,
+  "verifiedLiveArtifact": 12907770773,
+  "cloudRenderedReview": "The hosted monitor downloaded/unpacked actual final private artifact and reviewed loaded maps, mobile/desktop surface sweeps, Meetup composer, Directory and Reporting; final disposition verified for commissioning.",
+  "allowedAuthor": {
+    "login": "layalabs",
+    "id": 261854875
+  },
+  "allowedScope": "Safe Reporting FEATURE and UX changes using Zachary's current approved design system. Other authors, shared design changes, broad unrelated scope and unresolved ambiguities remain held.",
+  "target": "https://go-goa-qa.vercel.app",
+  "targetClassification": "protected shared fictional QA on Vercel production alias; no public resident launch",
+  "execution": "GitHub-hosted isolated Node/Postgres tests, build, actual vendored Impeccable context/detector and rendered baseline/candidate artifacts. No local Mac executor required.",
+  "publication": "Expected-head guarded merge, re-fetch current main/live/design, then expected-old guarded fast-forward of cloud-release only. Verify Vercel plus cloud/live-verification and actual live rendered artifact before success.",
+  "records": "Use automation/source-review for exact-head/base source execution receipts, automation/release-records for durable per-PR/checkpoint/release records; never store secrets.",
+  "trigger": "Retain existing active author-filtered PR, commit, submitted-review and comment subscription. Keep active bounded polling while CI/deployment is pending. No new monitor.",
+  "liveAuthorEventTested": false,
+  "limitations": [
+    "No real layalabs event has yet exercised the subscription; verify and record its first event when it arrives.",
+    "Distinct reopened and check/status-only triggers were not supported at setup. Resume pending work within the active cloud run and re-check on supported events.",
+    "Repository plan lacks server-enforced branch protection; current controls rely on the reviewer/workflow and trusted write collaborators.",
+    "If current design authority, source/artifact provenance, required checks, deployment identity or access cannot be verified, hold publication and notify only for a concrete meaningful issue."
+  ],
+  "notifications": "Stay quiet when no relevant change exists. Notify Zachary only for verified release, meaningful failure or concrete conflict/action needed. No GitHub comments/reviews or collaborator messages.",
+  "safety": "No Device Hub without fresh approval; no real residents, production seeding, notifications, destructive migrations, blanket conflict resolution, force push, bypasses, secrets in PR jobs, or ActForGoa/Dizko changes."
+}
