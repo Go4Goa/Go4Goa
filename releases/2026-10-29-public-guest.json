@@ -1,0 +1,128 @@
+{
+  "schemaVersion": 1,
+  "status": "verified",
+  "recordedAt": "2026-10-29T16:24:04.604Z",
+  "repository": "actforgoa2026/Go4Goa",
+  "pr": "https://github.com/actforgoa2026/Go4Goa/pull/9",
+  "authorization": {
+    "publicAccess": "decisions/2026-10-29-public-access.json",
+    "noSignIn": "decisions/2026-10-29-no-sign-in.json",
+    "owner": "ZakKrevitt",
+    "direction": "Public site with no passwords or sign-in UI; separate automatic resident guest sessions."
+  },
+  "source": {
+    "head": "a8be71f1a98c7f99850a730eaf791fa7e6a7fefd",
+    "base": "1f815793e54550266e2f724421b2255b179d6c89",
+    "integrated": "e7be2dd405f8c89470234dc24750c62ebf5ec4e3",
+    "merged": "26515cdc5a2cdcd08137c2738d1fbf283a8bba60",
+    "released": "26515cdc5a2cdcd08137c2738d1fbf283a8bba60",
+    "previousReleased": "1f815793e54550266e2f724421b2255b179d6c89",
+    "mergedTreeMatchesReviewedCandidate": true,
+    "latestMainAndReleaseRechecked": true
+  },
+  "checks": {
+    "unitTests": 30,
+    "isolatedDatabaseIntegrationScenarios": 9,
+    "build": "passed",
+    "prRun": 40908973821,
+    "mainRun": 40910419938,
+    "liveRun": 40910457473,
+    "allRuns": "success",
+    "vercelStatus": "success",
+    "cloud/live-verification": "success",
+    "reviews": "No unresolved threads or change-requesting reviews; both guest IP and deleted-account state findings fixed and verified."
+  },
+  "design": {
+    "approvedOwnerPRs": [
+      10,
+      11
+    ],
+    "impeccable": "Actual skill context/audit and source detector used; trusted cloud workflow includes vendored context.",
+    "widths": [
+      320,
+      390,
+      1440
+    ],
+    "designArtifact": {
+      "id": 12912773183,
+      "name": "design-evidence-40908973821-1",
+      "run": 40908973821,
+      "attempt": 1,
+      "pairs": 54,
+      "downloadedUnpackedAndViewed": true
+    },
+    "changedPairs": [
+      "1440-review.png",
+      "1440-offline.png",
+      "1440-upload-failed.png"
+    ],
+    "findings": "No new design regression. Changed desktop captures have small text-caret rendering differences; baseline structure unchanged. 53 inherited advisory token findings and two inherited poster font warnings remain explicit. No italic/oblique or sideflag finding. Separate actual QA guest Profile/Preferences/Reporting/editor renders also inspected.",
+    "liveArtifact": {
+      "id": 12914450492,
+      "name": "live-evidence-26515cdc5a2cdcd08137c2738d1fbf283a8bba60-1",
+      "run": 40910457473,
+      "attempt": 1,
+      "captures": 30,
+      "downloadedUnpackedAndViewed": true
+    },
+    "liveViewsInspected": [
+      "320-profile",
+      "390-preferences",
+      "1440-profile",
+      "1440-map",
+      "320-report",
+      "390-meetup-create"
+    ],
+    "deviceHubUsed": false
+  },
+  "deployment": {
+    "project": "go-goa-qa",
+    "projectId": "prj_6Q7Eugjt0H5X2fpIvyohQdGBJd15",
+    "teamId": "team_HFlIoPSiBdah4eZZDkHUF4Z7",
+    "id": "dpl_9znQrrZYGLqwim2DurVVuPZofbcN",
+    "url": "https://go-goa-qk9sunp5r-zakkrevitt-gmailcoms-projects.vercel.app",
+    "alias": "https://go-goa-qa.vercel.app",
+    "state": "READY",
+    "platformTarget": "production",
+    "applicationMode": "hosted-qa",
+    "classification": "Publicly accessible fictional preview; no resident-ready launch or provider activation.",
+    "ssoProtection": null,
+    "passwordProtection": null
+  },
+  "liveVerification": {
+    "anonymousPages200": true,
+    "loginRedirects": false,
+    "wwwAuthenticate": false,
+    "automaticDistinctResidentGuests": true,
+    "sameGuestAfterReload": true,
+    "noSignInOrSignOutUI": true,
+    "noPhoneOrEmailOnboarding": true,
+    "noTeamLoginRoute": true,
+    "anonymousSeededPersonaDenied403": true,
+    "guestModeratorDenied403": true,
+    "anonymousPrivateAccountDenied401": true,
+    "privateReportsAndPhotosIsolated": true,
+    "csrfEnforced": true,
+    "loadedMapAndData": true,
+    "reportingSmoke": "PASS: photo storage, private pending report, blurred coordinates, retry, moderation, points, RSVP, bookmarks, calendar and cached resources.",
+    "syntheticReportClosed": "877c2593-9fca-4b34-ae89-0c2239fedaf9",
+    "guestDeletionReset": "Local isolated browser test at all three widths: new resident identity, zero old points/activity and cleared meetup drafts."
+  },
+  "cloud": {
+    "automationId": "6ae33ac8da3c8191b8476185d4c8bb70",
+    "savedPromptExactReadback": true,
+    "savedPromptCharacters": 11307,
+    "canonicalPromptCommit": "e5edb2f3d19fe131c9dc4923897fa35787854edd",
+    "publicGuestReleaseHoldSatisfied": true,
+    "localFallback": "PAUSED",
+    "layalabsSignInPR8": "HELD: conflicts with owner no-sign-in direction.",
+    "firstRealAuthorEventStillRequiresVerification": true
+  },
+  "limitations": [
+    "Browser guest activity cannot be recovered after clearing its cookie.",
+    "No manual moderator sign-in; seeded personas are restricted to authorized automated QA.",
+    "Repository plan lacks server-enforced branch protection; existing workflow and expected-SHA controls apply.",
+    "Public launch provider/map policy and retention/operator decisions remain separate."
+  ],
+  "outcome": "Verified public guest release. This record satisfies the hosted monitor's temporary PR9 release hold. Preserve all other source, design, privacy, expected-SHA and release gates."
+}
