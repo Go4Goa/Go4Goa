@@ -1,0 +1,9 @@
+.local
+.env*
+!.env.example
+.impeccable/review
+node_modules
+test-results
+playwright-report
+.agents
+.claude

@@ -3,7 +3,8 @@ import { mkdirSync, existsSync, readFileSync, writeFileSync } from 'node:fs';
 import { resolve } from 'node:path';
 
 const production = process.env.NODE_ENV === 'production';
-const demo = !production && process.env.GO_GOA_DEMO !== 'false';
+const qa = process.env.GO_GOA_QA === 'true';
+const demo = qa || (!production && process.env.GO_GOA_DEMO !== 'false');
 const local = resolve('.local');
 if (!production) mkdirSync(local, { recursive: true, mode: 0o700 });
 function key() {
@@ -16,7 +17,8 @@ function key() {
 const dataKey = key();
 if (!/^[a-f\d]{64}$/i.test(dataKey)) throw new Error('DATA_KEY must be 32 bytes encoded as 64 hex characters.');
 export const config = {
-  production, demo, local, dataKey,
+  production, qa, demo, local, dataKey,
+  qaAccessCode: process.env.QA_ACCESS_CODE || '', blobToken: process.env.BLOB_READ_WRITE_TOKEN || '',
   port: Number(process.env.PORT || 4311), origin: process.env.PUBLIC_ORIGIN || 'http://127.0.0.1:4310',
   database: process.env.DATABASE_URL || 'postgresql:///go_goa?host=/tmp',
   afgOrigin: 'https://actforgoa-field-guide.vercel.app',
@@ -26,6 +28,10 @@ export const config = {
   s3Bucket: process.env.S3_BUCKET || '', s3Endpoint: process.env.S3_ENDPOINT || '', s3Region: process.env.S3_REGION || 'auto',
   mapKey: process.env.MAPTILER_KEY || '',
 };
-if (production && (process.env.GO_GOA_DEMO === 'true' || !process.env.DATABASE_URL || !config.s3Bucket || !config.mapKey || !config.origin.startsWith('https://') || !config.verifySid || !config.twilioSid || !config.twilioToken)) {
+if (production && !qa && (process.env.GO_GOA_DEMO === 'true' || !process.env.DATABASE_URL || !config.s3Bucket || !config.mapKey || !config.origin.startsWith('https://') || !config.verifySid || !config.twilioSid || !config.twilioToken)) {
   throw new Error('Production requires dedicated database, HTTPS origin, private object storage, map provider and Twilio Verify. Demo mode is forbidden.');
+}
+
+if (qa && (!process.env.DATABASE_URL || !process.env.DATA_KEY || !config.blobToken || config.qaAccessCode.length < 24 || !config.origin.startsWith('https://'))) {
+  throw new Error('Hosted QA requires a dedicated database, encryption key, private Blob store, HTTPS origin and strong access code.');
 }

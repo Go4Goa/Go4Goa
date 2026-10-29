@@ -2,7 +2,7 @@ import pg from 'pg';
 import { readFile } from 'node:fs/promises';
 import { config } from '../server/config.ts';
 const url=new URL(config.database); const database=url.pathname.slice(1);
-if(!config.production){
+if(!config.production&&!config.qa){
  if(!/^go_goa(?:_test)?$/.test(database)) throw new Error('Local setup may create only go_goa or go_goa_test.');
  const adminUrl=new URL(url);adminUrl.pathname='/postgres';const admin=new pg.Client({connectionString:adminUrl.href});await admin.connect();
  if(!(await admin.query('SELECT 1 FROM pg_database WHERE datname=$1',[database])).rowCount) await admin.query(`CREATE DATABASE "${database}"`);

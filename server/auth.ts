@@ -17,7 +17,7 @@ export const requireAccount: RequestHandler=(req,_res,next)=>{ if(!req.account)r
 export const requireModerator: RequestHandler=(req,res,next)=>requireAccount(req,res,e=>{if(e)return next(e);if(!['moderator','admin'].includes(req.account!.role))return next(Object.assign(new Error('Moderator access is required.'),{status:403}));next();});
 async function session(res:Response,user:string) { const token=randomBytes(32).toString('base64url'),csrf=randomBytes(24).toString('base64url');await pool.query('INSERT INTO sessions(token_hash,user_id,csrf) VALUES ($1,$2,$3)',[hash(token),user,csrf]);res.cookie('go_goa_session',token,{httpOnly:true,secure:config.production,sameSite:'strict',path:'/',maxAge:14*86400000}); }
 async function verifyApi(path:string,data:Record<string,string>) {
- if(!config.verifySid||!config.twilioSid||!config.twilioToken) fail(503,'Phone verification is not configured yet.');
+ if(config.qa||!config.verifySid||!config.twilioSid||!config.twilioToken) fail(503,'Phone verification is not configured yet.');
  const response=await fetch(`https://verify.twilio.com/v2/Services/${config.verifySid}/${path}`,{method:'POST',headers:{authorization:'Basic '+Buffer.from(config.twilioSid+':'+config.twilioToken).toString('base64'),'content-type':'application/x-www-form-urlencoded'},body:new URLSearchParams(data),signal:AbortSignal.timeout(12000)});
  if(!response.ok) fail(response.status===429?429:502,'Verification could not be completed. Please try again shortly.');
  return response.json() as Promise<{status:string}>;
@@ -35,7 +35,7 @@ auth.post('/verify-code',async(req,res)=>{
  const id=await tx(async db=>{const locked=await db.query('SELECT id FROM verification_challenges WHERE id=$1 AND consumed_at IS NULL FOR UPDATE',[v.challenge]);if(!locked.rowCount)fail(409,'This code has already been used.');const existing=(await db.query('SELECT id,deleted_at FROM users_private WHERE phone_hash=$1',[ch.destination_hash])).rows[0];let id=existing?.id;if(existing?.deleted_at)fail(403,'This account has been deleted.');if(!id){id=randomUUID();await db.query('INSERT INTO users_private(id,phone_hash,phone_cipher,phone_verified) VALUES ($1,$2,$3,true)',[id,ch.destination_hash,ch.destination_cipher]);await db.query('INSERT INTO profiles(id,username) VALUES ($1,$2)',[id,v.username]);await audit(db,id,'account.created',id,null,{username:v.username});}await db.query('UPDATE verification_challenges SET consumed_at=now() WHERE id=$1',[v.challenge]);return id as string;});await session(res,id);res.json({ok:true});
 });
 auth.post('/demo',async(req,res)=>{
- if(!config.demo||config.production||!['127.0.0.1','::1','::ffff:127.0.0.1'].includes(req.socket.remoteAddress||''))fail(404,'Not found.');
+ if(!config.demo||(!config.qa&&(config.production||!['127.0.0.1','::1','::ffff:127.0.0.1'].includes(req.socket.remoteAddress||''))))fail(404,'Not found.');
  const role=z.enum(['resident','organizer','moderator']).parse(req.body.role);await rate('demo:'+clientIp(req),30,600);const user=(await pool.query('SELECT id FROM users_private WHERE demo=true AND role=$1 ORDER BY created_at LIMIT 1',[role])).rows[0];if(!user)fail(503,'Run the local seed command first.');await session(res,user.id);res.json({ok:true});
 });
 auth.post('/logout',requireAccount,async(req,res)=>{await pool.query('DELETE FROM sessions WHERE token_hash=$1',[hash(req.cookies.go_goa_session)]);res.clearCookie('go_goa_session',{path:'/'});res.json({ok:true});});
@@ -44,7 +44,7 @@ auth.patch('/preferences',requireAccount,async(req,res)=>{
  await tx(async db=>{await db.query('UPDATE users_private SET sms_opt_in=$2,email_opt_in=$3 WHERE id=$1',[req.account!.id,v.sms,v.email]);await audit(db,req.account!.id,'preferences.changed',req.account!.id,{sms:req.account!.smsOptIn,email:req.account!.emailOptIn},v);});res.json({ok:true});
 });
 auth.post('/email/request',requireAccount,async(req,res)=>{
- const email=z.email().max(254).parse(req.body.email).toLowerCase();await rate('email:'+req.account!.id,3,600);if(!config.resend||!config.emailFrom)fail(503,'Email verification is not configured yet.');
+ const email=z.email().max(254).parse(req.body.email).toLowerCase();await rate('email:'+req.account!.id,3,600);if(config.qa||!config.resend||!config.emailFrom)fail(503,'Email verification is not configured yet.');
  const id=randomUUID(),code=String(randomInt(100000,1000000));await pool.query(`INSERT INTO verification_challenges(id,kind,destination_hash,destination_cipher,code_hash,user_id) VALUES ($1,'email',$2,$3,$4,$5)`,[id,lookupHash(email),seal(email),lookupHash(code+id),req.account!.id]);
  const response=await fetch('https://api.resend.com/emails',{method:'POST',headers:{authorization:`Bearer ${config.resend}`,'content-type':'application/json','idempotency-key':id},body:JSON.stringify({from:config.emailFrom,to:[email],subject:'Your GO-GOA email code',text:`Your code is ${code}. It expires in 10 minutes. Verifying your email does not turn on notifications.`}),signal:AbortSignal.timeout(12000)});
  if(!response.ok)fail(502,'Email could not be sent. Please try again later.');res.json({challenge:id});

@@ -2,17 +2,19 @@ import { S3Client, PutObjectCommand, GetObjectCommand, DeleteObjectCommand } fro
 import { mkdir, writeFile, readFile, unlink } from 'node:fs/promises';
 import { resolve } from 'node:path';
 import sharp from 'sharp';
+import { put, get, del } from '@vercel/blob';
 import { config } from './config.ts';
 import { fail, hash } from './security.ts';
 const s3=config.s3Bucket?new S3Client({region:config.s3Region,endpoint:config.s3Endpoint||undefined,forcePathStyle:!!config.s3Endpoint}):null;
 const dir=resolve(config.local,'media');
 export async function putAsset(key:string,data:Buffer) {
  if(!/^[a-f\d-]+(?:-thumb)?\.webp$/.test(key))throw new Error('Invalid asset key');
- if(s3) await s3.send(new PutObjectCommand({Bucket:config.s3Bucket,Key:key,Body:data,ContentType:'image/webp',ServerSideEncryption:'AES256'}));
+ if(config.blobToken) await put(key,data,{access:'private',token:config.blobToken,addRandomSuffix:false,contentType:'image/webp',cacheControlMaxAge:60});
+ else if(s3) await s3.send(new PutObjectCommand({Bucket:config.s3Bucket,Key:key,Body:data,ContentType:'image/webp',ServerSideEncryption:'AES256'}));
  else {await mkdir(dir,{recursive:true,mode:0o700});await writeFile(resolve(dir,key),data,{mode:0o600});}
 }
-export async function getAsset(key:string) {if(s3){const r=await s3.send(new GetObjectCommand({Bucket:config.s3Bucket,Key:key}));return Buffer.from(await r.Body!.transformToByteArray());}return readFile(resolve(dir,key));}
-export async function deleteAsset(key:string) {if(s3)await s3.send(new DeleteObjectCommand({Bucket:config.s3Bucket,Key:key}));else await unlink(resolve(dir,key)).catch(e=>{if(e.code!=='ENOENT')throw e;});}
+export async function getAsset(key:string) {if(config.blobToken){const result=await get(key,{access:'private',token:config.blobToken,useCache:false});if(!result||result.statusCode!==200)throw new Error('Private photo unavailable');return Buffer.from(await new Response(result.stream).arrayBuffer());}if(s3){const r=await s3.send(new GetObjectCommand({Bucket:config.s3Bucket,Key:key}));return Buffer.from(await r.Body!.transformToByteArray());}return readFile(resolve(dir,key));}
+export async function deleteAsset(key:string) {if(config.blobToken)await del(key,{token:config.blobToken});else if(s3)await s3.send(new DeleteObjectCommand({Bucket:config.s3Bucket,Key:key}));else await unlink(resolve(dir,key)).catch(e=>{if(e.code!=='ENOENT')throw e;});}
 export async function derivative(bytes:Buffer) {
  if(bytes.length>10*1024*1024)fail(413,'Choose a photo under 10 MB.');
  try {const source=sharp(bytes,{limitInputPixels:40000000,animated:false,failOn:'error'});const m=await source.metadata();if(!['jpeg','png','webp'].includes(m.format||'')||(m.pages||1)>1)fail(415,'Use a still JPG, PNG or WebP photo.');
