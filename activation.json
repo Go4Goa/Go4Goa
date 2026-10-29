@@ -1,0 +1,25 @@
+{
+  "schemaVersion": 1,
+  "status": "active_cloud_release_authority_local_fallback_paused",
+  "completedAt": "2026-10-29T15:10:47.973Z",
+  "cloudAutomationId": "6ae33ac8da3c8191b8476185d4c8bb70",
+  "enabled": true,
+  "repository": "actforgoa2026/Go4Goa",
+  "prAuthor": {
+    "login": "layalabs",
+    "id": 261854875
+  },
+  "existingEventFiltersUnchanged": true,
+  "scheduledRepositoryPolling": false,
+  "activePendingCheckPolling": true,
+  "exactSavedPromptEqualityVerified": true,
+  "promptLength": 9497,
+  "promptRecord": "cloud-release-prompt.txt",
+  "handoffCommit": "afa2dcdbb782835879ff4ed29cdec1bf567ace1f",
+  "localAutomationId": "review-layalabs-reporting-prs",
+  "localAutomationStatus": "PAUSED",
+  "localStatusReadBack": true,
+  "verifiedRelease": "912d7416335687fa806f26042fc0f8dcdf5940eb",
+  "liveRun": 40896333901,
+  "liveAuthorEventTested": false
+}
