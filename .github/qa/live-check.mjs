@@ -18,13 +18,22 @@ try{
  for(const width of [320,390,1440]){
   const context=await browser.newContext({httpCredentials:{username:'qa',password:code},viewport:{width,height:width===1440?1000:844},reducedMotion:'reduce',serviceWorkers:'block'});
   const page=await context.newPage();
-  for(const [path,name]of [['/report','report'],['/','map'],['/events','events'],['/profile','profile']]){
+  for(const [path,name]of [['/report','report'],['/','map'],['/events','events'],['/profile','profile'],['/resources','resources'],['/resources/topics/waste','resource-topic'],['/directory','directory']]){
    await page.goto(origin+path);await page.locator('main h1').first().waitFor();await page.evaluate(()=>document.fonts.ready);
    const bad=await page.evaluate(()=>[...document.querySelectorAll('body *')].filter(e=>{const r=e.getBoundingClientRect();return r.width&&r.height&&/italic|oblique/.test(getComputedStyle(e).fontStyle);}).map(e=>e.tagName));assert.deepEqual(bad,[],'Live typography');
    const file=`${width}-${name}.png`;await page.screenshot({path:'test-results/live/'+file,fullPage:true,animations:'disabled'});captures.push(file);
   }
+  // Fictional hosted QA persona only; no real resident or notification provider.
+  const signedIn=await context.request.post(origin+'/api/auth/demo',{headers:{origin,authorization},data:{role:'resident'}});assert.equal(signedIn.status(),200);
+  await page.goto(origin+'/events/new');await page.getByRole('heading',{name:'Untitled meetup',exact:true}).waitFor();
+  await page.getByText('Customize graphic',{exact:true}).click();await page.getByRole('button',{name:'Ocean',exact:true}).click();await page.getByRole('button',{name:'Waves',exact:true}).click();
+  const editor=`${width}-meetup-create.png`;await page.screenshot({path:'test-results/live/'+editor,fullPage:true,animations:'disabled'});captures.push(editor);
+  const listing=await context.request.get(origin+'/api/events',{headers:{authorization}});assert.equal(listing.status(),200);
+  const events=(await listing.json()).events;assert.ok(events.length,'A fictional QA meetup is required for live evidence');
+  await page.goto(origin+'/events/'+events[0].id);await page.locator('main h1').first().waitFor();await page.getByRole('button',{name:'Share meetup',exact:true}).waitFor();
+  const detail=`${width}-meetup-detail.png`;await page.screenshot({path:'test-results/live/'+detail,fullPage:true,animations:'disabled'});captures.push(detail);
   await context.close();
  }
 }finally{await browser.close();}
 await writeFile('test-results/live/provenance.json',JSON.stringify({sha,health,origin,captures,runId:process.env.GITHUB_RUN_ID},null,2));
-console.log('Live identity, access protection and 12 rendered views verified; manual rendered approval remains required.');
+console.log('Live identity, access protection and 27 rendered views verified; manual rendered approval remains required.');

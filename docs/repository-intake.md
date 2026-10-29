@@ -26,6 +26,16 @@ No authentication requirement, contractual rate limit, SLA or stable versioning 
 
 GO-GOA stores concise descriptions and source metadata, not full articles or research passages. Volunteer phone numbers, individual contact details and conflicting unverified contact values are not republished. Users follow the upstream listing to consult contacts and current evidence. Do not treat `checked_on`, a reachable website, or a successful sync as proof a service is available. Corrections made by upstream presentation helpers remain a reason to link to the upstream record rather than reproduce raw contact values.
 
+### Directory development port update, 29 October 2026
+
+The user subsequently authorized a local port of ActForGoa community search and CRM, then narrowed both Directory and Resources to trash and infrastructure. This update governs that focused reuse and public projection. The copied modules and curated maps come from ActForGoa-website commit `a5355bcbd6abcc8d881d1104af3f5f8910f390fd`; their local adaptations are recorded in `shared/actforgoa/PROVENANCE.md`. The source checkout was never edited. This authorization does not imply public relicensing or deployment.
+
+The Directory server fetches the public CRM feed and retains a complete source-membership snapshot after allowlisting fields, applying dated contact corrections and removing direct personal/volunteer phone and email values. The public API returns only records that match the trash/infrastructure scope. Public institutional contact routes may be projected with their source, historical-status and untested-delivery caveats; direct personal contacts remain on the upstream listing. Sync time records retrieval, not verification of current roles, availability or delivery. The broader Resources ingestion remains governed by its concise-description and source-metadata boundary above.
+
+Browser CRM notes use the separate key `go4goa.directory.workspace.v1`, remain local to the browser profile, and are not synced to GO-GOA accounts or ActForGoa. Existing ActForGoa browser notes are never read automatically. Explicit import/export retains the original version-1 backup format, preserves existing local notes on import, and retains out-of-scope imported notes in backups while hiding their listings from this Directory.
+
+The 29 October inspection found 459 scoped records before known-identity grouping and 458 displayed listings after grouping. These are snapshot inspection facts, not service-verification, contact-delivery or impact claims. The wider source snapshot remains server-side. Both Directory and Resources expose linked ActForGoa attribution and “Need more resources? Visit ActForGoa” below their content.
+
 ## Dizko
 
 Reference paths: `Dizko-Labs/EventChat` (`00c9d7cb927d53e04f513a6bfdc102e8fc7c156a`) and `Dizko-Labs/Backend`, reached through the supplied `Dizko Labs` symlinks. No files changed. No application code imported.
@@ -54,3 +64,7 @@ GO-GOA owns its clean implementation. Act For Goa/Dizko repositories do not gran
 ## Local infrastructure
 
 Node 24 and PostgreSQL 16 are available. PostgreSQL responds locally; PostGIS is not installed in this instance. Use a new GO-GOA database only, with indexed bounding boxes and SQL distance queries for local work. Supply a PostGIS production migration and require it for production. Object storage has a private local development adapter and an S3-compatible production adapter. Live Twilio, Resend, storage and map credentials are deliberately not taken from reference projects.
+
+### Map reuse update, 29 October 2026
+
+The user subsequently requested actual Dizko map code reuse. This supersedes the original map row's clean reimplementation decision. The copied and adapted source, upstream revision, provider boundaries and attribution are recorded in `src/components/map/PROVENANCE.md`. The reference checkouts remain unmodified. GO-GOA still uses its own public reports/events and independently configured services.

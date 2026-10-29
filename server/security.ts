@@ -16,6 +16,10 @@ export async function rate(key: string, maximum: number, seconds: number, db: DB
   if(rows[0].hits>maximum) fail(429,'Too many attempts. Please wait and try again.');
 }
 export function clientIp(req: Request) { return req.ip || req.socket.remoteAddress || 'unknown'; }
-export function assertSameOrigin(req: Request) { if(![config.origin,...(config.qa?[process.env.VERCEL_URL,process.env.VERCEL_BRANCH_URL].filter(Boolean).map(host=>'https://'+host):[])].includes(String(req.headers.origin))) fail(403,'Open GO-GOA to make this change.'); }
+export function assertSameOrigin(req: Request) {
+ const localOrigins=!config.production&&!config.qa?['http://127.0.0.1:4310','http://127.0.0.1:4312']:[];
+ const origins=[config.origin,...localOrigins,...(config.qa?[process.env.VERCEL_URL,process.env.VERCEL_BRANCH_URL].filter(Boolean).map(host=>'https://'+host):[])];
+ if(!origins.includes(String(req.headers.origin)))fail(403,'This page address is not allowed to submit changes. Open the configured GO-GOA app address and try again.');
+}
 export function publicPoint(point:{lat:number;lng:number},blur:boolean) { return blur ? {lat:Number((Math.floor(point.lat*100)/100+.005).toFixed(3)),lng:Number((Math.floor(point.lng*100)/100+.005).toFixed(3))}:point; }
 export function distance(a:{lat:number;lng:number},b:{lat:number;lng:number}) { const r=Math.PI/180;const h=Math.sin((a.lat-b.lat)*r/2)**2+Math.cos(a.lat*r)*Math.cos(b.lat*r)*Math.sin((a.lng-b.lng)*r/2)**2;return 6371000*2*Math.asin(Math.sqrt(Math.min(1,h))); }

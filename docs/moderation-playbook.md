@@ -9,7 +9,7 @@ Local QA uses fictional reports only. Before public launch, appoint accountable 
 5. Electrical dangers require qualified responders. Do not encourage volunteer repairs or cleanups at the hazard. Direct urgent safety needs to the authoritative emergency resources from a safe location.
 6. Move through Verified, In progress, Resolved or Closed only with supporting evidence. Never promise an authority has accepted a report without confirmation. Use the responsible-body field cautiously.
 7. Check resource links and their verification dates. Add a better source with a clear matching rationale; do not present stale contact information as current.
-8. Review new organizers and public meetup details before approval. Cancel unsafe events with a clear reason. No direct messages to non-attendees or unconsented channels.
+8. Meetups publish immediately; organizer approval is not required. Cancel unsafe events with a clear reason. No direct messages to non-attendees or unconsented channels.
 9. Review audit and notification outcomes. Escalate privacy leaks or unauthorized changes immediately. Preserve evidence without copying personal data into GitHub.
 
 This baseline needs a retention policy, appeals/reversal workflow and escalation ownership before live use. Immutable audit rows may preserve previously recorded text; avoid including personal details in audit reasons.

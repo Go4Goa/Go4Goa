@@ -1,0 +1,10 @@
+.place-search { display:grid; gap:10px; min-width:0; }
+.place-search-row { display:grid; grid-template-columns:minmax(0,1fr) auto; align-items:end; gap:8px; }
+.place-search-results { list-style:none; padding:0; margin:0; display:grid; gap:4px; }
+.place-search-results button { width:100%; justify-content:flex-start; min-height:52px; text-align:left; }
+.place-search-results button span { white-space:normal; }
+.place-search-results .place-search-copy { display:grid; gap:2px; min-width:0; overflow-wrap:anywhere; }
+.place-search-copy small { color:var(--text-secondary); font-size:12px; line-height:1.4; }
+.place-search-status { color:var(--text-secondary); font-size:12px; }
+.place-search-attribution { font-size:12px; color:var(--text-secondary); font-weight:400; letter-spacing:normal; }
+.place-search-attribution a { text-underline-offset:3px; text-decoration:underline; white-space:nowrap; color:#5e5e5e; }

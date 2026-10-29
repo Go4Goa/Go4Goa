@@ -1,8 +1,8 @@
 # Deployment runbook
 
-No hosted environment has been provisioned. Do not treat the local demo as a public staging environment.
+The established target is the protected `go-goa-qa` Vercel project at https://go-goa-qa.vercel.app. Its Vercel production alias serves shared QA, not the public resident launch. See `hosted-qa.md` and `cloud-pr-workflow.md` for the active release procedure. The requirements below govern a later public launch.
 
-Before deployment, finish the release gates in `qa-status.md`, name the privacy operator and set an audited moderator onboarding process. Use dedicated GO-GOA credentials, never credentials from ActForGoa or Dizko.
+Before deployment, finish the release gates in `qa-status.md`, name the privacy operator and set an audited moderator onboarding process. Use dedicated GO-GOA credentials. The sole approved reuse is the existing Google Places server key for hosted Go4Goa, explicitly authorized by Zachary on 29 October 2026; do not reuse other service credentials.
 
 Required: Node 24 runtime, Postgres/PostGIS, private object storage, an HTTPS origin, MapTiler, Twilio Verify. Resend and Twilio Messaging are optional until notification delivery is enabled and tested.
 
