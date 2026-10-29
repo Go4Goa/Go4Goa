@@ -111,8 +111,8 @@
   "cloud": {
     "automationId": "6ae33ac8da3c8191b8476185d4c8bb70",
     "savedPromptExactReadback": true,
-    "savedPromptCharacters": 11307,
-    "canonicalPromptCommit": "e5edb2f3d19fe131c9dc4923897fa35787854edd",
+    "savedPromptCharacters": 11538,
+    "canonicalPromptCommit": "6608de75441faec77150018067cb63a4730e8a45",
     "publicGuestReleaseHoldSatisfied": true,
     "localFallback": "PAUSED",
     "layalabsSignInPR8": "Closed unmerged by author, superseded by PR12. PR6 also closed unmerged.",
@@ -125,7 +125,9 @@
       "checkpoint": "https://github.com/actforgoa2026/Go4Goa/blob/1cf66f3bc5759e527a72a106a1b0db64286fd5ae/review-checkpoints/pr-12-b27e367ac4a2-held.json",
       "outcome": "held: no-sign-in conflict and unresolved AI/provider/schema authority; no contributor code execution or release"
     },
-    "layalabsPR12": "HELD: phone sign-in conflicts with owner direction; AI/privacy/provider/schema changes remain unresolved."
+    "layalabsPR12": "HELD: phone sign-in conflicts with owner direction; AI/privacy/provider/schema changes remain unresolved.",
+    "publicGuestReleaseHoldAcknowledgedByHostedMonitor": true,
+    "eventSentenceCorrectionReadBack": true
   },
   "limitations": [
     "Browser guest activity cannot be recovered after clearing its cookie.",
