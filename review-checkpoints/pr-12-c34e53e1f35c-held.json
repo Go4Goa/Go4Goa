@@ -1,0 +1,81 @@
+{
+  "schemaVersion": 1,
+  "status": "held",
+  "recordedAt": "2026-10-29T16:31:51.503Z",
+  "repository": "actforgoa2026/Go4Goa",
+  "pr": {
+    "number": 12,
+    "url": "https://github.com/actforgoa2026/Go4Goa/pull/12",
+    "author": {
+      "login": "layalabs",
+      "id": 261854875
+    }
+  },
+  "event": {
+    "family": "github/pull_request",
+    "action": "synchronize",
+    "deliveryId": "03edf0f0-d3b6-11f1-909f-8292ea9c8542"
+  },
+  "source": {
+    "head": "c34e53e1f35c1be5a7427e8a400cc0803e087d5e",
+    "base": "26515cdc5a2cdcd08137c2738d1fbf283a8bba60",
+    "integrated": "e63587d87db6ce51c776547c68b8b9c294cd7fb6",
+    "previousHeldHead": "b27e367ac4a29e3f375781d124e229a265b8e93f",
+    "changedFiles": [
+      "db/009-ai-review.sql",
+      "server/ai-review.ts",
+      "server/twilio-credentials.ts",
+      "server/twilio-verify.ts",
+      "server/auth.ts",
+      "server/incidents.ts",
+      "server/worker.ts",
+      "src/pages/SignIn.tsx",
+      "docs/architecture.md",
+      "docs/deployment-runbook.md",
+      "docs/hosted-qa.md",
+      "docs/moderation-playbook.md",
+      "tests/ai-review.test.ts",
+      "tests/twilio-verify.test.ts",
+      "tests/api.integration.ts"
+    ]
+  },
+  "reviewedScope": "Combined AI report review/moderation, Twilio phone verification/sign-in, server/auth/API/schema/worker/UI/docs/test changes; outside safe Reporting FEATURE/UX-only scope.",
+  "holdReasons": [
+    {
+      "gate": "owner no-sign-in direction",
+      "conflict": "The changed source adds phone verification/sign-in and SignIn UI despite the owner-approved public guest contract prohibiting sign-in UI, phone/email onboarding, persona selection and team-password entry absent later owner authority.",
+      "authority": "decisions/2026-10-29-no-sign-in.json at b0633af53462fae584993d5e2bcf7a7576fc7993"
+    },
+    {
+      "gate": "moderation/privacy/design authority",
+      "conflict": "The PR proposes automated AI publication, merge and rejection of resident reports, sends private descriptions and some report media/location-label data to Anthropic, and changes escalation/moderation behavior without cloud-accessible owner approval resolving prior human/moderation, privacy and retention controls."
+    },
+    {
+      "gate": "auth/provider/schema coordination",
+      "conflict": "It adds Twilio Verify provider dependencies/credentials, authentication behavior, database migration 009 and worker/API changes; these are broad coordinated auth/API/schema/security changes, not an eligible safe Reporting FEATURE/UX change."
+    },
+    {
+      "gate": "trusted execution",
+      "conflict": "No exact-current source receipt exists at automation/source-review reviews/pr-12.json. Current trusted-base run 40912212185 source-review failed; verify and visual-evidence were skipped. No contributor code was executed, no receipt was written and no rerun was requested."
+    }
+  ],
+  "currentChecks": {
+    "run": 40912212185,
+    "sourceReview": "failure",
+    "verify": "skipped",
+    "visualEvidence": "skipped",
+    "reviews": "no submitted PR reviews"
+  },
+  "actionsTaken": [
+    "Fetched current PR metadata, full diff and changed-file manifest.",
+    "Fetched current check runs and review state.",
+    "Recorded this updated-head hold."
+  ],
+  "actionsNotTaken": [
+    "No source receipt.",
+    "No workflow rerun or contributor-code execution.",
+    "No artifact review.",
+    "No merge, cloud-release update, deployment, GitHub comment or review, or collaborator message."
+  ],
+  "disposition": "Hold. This synchronized head invalidates prior checkpoints for execution/release; it is neither approved nor release-eligible."
+}
