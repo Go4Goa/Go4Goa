@@ -8,7 +8,7 @@ This is an isolated testing environment. It uses its own Neon Postgres/PostGIS d
 
 Share the URL directly. On 29 October 2026 Zachary explicitly authorized public browsing without a site password or Vercel login. No GitHub access or Vercel membership is needed to view the site.
 
-Shared resident, organizer and moderator test identities remain restricted to the team's existing QA credential at POST /api/auth/demo. This does not protect public pages or show a browser password prompt. Automated QA supplies the credential in an Authorization header; anonymous requests cannot acquire a shared identity or see private account/report data. Real phone accounts are not enabled here.
+Shared resident, organizer and moderator test identities remain restricted to the team's existing QA credential. For manual testing, open [Team sign-in](https://go-goa-qa.vercel.app/api/auth/team-access), use username `qa` and the existing team code, then select a testing role on Profile. Only this explicitly chosen team entry asks for credentials; ordinary public pages never do. The browser remembers the credential for test-account requests. Automated QA can also supply it in an Authorization header. Anonymous visitors cannot acquire a shared identity or see private account/report data. Real phone accounts are not enabled here.
 
 Follow [Reporting QA handoff](reporting-qa-handoff.md). Report issues with the tested URL and commit, browser, steps and scrubbed screenshots. Do not put the QA password, cookies, personal information or provider keys into issues.
 

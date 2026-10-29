@@ -24,6 +24,15 @@ async function verifyApi(path:string,data:Record<string,string>) {
  return response.json() as Promise<{status:string}>;
 }
 auth.get('/me',(req,res)=>res.json({account:req.account||null}));
+// Explicit team-only entry point; public pages never challenge visitors.
+auth.get('/team-access',async(req,res)=>{
+ if(!config.qa)fail(404,'Not found.');
+ res.set('Cache-Control','no-store');
+ if(!await qaAuthorized(req.get('authorization')||null,config.qaAccessCode)){
+  res.set('WWW-Authenticate','Basic realm="GO-GOA team testing", charset="UTF-8"').status(401).send('Team testing sign-in. Public browsing does not require a password.');return;
+ }
+ res.redirect(303,'/profile');
+});
 auth.post('/request-code',async(req,res)=>{
  const {phone}=z.object({phone:phoneSchema}).strict().parse(req.body);await rate('otp-ip:'+clientIp(req),10,600);await rate('otp-phone:'+phone,3,600);
  await verifyApi('Verifications',{To:phone,Channel:'sms'});
@@ -38,7 +47,7 @@ auth.post('/verify-code',async(req,res)=>{
 auth.post('/demo',async(req,res)=>{
  if(!config.demo||(!config.qa&&(config.production||!['127.0.0.1','::1','::ffff:127.0.0.1'].includes(req.socket.remoteAddress||''))))fail(404,'Not found.');
  // Public browsing must not grant a shared resident or moderator identity.
- if(config.qa&&!await qaAuthorized(req.get('authorization')||null,config.qaAccessCode))fail(403,'Shared test accounts require team access. You can browse the site without signing in.');
+ if(config.qa&&!await qaAuthorized(req.get('authorization')||null,config.qaAccessCode))fail(403,'Shared test accounts require team sign-in. You can browse the site without signing in.');
  const role=z.enum(['resident','organizer','moderator']).parse(req.body.role);await rate('demo:'+clientIp(req),30,600);const user=(await pool.query('SELECT id FROM users_private WHERE demo=true AND role=$1 ORDER BY created_at LIMIT 1',[role])).rows[0];if(!user)fail(503,'Run the local seed command first.');await session(res,user.id);res.json({ok:true});
 });
 auth.post('/logout',requireAccount,async(req,res)=>{await pool.query('DELETE FROM sessions WHERE token_hash=$1',[hash(req.cookies.go_goa_session)]);res.clearCookie('go_goa_session',{path:'/'});res.json({ok:true});});

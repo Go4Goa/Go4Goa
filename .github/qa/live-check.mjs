@@ -22,6 +22,13 @@ for(const role of ['resident','organizer','moderator']){
 }
 const browser=await chromium.launch({headless:true});const captures=[];
 try{
+ // Exercise the explicit manual team entry with browser-managed Basic credentials.
+ const team=await browser.newContext({httpCredentials:{username:'qa',password:code},serviceWorkers:'block'});
+ try{
+  const page=await team.newPage();await page.goto(origin+'/api/auth/team-access');await page.waitForURL(origin+'/profile');
+  await page.getByRole('button',{name:'Continue as a resident',exact:true}).click();
+  await page.waitForFunction(async()=>!!(await(await fetch('/api/auth/me')).json()).account);
+ }finally{await team.close();}
  for(const width of [320,390,1440]){
   const context=await browser.newContext({viewport:{width,height:width===1440?1000:844},reducedMotion:'reduce',serviceWorkers:'block'});
   const page=await context.newPage();

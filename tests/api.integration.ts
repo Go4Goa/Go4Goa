@@ -38,6 +38,9 @@ test('hosted QA is public to browse without exposing shared accounts or private 
   const previous={qa:config.qa,qaAccessCode:config.qaAccessCode};
   config.qa=true;config.qaAccessCode='integration-only-team-access-at-least-24-characters';
   try {
+    const teamEntry=await call('/api/auth/team-access');assert.equal(teamEntry.status,401);assert.match(teamEntry.headers.get('www-authenticate')||'',/GO-GOA team testing/);
+    const teamReady=await fetch(base+'/api/auth/team-access',{redirect:'manual',headers:{authorization:'Basic '+btoa('qa:'+config.qaAccessCode)}});
+    assert.equal(teamReady.status,303);assert.equal(teamReady.headers.get('location'),'/profile');assert.equal(teamReady.headers.get('set-cookie'),null,'opening team entry alone does not create a privileged session');
     for(const path of ['/api/health','/api/config','/api/explore']) {
       const response=await call(path);assert.equal(response.status,200);
       assert.equal(response.headers.get('www-authenticate'),null,'public browsing never opens a password prompt');
