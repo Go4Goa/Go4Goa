@@ -3,7 +3,7 @@ import cookieParser from 'cookie-parser';
 import { resolve } from 'node:path';
 import { existsSync } from 'node:fs';
 import { z } from 'zod';
-import { config } from './config.ts';
+import { config,phoneVerificationCredentials } from './config.ts';
 import { pool } from './db.ts';
 import { assertSameOrigin,fail,HttpError,rate,clientIp } from './security.ts';
 import { auth,loadAccount,requireModerator } from './auth.ts';
@@ -17,6 +17,7 @@ import { notificationRoutes } from './notifications.ts';
 import { qaAuthorized } from '../shared/qa-access.ts';
 import { categories } from '../shared/model.ts';
 import { searchPlaces,suggestPlaces,resolvePlace } from './places.ts';
+import { phoneVerificationEnabled } from './twilio-verify.ts';
 export function createApp() {
  const app=express();app.disable('x-powered-by');
  app.use(async(req,res,next)=>{if(config.qa&&!await qaAuthorized(req.get('authorization')||null,config.qaAccessCode)){res.set({'WWW-Authenticate':'Basic realm="GO-GOA QA"','Cache-Control':'no-store'}).status(401).json({error:'QA access required.'});return;}if(config.qa)res.set('X-Robots-Tag','noindex, nofollow, noarchive');next();});
@@ -27,7 +28,7 @@ export function createApp() {
  app.use('/api/notifications/resend-status',express.raw({type:'application/json',limit:'256kb'}));
  app.use(express.json({limit:'32kb'}),express.urlencoded({extended:false,limit:'32kb'}));
  app.get('/api/health',async(_req,res)=>{await pool.query('SELECT 1');res.json({ok:true,mode:config.qa?'hosted-qa':config.demo?'local-demo':'live',release:{commit:process.env.VERCEL_GIT_COMMIT_SHA||null,deployment:process.env.VERCEL_URL||null}});});
- app.get('/api/config',async(_req,res)=>{const enabled=(await pool.query('SELECT id,label,group_name FROM taxonomy WHERE enabled')).rows;res.json({demo:config.demo,qa:config.qa,phoneVerification:!config.qa&&!!(config.verifySid&&config.twilioSid&&config.twilioToken),email:!config.qa&&!!(config.resend&&config.emailFrom),sms:!config.qa&&!!config.messagingSid,categories:categories.filter(c=>enabled.some(e=>e.id===c.id)).map(c=>({...c,label:enabled.find(e=>e.id===c.id).label})),map:{tiles:config.mapKey?'/api/maps/tiles/{z}/{x}/{y}':'https://tile.openstreetmap.org/{z}/{x}/{y}.png',attribution:config.mapKey?'© MapTiler © OpenStreetMap contributors':'© OpenStreetMap contributors'}});});
+ app.get('/api/config',async(_req,res)=>{const enabled=(await pool.query('SELECT id,label,group_name FROM taxonomy WHERE enabled')).rows;res.json({demo:config.demo,qa:config.qa,phoneVerification:phoneVerificationEnabled(config.phoneVerificationRequested,phoneVerificationCredentials),email:!config.qa&&!!(config.resend&&config.emailFrom),sms:!config.qa&&!!config.messagingSid,categories:categories.filter(c=>enabled.some(e=>e.id===c.id)).map(c=>({...c,label:enabled.find(e=>e.id===c.id).label})),map:{tiles:config.mapKey?'/api/maps/tiles/{z}/{x}/{y}':'https://tile.openstreetmap.org/{z}/{x}/{y}.png',attribution:config.mapKey?'© MapTiler © OpenStreetMap contributors':'© OpenStreetMap contributors'}});});
  app.use('/api/auth',auth);app.use('/api/incidents',incidents);app.use('/api/media',mediaRoutes);app.use('/api/events',events);app.use('/api/explore',explore);app.use('/api/resources',resourceRoutes);app.use('/api/directory',directoryRoutes);app.use('/api/account',account);app.use('/api/notifications',notificationRoutes);app.use('/api/admin',moderation,eventAdmin);
  app.get('/api/admin/operations',requireModerator,async(_req,res)=>res.json({sync:(await pool.query('SELECT * FROM sync_state')).rows,runs:(await pool.query('SELECT * FROM sync_runs ORDER BY id DESC LIMIT 20')).rows,audit:(await pool.query('SELECT action,target_id,reason,created_at FROM audit_log ORDER BY id DESC LIMIT 50')).rows}));
  app.get('/api/maps/tiles/:z/:x/:y',async(req,res)=>{if(!config.mapKey)fail(503,'Map provider is not configured.');const zoom=z.coerce.number().int().min(0).max(19).parse(req.params.z),x=z.coerce.number().int().min(0).max(2**zoom-1).parse(req.params.x),y=z.coerce.number().int().min(0).max(2**zoom-1).parse(req.params.y);const response=await fetch(`https://api.maptiler.com/maps/streets-v2/256/${zoom}/${x}/${y}.png?key=${encodeURIComponent(config.mapKey)}`,{signal:AbortSignal.timeout(10000)});if(!response.ok)fail(502,'Map tile unavailable.');res.set({'Cache-Control':'public, max-age=86400','Content-Type':'image/png'}).send(Buffer.from(await response.arrayBuffer()));});

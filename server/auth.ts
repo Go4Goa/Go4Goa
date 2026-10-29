@@ -1,10 +1,11 @@
 import { Router, type Request, type RequestHandler, type Response } from 'express';
 import { randomBytes, randomUUID, randomInt } from 'node:crypto';
 import { z } from 'zod';
-import { config } from './config.ts';
+import { config, phoneVerificationCredentials } from './config.ts';
 import { pool, tx, audit } from './db.ts';
 import { clientIp, fail, hash, lookupHash, seal, unseal, rate, equal } from './security.ts';
 import type { Account } from '../shared/model.ts';
+import { phoneVerificationEnabled, requestTwilioVerification } from './twilio-verify.ts';
 
 declare global { namespace Express { interface Request { account?: Account } } }
 export const auth = Router();
@@ -16,11 +17,9 @@ export const loadAccount: RequestHandler=async(req,_res,next)=>{
 export const requireAccount: RequestHandler=(req,_res,next)=>{ if(!req.account)return next(Object.assign(new Error('Sign in to continue.'),{status:401})); if(!['GET','HEAD'].includes(req.method)&&!equal(String(req.headers['x-csrf-token']||''),req.account.csrf))return next(Object.assign(new Error('Refresh the page and try again.'),{status:403}));next(); };
 export const requireModerator: RequestHandler=(req,res,next)=>requireAccount(req,res,e=>{if(e)return next(e);if(!['moderator','admin'].includes(req.account!.role))return next(Object.assign(new Error('Moderator access is required.'),{status:403}));next();});
 async function session(res:Response,user:string) { const token=randomBytes(32).toString('base64url'),csrf=randomBytes(24).toString('base64url');await pool.query('INSERT INTO sessions(token_hash,user_id,csrf) VALUES ($1,$2,$3)',[hash(token),user,csrf]);res.cookie('go_goa_session',token,{httpOnly:true,secure:config.production,sameSite:'strict',path:'/',maxAge:14*86400000}); }
-async function verifyApi(path:string,data:Record<string,string>) {
- if(config.qa||!config.verifySid||!config.twilioSid||!config.twilioToken) fail(503,'Phone verification is not configured yet.');
- const response=await fetch(`https://verify.twilio.com/v2/Services/${config.verifySid}/${path}`,{method:'POST',headers:{authorization:'Basic '+Buffer.from(config.twilioSid+':'+config.twilioToken).toString('base64'),'content-type':'application/x-www-form-urlencoded'},body:new URLSearchParams(data),signal:AbortSignal.timeout(12000)});
- if(!response.ok) fail(response.status===429?429:502,'Verification could not be completed. Please try again shortly.');
- return response.json() as Promise<{status:string}>;
+async function verifyApi(path:'Verifications'|'VerificationCheck',data:Record<string,string>) {
+ if(!phoneVerificationEnabled(config.phoneVerificationRequested,phoneVerificationCredentials)) fail(503,'Phone verification is not configured yet.');
+ return requestTwilioVerification(phoneVerificationCredentials,path,data);
 }
 auth.get('/me',(req,res)=>res.json({account:req.account||null}));
 auth.post('/request-code',async(req,res)=>{

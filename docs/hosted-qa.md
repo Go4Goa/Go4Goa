@@ -2,13 +2,15 @@
 
 URL: https://go-goa-qa.vercel.app
 
-This is an isolated testing environment. It uses its own Neon Postgres/PostGIS database and a private Vercel Blob store. It contains fictional personas and example records. Use sample photos and places only. Phone verification, SMS and email delivery are disabled in hosted QA.
+This is an isolated testing environment. It uses its own Neon Postgres/PostGIS database and a private Vercel Blob store. It contains fictional personas and example records. Use sample photos and places only. SMS notifications and email delivery are disabled in hosted QA.
+
+Phone sign-in needs `GO_GOA_PHONE_VERIFICATION=true` and all Verify credentials in Vercel. The owner authorized temporary Watchdoggs Verify reuse for the 30 October 2026 hackathon test. Replace the shared credentials after the test. Test both new credential sets before you revoke the shared credentials.
 
 ## Give the Reporting QA partner access
 
 Send the URL, username `qa`, and the shared QA password privately. The password is kept in the Vercel project's `QA_ACCESS_CODE` environment variable and is deliberately absent from GitHub. GitHub repository access does not automatically grant website access. No Vercel team membership is required for the stable URL.
 
-After the browser's password prompt, open Profile and choose **Continue as a resident**. Expand **Organizer and moderator testing** to switch testing roles. These personas are shared, so coordinate before changing a report the other person is testing. Role switching is available only behind the QA access gate; live phone accounts are not enabled here.
+After the browser password prompt, open Profile. Use phone sign-in for the real OTP test. Use **Continue as a resident** for provider-free tests. Expand **Organizer and moderator testing** to switch roles. These personas are shared. Coordinate before you change a report that another person tests. Role switching is available only behind the QA access gate.
 
 Follow [Reporting QA handoff](reporting-qa-handoff.md). Report issues with the tested URL and commit, browser, steps and scrubbed screenshots. Do not put the QA password, cookies, personal information or provider keys into issues.
 
