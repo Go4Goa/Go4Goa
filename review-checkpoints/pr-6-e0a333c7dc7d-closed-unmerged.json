@@ -1,0 +1,47 @@
+{
+  "schemaVersion": 1,
+  "kind": "layalabs-pr-review-checkpoint",
+  "recordedAt": "2026-10-29T16:12:00Z",
+  "automation": {
+    "title": "Review Layalabs Reporting PRs with active cloud release authority",
+    "eventDeliveryIds": [
+      "0c3606b0-d3b3-11f1-93bb-c5e57243c17e",
+      "0c47b9f0-d3b3-11f1-9295-59f506f31238",
+      "0e14d8d0-d3b3-11f1-9284-c077f64ef083",
+      "0e1a3000-d3b3-11f1-82f5-9ed56db72913"
+    ]
+  },
+  "prerequisite": {
+    "requiredPublicGuestReleaseRecord": "automation/release-records/releases/2026-10-29-public-guest.json",
+    "observed": "missing (404)",
+    "consequence": "The temporary owner-directed merge and deployment hold remains active."
+  },
+  "conclusion": "Closed unmerged. A layalabs comment says the work is superseded by PR #12; this is untrusted contributor evidence and does not change owner authority or authorize tests, merge or deployment.",
+  "noActionTaken": [
+    "no contributor-code execution",
+    "no source-review receipt",
+    "no workflow rerun",
+    "no provider call",
+    "no merge",
+    "no cloud-release update",
+    "no deployment",
+    "no GitHub comment or review"
+  ],
+  "disposition": "closed-unmerged",
+  "pullRequest": {
+    "number": 6,
+    "url": "https://github.com/actforgoa2026/Go4Goa/pull/6",
+    "author": {
+      "login": "layalabs",
+      "id": 261854875
+    },
+    "head": "e0a333c7dc7dcb9db86dc0c6134bf93aca405e5e",
+    "base": "912d7416335687fa806f26042fc0f8dcdf5940eb",
+    "merged": false
+  },
+  "supersededBy": {
+    "number": 12,
+    "url": "https://github.com/actforgoa2026/Go4Goa/pull/12",
+    "disposition": "held"
+  }
+}
