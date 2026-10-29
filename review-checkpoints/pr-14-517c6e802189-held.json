@@ -1,0 +1,61 @@
+{
+  "schemaVersion": 1,
+  "status": "held",
+  "recordedAt": "2026-10-29T17:24:34.979Z",
+  "repository": "actforgoa2026/Go4Goa",
+  "pr": {
+    "number": 14,
+    "url": "https://github.com/actforgoa2026/Go4Goa/pull/14",
+    "author": {
+      "login": "layalabs",
+      "id": 261854875
+    },
+    "head": "517c6e802189716d4587770ecc64ec3660b2309c",
+    "base": "e2a1d622b3aac809ae687ecfb48fac7b7b008c1e",
+    "integrated": "9e9b06ca623d2b503dda7c8ca626e6adcfbf8301"
+  },
+  "event": {
+    "family": "github/pull_request",
+    "action": "opened",
+    "deliveryId": "6dec5300-d3bd-11f1-9c29-665f6490980c"
+  },
+  "reviewedScope": "Public leaderboard API/UI, header navigation redesign, points aggregation and documentation updates.",
+  "holdReasons": [
+    {
+      "gate": "owner design authority",
+      "conflict": "The PR edits PRODUCT.md to remove the explicit 'no gamified rankings' brand commitment and adds a public leaderboard plus a header-navigation change. A contributor PR cannot override or remove ZakKrevitt’s design decision; no later owner-approved cloud-accessible authority was found."
+    },
+    {
+      "gate": "eligible scope",
+      "conflict": "A public ranking system and global navigation change are unrelated to safe Reporting FEATURE/UX-only unattended work."
+    },
+    {
+      "gate": "privacy and operational risk",
+      "conflict": "Public aggregate activity rankings create new visibility, anti-abuse, reversal-policy and incentive risks. The existing QA status itself says these need operational review before public launch."
+    },
+    {
+      "gate": "trusted execution",
+      "conflict": "Current run 40920838661 source-review failed and verify/visual-evidence were skipped. No source receipt exists, and no code was executed or rerun."
+    }
+  ],
+  "sourceFiles": [
+    "PRODUCT.md",
+    "docs/qa-status.md",
+    "docs/superpowers/specs/2026-10-29-leaderboard-design.md",
+    "server/app.ts",
+    "server/leaderboard.ts",
+    "shared/leaderboard.ts",
+    "src/App.tsx",
+    "src/pages/Leaderboard.tsx",
+    "src/styles.css",
+    "tests/api.integration.ts",
+    "tests/leaderboard.test.ts"
+  ],
+  "actionsNotTaken": [
+    "No source receipt.",
+    "No workflow rerun or contributor-code execution.",
+    "No visual artifact review.",
+    "No merge, cloud-release update, deployment, GitHub comment/review, or collaborator message."
+  ],
+  "disposition": "Hold. Requires a later explicit owner design decision and privacy/operational approval; it is not approved for unattended merge or release."
+}
