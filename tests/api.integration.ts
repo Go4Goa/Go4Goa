@@ -65,6 +65,26 @@ test('authentication, CSRF and role guards reject unauthorized mutations',async(
   assert.equal((await call('/api/auth/preferences','PATCH',{sms:true,email:false},resident)).status,400);
 });
 
+test('public leaderboard counts only verified points from active accounts',async()=>{
+  const reporter=await actor('resident'),attendee=await actor('resident'),deleted=await actor('resident');
+  const reportOne=randomUUID(),reportTwo=randomUUID(),eventOne=randomUUID(),eventTwo=randomUUID();
+  await pool.query(`INSERT INTO points_ledger(user_id,reason,source_id,points) VALUES
+    ($1,'report_approved',$4,10),($1,'report_resolved',$4,20),($1,'report_approved',$5,10),
+    ($2,'event_attendance',$6,15),($2,'event_attendance',$7,15),
+    ($3,'report_approved',$8,999)`,[reporter.id,attendee.id,deleted.id,reportOne,reportTwo,eventOne,eventTwo,randomUUID()]);
+  await pool.query('UPDATE users_private SET deleted_at=now() WHERE id=$1',[deleted.id]);
+
+  const response=await call('/api/leaderboard');assert.equal(response.status,200);
+  const {entries}=await response.json() as {entries:any[]};
+  const reportEntry=entries.find(entry=>entry.username.startsWith('qa_'+reporter.id.replaceAll('-','').slice(0,16)));
+  const meetupEntry=entries.find(entry=>entry.username.startsWith('qa_'+attendee.id.replaceAll('-','').slice(0,16)));
+  assert.deepEqual(reportEntry,{username:reportEntry.username,totalPoints:40,reportPoints:40,meetupPoints:0,reports:2,meetups:0});
+  assert.deepEqual(meetupEntry,{username:meetupEntry.username,totalPoints:30,reportPoints:0,meetupPoints:30,reports:0,meetups:2});
+  assert.ok(entries.indexOf(reportEntry)<entries.indexOf(meetupEntry));
+  assert.ok(!entries.some(entry=>entry.username.startsWith('qa_'+deleted.id.replaceAll('-','').slice(0,16))));
+  assert.ok(entries.every(entry=>!('id' in entry)&&!('phone' in entry)&&!('email' in entry)));
+});
+
 test('public preview guests are separate residents with private reports and no role escalation',async()=>{
   const previous={qa:config.qa,phoneVerificationRequested:config.phoneVerificationRequested};config.qa=true;config.phoneVerificationRequested=false;
   try {
