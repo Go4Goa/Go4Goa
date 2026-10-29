@@ -22,13 +22,7 @@ for(const role of ['resident','organizer','moderator']){
 }
 const browser=await chromium.launch({headless:true});const captures=[];
 try{
- // Exercise the explicit manual team entry with browser-managed Basic credentials.
- const team=await browser.newContext({httpCredentials:{username:'qa',password:code},serviceWorkers:'block'});
- try{
-  const page=await team.newPage();await page.goto(origin+'/api/auth/team-access');await page.waitForURL(origin+'/profile');
-  await page.getByRole('button',{name:'Continue as a resident',exact:true}).click();
-  await page.waitForFunction(async()=>!!(await(await fetch('/api/auth/me')).json()).account);
- }finally{await team.close();}
+ const guestIds=new Set();
  for(const width of [320,390,1440]){
   const context=await browser.newContext({viewport:{width,height:width===1440?1000:844},reducedMotion:'reduce',serviceWorkers:'block'});
   const page=await context.newPage();
@@ -39,13 +33,11 @@ try{
    if(name==='map'){await page.locator('.maplibregl-canvas').waitFor();await page.locator('.radar-map-loading').waitFor({state:'hidden',timeout:60000});assert.equal(await page.locator('.radar-map-failure').count(),0,'Live map provider must render');await page.getByRole('button',{name:/\d+ places? · View list/}).waitFor();}
    if(name==='events')await page.locator('.event-feed .event-row').first().waitFor();
    if(name==='directory')await page.locator('.directory-results').waitFor();
-   if(name==='profile')await page.getByRole('button',{name:'Continue as a resident',exact:true}).waitFor();
+   if(name==='profile'){await page.locator('.private-profile').waitFor();assert.equal(await page.getByText('Sign out',{exact:true}).count(),0);assert.equal(await page.getByLabel('Phone number',{exact:true}).count(),0);const who=await(await context.request.get(origin+'/api/auth/me')).json();assert.equal(who.account.role,'resident');assert.match(who.account.username,/^guest_/);guestIds.add(who.account.id);}
    await settle();
    const bad=await page.evaluate(()=>[...document.querySelectorAll('body *')].filter(e=>{const r=e.getBoundingClientRect();return r.width&&r.height&&/italic|oblique/.test(getComputedStyle(e).fontStyle);}).map(e=>e.tagName));assert.deepEqual(bad,[],'Live typography');
    const file=`${width}-${name}.png`;await page.screenshot({path:'test-results/live/'+file,fullPage:true,animations:'disabled'});captures.push(file);
   }
-  // Fictional hosted QA persona only; no real resident or notification provider.
-  const signedIn=await context.request.post(origin+'/api/auth/demo',{headers:{origin,authorization},data:{role:'resident'}});assert.equal(signedIn.status(),200);
   await page.goto(origin+'/events/new');await page.getByRole('button',{name:'Meetup name: Untitled meetup',exact:true}).waitFor();
   await page.getByText('Customize graphic',{exact:true}).click();await page.getByRole('button',{name:'Ocean',exact:true}).click();await page.getByRole('button',{name:'Waves',exact:true}).click();
   await settle();
@@ -57,6 +49,7 @@ try{
   const detail=`${width}-meetup-detail.png`;await page.screenshot({path:'test-results/live/'+detail,fullPage:true,animations:'disabled'});captures.push(detail);
   await context.close();
  }
+ assert.equal(guestIds.size,3,'Every fresh browser gets its own guest identity');
 }finally{await browser.close();}
 await writeFile('test-results/live/provenance.json',JSON.stringify({sha,health,origin,captures,runId:process.env.GITHUB_RUN_ID},null,2));
-console.log('Live identity, public browsing, restricted test accounts and 27 rendered views verified; manual rendered approval remains required.');
+console.log('Live identity, public guest use without sign-in, restricted test accounts and 27 rendered views verified; manual rendered approval remains required.');

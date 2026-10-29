@@ -1,6 +1,6 @@
 # Cloud Reporting review and release
 
-Status: the cloud handoff was verified at automation/release-records/handoff.json and the local worker is paused. On 29 October 2026 the owner explicitly authorized public browsing without a site password or Vercel login. This access decision supersedes the previous outer-gate requirement; all design, review, privacy and release gates remain.
+Status: the cloud handoff was verified at automation/release-records/handoff.json and the local worker is paused. On 29 October 2026 the owner explicitly authorized public guest use without any sign-in screen, site password or Vercel login. This access decision supersedes the previous outer-gate requirement; all design, review, privacy and release gates remain.
 
 ## Review boundary
 
@@ -26,7 +26,7 @@ Vercel will follow a separate `cloud-release` branch after its GitHub connection
 
 The current private organization repository does not support branch protection on its present plan. These are reviewer/workflow controls, not an enforceable restriction on other collaborators' direct writes. GitHub Team is required if the owner wants repository-enforced branch protection. No plan upgrade or charge is authorized by this document.
 
-`Verify public QA release` runs only on `cloud-release`. It waits for `/api/health` to identify the expected Git commit, checks unauthenticated public 200 responses without login redirects or password challenges, and rejects unauthenticated shared test-account creation with 403, captures 27 live mobile/desktop views and runs the hosted fictional Reporting smoke test. It requires the shared QA access code as the encrypted `GO_GOA_QA_ACCESS_CODE` Actions secret; this secret is never referenced by PR jobs. Its separate status job publishes `cloud/live-verification` with the exact run URL for the cloud reviewer.
+`Verify public QA release` runs only on `cloud-release`. It waits for `/api/health` to identify the expected Git commit, checks unauthenticated public 200 responses without login redirects or password challenges, verifies automatic separate guest resident sessions with no sign-in UI, and rejects unauthenticated shared test-account creation with 403, captures 27 live mobile/desktop views and runs the hosted fictional Reporting smoke test. It requires the shared QA access code as the encrypted `GO_GOA_QA_ACCESS_CODE` Actions secret; this secret is never referenced by PR jobs. Its separate status job publishes `cloud/live-verification` with the exact run URL for the cloud reviewer.
 
 After publication, verify source/deployment identity, public access without a site password plus restricted test-account/private API access, authenticated health and Reporting behavior, and mobile/desktop rendering. Record immutable evidence. Stop subsequent releases after failure. Restore only a previous verified application deployment when safe, without reversing migrations blindly.
 

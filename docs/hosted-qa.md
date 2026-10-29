@@ -8,7 +8,9 @@ This is an isolated testing environment. It uses its own Neon Postgres/PostGIS d
 
 Share the URL directly. On 29 October 2026 Zachary explicitly authorized public browsing without a site password or Vercel login. No GitHub access or Vercel membership is needed to view the site.
 
-Shared resident, organizer and moderator test identities remain restricted to the team's existing QA credential. For manual testing, open [Team sign-in](https://go-goa-qa.vercel.app/api/auth/team-access), use username `qa` and the existing team code, then select a testing role on Profile. Only this explicitly chosen team entry asks for credentials; ordinary public pages never do. The browser remembers the credential for test-account requests. Automated QA can also supply it in an Authorization header. Anonymous visitors cannot acquire a shared identity or see private account/report data. Real phone accounts are not enabled here.
+The preview starts a separate guest resident session automatically in each browser. There is no sign-in screen, phone/email form, team-entry URL or browser password challenge. Reports, meetup creation, RSVP and bookmarks use that guest identity. The private session cookie keeps each visitor's activity separate; clearing cookies loses access to that guest activity.
+
+Guest creation cannot select a role or obtain moderator permissions. Shared seeded personas remain available only to authorized automated QA through the encrypted credential at the test-account API; no persona chooser is shown to visitors. Phone verification and live notifications stay disabled.
 
 Follow [Reporting QA handoff](reporting-qa-handoff.md). Report issues with the tested URL and commit, browser, steps and scrubbed screenshots. Do not put the QA password, cookies, personal information or provider keys into issues.
 
@@ -28,7 +30,7 @@ Vercel's `production` target here means the stable URL of the dedicated QA proje
 ## Isolation and access
 
 - Public routes and public API projections return 200 without credentials, login redirects or WWW-Authenticate challenges. Vercel login protection is disabled for this project.
-- Shared test-account creation requires the encrypted QA credential and returns 403 without it. Private APIs still require an authorized account. The credential is never bundled in client code.
+- Automatic guest creation creates only separate resident identities. Shared seeded test-account creation requires the encrypted QA credential and returns 403 without it. Private APIs still require an authorized session. The credential is never bundled in client code.
 - Preview responses remain unindexed. Opaque HttpOnly sessions, CSRF controls and private/public projections remain enforced.
 - Photos are stored privately and served only through the report authorization checks.
 - Test accounts do not send live messages. No background notification worker is deployed for QA.

@@ -24,14 +24,18 @@ async function verifyApi(path:string,data:Record<string,string>) {
  return response.json() as Promise<{status:string}>;
 }
 auth.get('/me',(req,res)=>res.json({account:req.account||null}));
-// Explicit team-only entry point; public pages never challenge visitors.
-auth.get('/team-access',async(req,res)=>{
+// Each public-preview visitor gets a separate resident identity without signing in.
+auth.post('/guest',async(req,res)=>{
  if(!config.qa)fail(404,'Not found.');
- res.set('Cache-Control','no-store');
- if(!await qaAuthorized(req.get('authorization')||null,config.qaAccessCode)){
-  res.set('WWW-Authenticate','Basic realm="GO-GOA team testing", charset="UTF-8"').status(401).send('Team testing sign-in. Public browsing does not require a password.');return;
- }
- res.redirect(303,'/profile');
+ z.object({}).strict().parse(req.body||{});
+ if(req.account){res.json({ok:true});return;}
+ await rate('guest:'+clientIp(req),40,3600);
+ const id=randomUUID();
+ await tx(async db=>{
+  await db.query("INSERT INTO users_private(id,role,demo) VALUES ($1,'resident',true)",[id]);
+  await db.query('INSERT INTO profiles(id,username) VALUES ($1,$2)',[id,'guest_'+id.replaceAll('-','').slice(0,16)]);
+ });
+ await session(res,id);res.json({ok:true});
 });
 auth.post('/request-code',async(req,res)=>{
  const {phone}=z.object({phone:phoneSchema}).strict().parse(req.body);await rate('otp-ip:'+clientIp(req),10,600);await rate('otp-phone:'+phone,3,600);
