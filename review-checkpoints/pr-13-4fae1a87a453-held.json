@@ -1,0 +1,41 @@
+{
+  "schemaVersion": 1,
+  "status": "held",
+  "recordedAt": "2026-10-29T17:04:27.655Z",
+  "repository": "actforgoa2026/Go4Goa",
+  "pr": {
+    "number": 13,
+    "url": "https://github.com/actforgoa2026/Go4Goa/pull/13",
+    "author": {
+      "login": "layalabs",
+      "id": 261854875
+    },
+    "head": "4fae1a87a453d845dc824e1ecb387842c7722531",
+    "base": "e2a1d622b3aac809ae687ecfb48fac7b7b008c1e",
+    "integrated": "04ef18d522e525d591c91cd000154e7ce459e65d"
+  },
+  "event": {
+    "family": "github/pull_request",
+    "action": "opened",
+    "deliveryId": "9e302850-d3ba-11f1-995b-582a227283c3"
+  },
+  "sourceReview": {
+    "changedFiles": [
+      "docs/hosted-qa.md",
+      "docs/pr12-migration-vercel-release.md"
+    ],
+    "summary": "Documentation-only PR adding a 328-line release procedure for PR #12, including database migration, provider and environment-variable instructions, cloud-release publication, and live test directions."
+  },
+  "holdReasons": [
+    "Release/database/provider/credential procedure is unrelated to safe Reporting FEATURE/UX and outside the unattended Layalabs scope.",
+    "The proposed document cannot grant itself authority or relax the monitor’s existing source-review, expected-SHA, isolated execution, secret, design, artifact, migration, cloud-release, and live-verification gates.",
+    "It directs Vercel/Neon-secret-dependent operations and real SMS/live verification; no separate authorization, verified access, or gate evidence is supplied.",
+    "No current source receipt exists for PR #13 or the still-relevant PR #12 receipt path. Trusted run 40917575074 source-review failed; verify and visual-evidence were skipped."
+  ],
+  "actionsNotTaken": [
+    "No source receipt.",
+    "No workflow rerun or contributor-code execution.",
+    "No merge, migration, secret access, cloud-release update, deployment, comment, review, or collaborator message."
+  ],
+  "disposition": "Hold PR #13. Its documentation does not alter the existing public-guest or release-gate authority."
+}
