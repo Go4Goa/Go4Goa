@@ -34,7 +34,8 @@ export function mixFeed(pool: FeedItem[], count: number, seed: number): FeedEntr
     if (!queue?.length) {
       queue = shuffle(groups.get(category)!);
       if (!output.length) {
-        const gallery = queue.findIndex(item => item.id === 'sample-cleanup');
+        const featured = queue.findIndex(item => item.kind === 'gallery' && item.gallery.featured);
+        const gallery = featured >= 0 ? featured : queue.findIndex(item => item.id === 'sample-cleanup');
         if (gallery > 0) [queue[0], queue[gallery]] = [queue[gallery]!, queue[0]!];
         const event = queue.findIndex(item => item.kind === 'event' && item.id.startsWith('home-sample-'));
         if (gallery >= 0 && event > 1) [queue[1], queue[event]] = [queue[event]!, queue[1]!];

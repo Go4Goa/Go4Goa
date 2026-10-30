@@ -27,3 +27,15 @@ test('filtered and empty feeds stay usable; small pools avoid immediate repeats 
   assert.equal(mixFeed([pool[0]!], 20, 1).length, 20);
   assert.notDeepEqual(mixFeed(pool, 16, 1), mixFeed(pool, 16, 2));
 });
+
+test('the featured community gallery leads every mixed and meetup feed without disturbing append order', () => {
+  const featured: FeedItem = { id: 'featured-cleanup', category: 'meetups', kind: 'gallery', gallery: { id: 'featured-cleanup', title: 'Community cleanup', label: 'Community', location: 'Mandrem', photos: [], featured: true } };
+  for (let seed = 0; seed < 100; seed++) {
+    for (const items of [[...pool, featured], [...pool.filter(item => item.category === 'meetups'), featured]]) {
+      const entries = mixFeed(items, 20, seed);
+      assert.equal(entries[0]!.item.id, featured.id);
+      assert.deepEqual(entries.slice(0, 12), mixFeed(items, 12, seed));
+      assert.equal(entries.slice(0, 5).filter(entry => entry.item.id === featured.id).length, 1);
+    }
+  }
+});
