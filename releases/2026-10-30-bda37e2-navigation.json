@@ -1,0 +1,59 @@
+{
+  "schemaVersion": 1,
+  "repository": "actforgoa2026/Go4Goa",
+  "feature": "Four-item bottom navigation: Meetups, Map, Document, Profile",
+  "authorization": "User approved the dev render and explicitly requested: looks good, ship this nav update to prod; then confirmed keep going.",
+  "source": "bda37e206b87886699a70f1cbbb604437d6c0951",
+  "previousRelease": "932e2dff597d6358819f40ad1b000a651d00554e",
+  "pullRequests": [
+    15,
+    16
+  ],
+  "ownerAuthored": true,
+  "qa": {
+    "candidateRun": 41000601598,
+    "candidateArtifact": 12953332881,
+    "mainRun": 41001165167,
+    "mainArtifact": 12953547035,
+    "unitTests": 48,
+    "comparisonScreens": 54,
+    "candidateHead": "a5cb4e5e9c24d4adf5f2b404d9d2b2998db4d7e1",
+    "candidateBase": "932e2dff597d6358819f40ad1b000a651d00554e",
+    "tree": "742c3c1a1ac48954a838571b23802f51ff300d77",
+    "renderReview": "Baseline and candidate navigation reviewed at 320, 390 and 1440 pixels, with additional manual desktop/tablet/phone checks. Four labels, correct order and active states; no new overflow or accessibility findings."
+  },
+  "publication": {
+    "expectedOldGuard": true,
+    "force": false,
+    "method": "cloud-release fast-forward"
+  },
+  "changes": "Only TabBar component and design/product documentation. Prerequisite harness update preserves meetup draft recovery coverage through Map. No schema, credentials, provider flags or auth changes.",
+  "target": "https://go-goa-qa.vercel.app",
+  "liveRun": 41001629240,
+  "recordedAt": "2026-10-30T04:17:55.351Z",
+  "outcome": "Live and verified",
+  "deployment": {
+    "id": "dpl_F2rTvJ8rdQnDkbhGxA8rnEg4C7Ci",
+    "url": "https://go-goa-cf8qbyzwa-zakkrevitt-gmailcoms-projects.vercel.app",
+    "status": "success",
+    "commit": "bda37e206b87886699a70f1cbbb604437d6c0951"
+  },
+  "liveArtifact": {
+    "id": 12954036052,
+    "name": "live-evidence-bda37e206b87886699a70f1cbbb604437d6c0951-1",
+    "sha256": "bea3cfc2bab947b8dae9d988e992a05e91b8a3f369d955846fed5da6e1afb75f"
+  },
+  "liveVerification": {
+    "status": "success",
+    "captures": 33,
+    "manualApproval": "Reviewed current live desktop Meetups and mobile Document render plus hosted 320px Profile and 1440px Map captures. Correct tab order, labels, destinations and selected state. No clipping, oblique type or decorative side stripes in changed navigation.",
+    "publicGuestAccess": true,
+    "phoneVerification": false,
+    "workflow": "https://github.com/actforgoa2026/Go4Goa/actions/runs/41001629240"
+  },
+  "screenshots": [
+    ".impeccable/review/nav-order/production-desktop.png",
+    ".impeccable/review/nav-order/production-mobile.png"
+  ],
+  "cacheNote": "Existing IAB service-worker cache initially served an older app. One normal refresh loaded the current approved navigation."
+}
