@@ -1,0 +1,37 @@
+{
+  "schemaVersion": 1,
+  "status": "held",
+  "recordedAt": "2026-10-30T05:45:09.907Z",
+  "repository": "actforgoa2026/Go4Goa",
+  "pr": "https://github.com/actforgoa2026/Go4Goa/pull/18",
+  "source": {
+    "head": "975a3890dc7703286047f3fc5a3230fcbabe3e3e",
+    "base": "d6de86cf5df74e5261836db7d5028bb16d42dc54",
+    "integrated": "475c424b64bf242a8a60423b36cb11342672faf9"
+  },
+  "authority": {
+    "decisionCommit": "a239094e2cc6355acc7fdbf482add77170268834",
+    "bootstrapRun": 41009236897,
+    "artifact": 12956867821,
+    "artifactDigest": "sha256:2ef66304e6dd692d63aceab3b4e636dd87219aaed1416e83322ab3b4a45281c8"
+  },
+  "checks": {
+    "bootstrapRunConclusion": "success",
+    "baselineCandidatePairs": 54,
+    "byteIdenticalPairs": true,
+    "statusDiscoveryTests": "passed"
+  },
+  "hold": {
+    "gate": "complete rendered-map evidence",
+    "finding": "The inherited 320-map capture renders Map unavailable because its fictional vector fixture declares zero vector layers/PBF metadata. This is not a loaded-map pass, even though baseline and candidate are byte-identical.",
+    "remediation": "Await a renewed exact PR head/base/eight-file decision binding and bootstrap run. The correction must provide faithful park/water/transportation/place source-layer metadata and assert visible maps complete loading with no failure state. Re-review all changed evidence; do not merge or publish the superseded head."
+  },
+  "actionsTaken": {
+    "merged": false,
+    "published": false,
+    "githubCommentsOrReviewsPosted": false,
+    "collaboratorMessagesSent": false,
+    "localExecutorUsed": false,
+    "deviceHubUsed": false
+  }
+}
