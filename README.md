@@ -62,3 +62,18 @@ Integration tests create/use only `go_goa_test`. They create fictional records a
 The API runs on port 4311 and Vite proxies `/api` from 4310. Restart `npm run dev` after server changes. Client edits reload automatically. `npm run worker` separately runs resource synchronization and notification processing. Do not expose a demo development server on the public internet.
 
 Only this repository is writable. ActForGoa and Dizko supplied read-only references and focused attributed component extractions. No credentials or private user data from either project are included.
+
+
+## Meetup check-in and profile points
+
+Point amounts are defined in `shared/points.ts`: approved report +10, resolved report +20, confirmed meetup attendance +15. The append-only ledger allows one award per person, reason and source. Report submission itself waits for moderation before earning points.
+
+A host opens their meetup and chooses **Check in attendees → Open QR check-in**. The code can be enlarged for a group or copied for someone whose camera cannot scan. Attendees scan with their phone camera, review the meetup and confirm attendance. No camera permission is requested by the website. Walk-ins get an RSVP if there is space; check-in does not subscribe them to reminders. The profile's Attended tab and linked points history show the receipt.
+
+QR check-in opens one hour before the start and closes one hour after the end. Codes last at most two hours. Hosts and moderators can replace or close the code; rescheduling and cancellation revoke it. The attendee must have an active private session and a valid CSRF token. In shared QA, the existing automatic guest session supplies this identity. Points remain tied to that browser, and multiple guest identities cannot be treated as verified unique people. Possession of a QR link is evidence of access to the host's code, not proof of physical presence. Share it only onsite.
+
+The host's existing attendee list supports manual check-in until 24 hours after the meetup ends. Hosts cannot confirm themselves; another moderator can confirm them after they RSVP. Confirmed attendance cannot be cancelled to free a place. Concurrent check-ins lock the event row, enforce capacity and save attendance plus points in one transaction. Repeat scans and retries do not add points.
+
+Release prerequisite: back up the existing database and apply additive migration `db/010-qr-check-in.sql` before deploying the app. The session token is encrypted at rest, validated by its hash and carried in the URL fragment to keep it out of normal request URLs. Private responses are not cached. No token is returned by public meetup or profile projections. The migration is safe to leave in place during an application rollback.
+
+Verification covers permission/CSRF failures, cross-meetup and tampered tokens, preview without mutation, concurrent duplicate requests, capacity races, reserved attendees, moderator-confirmed hosts, expired/closed/replaced codes, rescheduling/cancellation and profile receipts. The rendered QR must also be decoded from a screenshot and the mobile/desktop host and attendee states inspected before release.
