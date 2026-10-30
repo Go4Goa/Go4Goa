@@ -1,0 +1,104 @@
+{
+  "schemaVersion": 1,
+  "status": "verified",
+  "recordedAt": "2026-10-30T04:12:42.321Z",
+  "repository": "actforgoa2026/Go4Goa",
+  "pr": "https://github.com/actforgoa2026/Go4Goa/pull/14",
+  "authorization": {
+    "owner": "ZakKrevitt",
+    "direction": "Owner explicitly approved the global header change and public rankings, asked to fix the category ranking bug and ship; retain public guest access without sign-in.",
+    "scope": "PR14-specific design and ranking approval; does not waive other design/release gates."
+  },
+  "source": {
+    "head": "c12e2139abc92787badc97de81866313c1e512ac",
+    "base": "bc9ac77d2fb610a3fa470fddb5ec391a42b8db04",
+    "integrated": "8a93bd3c053b72ae9ae7e245c25038c63d8dc72c",
+    "merged": "55eec8cca653806efb46276cc7b2cd9bd1de836b",
+    "released": "932e2dff597d6358819f40ad1b000a651d00554e",
+    "sourceReceiptCommit": "8e5458a18bd91de63323517dcaa50d28709e1668",
+    "releaseDelta": "Owner-authored PR15 changes only the draft recovery test navigation target from Resources to Map; application code identical to PR14 merge."
+  },
+  "fix": "Validate metric server-side and select each category's top 100 before limiting; prevent older category data from showing under a newly selected metric. Regression test includes category leaders below the overall top 100.",
+  "checks": {
+    "unitTests": 48,
+    "isolatedDatabaseIntegrationScenarios": 18,
+    "harnessTests": 11,
+    "build": "passed",
+    "regression": "Failed with original overall-only query, passed after fix",
+    "prRun": 40999190926,
+    "prAttempt": 2,
+    "releaseQaRun": 41000550076,
+    "liveRun": 41001054926,
+    "conclusion": "success"
+  },
+  "design": {
+    "impeccable": "Actual installed skill context/audit and source detector used",
+    "widths": [
+      320,
+      390,
+      1440
+    ],
+    "baselineCandidatePairs": 54,
+    "designArtifact": 12952314626,
+    "additionalLeaderboardScreenshots": 18,
+    "states": "all categories, keyboard switching, loading, error and empty",
+    "findings": "No new overflow or serious accessibility issues. Upright type and no sideflags. Approved header change preserves underlying Reporting/map/events/profile layouts.",
+    "liveArtifact": 12953107699,
+    "liveCaptures": 33,
+    "liveViewsInspected": [
+      "320-leaderboard",
+      "1440-leaderboard",
+      "390-profile",
+      "320-report",
+      "390-map",
+      "1440-events"
+    ],
+    "deviceHubUsed": false
+  },
+  "deployment": {
+    "project": "go-goa-qa",
+    "projectId": "prj_6Q7Eugjt0H5X2fpIvyohQdGBJd15",
+    "teamId": "team_HFlIoPSiBdah4eZZDkHUF4Z7",
+    "id": "dpl_F8K36XevNXePf7UfZgoXEEAde4j4",
+    "url": "https://go-goa-qa.vercel.app",
+    "immutableUrl": "https://go-goa-noc1rvsie-zakkrevitt-gmailcoms-projects.vercel.app",
+    "target": "production",
+    "readyState": "READY",
+    "phoneVerification": false,
+    "mode": "hosted-qa"
+  },
+  "liveVerification": {
+    "publicPages200": true,
+    "noLoginRedirect": true,
+    "noPasswordChallenge": true,
+    "phoneVerification": false,
+    "allLeaderboardMetrics": true,
+    "distinctAutomaticResidentGuests": true,
+    "guestReloadPreservesIdentity": true,
+    "privateAccountWithoutSession401": true,
+    "guestModerator403": true,
+    "testPersonaAccess403": true,
+    "noTeamSignInRoute": true,
+    "mapLoaded": true,
+    "guestConfigurationRetry": true,
+    "reportedRun": "https://github.com/actforgoa2026/Go4Goa/actions/runs/41001054926"
+  },
+  "local": {
+    "path": "/Users/zakkrevitt/code/GO-GOA",
+    "branch": "main",
+    "head": "bda37e206b87886699a70f1cbbb604437d6c0951",
+    "trackedState": "clean",
+    "ahead": 0,
+    "behind": 0,
+    "includesPR16Navigation": true,
+    "backupStash": "1ca6cb06c139b0b252fc24285d2cfe14c1bb4242",
+    "backupPath": ".local/pr14-release/local-before-sync",
+    "apiRestarted": true,
+    "guestModeAndAllCategoryEndpointsVerifiedOnApiAndVite": true
+  },
+  "limitations": [
+    "Vercel blocked the contributor-authored squash commit because the contributor has no linked Vercel account. Normal CLI deployment and redeploy were also blocked. The legitimate owner-authored PR15 commit deployed successfully with identical application files. This does not establish unattended releases for future contributor-authored commits.",
+    "The navigation chat is separately releasing PR16 after main checks; this record certifies PR14 release 932e2df."
+  ],
+  "outcome": "PR14 fixed, merged and verified live; local main synchronized with the newer approved navigation commit, previous local edits backed up and preserved."
+}
