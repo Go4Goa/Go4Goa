@@ -1,5 +1,9 @@
 # Arc component provenance
 
+## Home preview carousel, 30 October 2026
+
+`carousel/carousel.tsx` and `carousel/carousel.module.css` are copied byte-for-byte from https://uiarc.dev/r/carousel.json. The Home feed uses the public `slideSize="100cqw"` API for a photo-per-slide gallery, without modifying component styles or internals. Existing Button and SegmentedControl are reused with their shared theme and no Home-specific component overrides. Home styles apply only to content and layout wrappers.
+
 These components are the actual free component source from Arc UI (https://uiarc.dev), retrieved 22 October 2026 through its public registry, using its documented manual-copy workflow.
 
 | Item | Registry source |
