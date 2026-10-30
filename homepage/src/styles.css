@@ -1657,10 +1657,10 @@ footer {
     max-height: 1000px;
   }
   .hero-art {
-    width: 330px;
-    height: 495px;
-    top: -70px;
-    left: calc(50% - 165px);
+    width: 280px;
+    height: 420px;
+    top: -125px;
+    left: calc(50% - 140px);
   }
   .hero-content {
     padding-top: 180px;
