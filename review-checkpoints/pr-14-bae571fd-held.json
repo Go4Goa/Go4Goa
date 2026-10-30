@@ -1,0 +1,29 @@
+{
+  "schemaVersion": 1,
+  "recordedAt": "2026-10-29T18:16:21Z",
+  "event": {
+    "deliveryId": "7e8a4c70-d3ff-11f1-9eec-9165ef78e8e4",
+    "action": "synchronize"
+  },
+  "pr": {
+    "number": 14,
+    "url": "https://github.com/actforgoa2026/Go4Goa/pull/14",
+    "author": "layalabs",
+    "authorId": 261854875,
+    "head": "bae571fd5982161e685b2e8657a1fd1e614ad8dd",
+    "base": "8cd07d2f5bd8646f6e7774d013fd39a3363b2681",
+    "integrated": "3c4aea3c0cb3b0da1ac3d2a3da7b737312f5d448"
+  },
+  "outcome": "held-before-execution",
+  "supersedes": "review-checkpoints/pr-14-d44bf52c-held.json",
+  "blockers": [
+    "Current diff continues to remove PRODUCT.md's owner-approved prohibition on gamified rankings.",
+    "It adds a public leaderboard and shared-header/navigation change, requiring current owner design and privacy/anti-abuse/reversal authority outside delegated safe Reporting FEATURE/UX.",
+    "No reviews by ZakKrevitt are present for the current head.",
+    "reviews/pr-14.json is absent on automation/source-review, so there is no exact current source-review receipt and no trusted execution authorization."
+  ],
+  "actionsNotTaken": [
+    "No contributor code execution or workflow rerun",
+    "No merge, cloud-release update, deployment, comment, review, or collaborator message"
+  ]
+}
