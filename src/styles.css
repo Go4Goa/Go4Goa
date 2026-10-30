@@ -143,3 +143,9 @@ main { padding-bottom: calc(var(--bottom-nav-height, 53px) + 40px); }
 .profile-preferences .account-settings { margin: 0; padding: 0; border: 0; }
 .profile-page > .contribution { margin-top: 32px; padding-top: 24px; border-top: 1px solid var(--line); }
 .profile-page > .points-history { margin-bottom: 0; }
+
+/* Keep the app viewport steady while preserving vertical scroll and map gestures. */
+html, body {
+  overflow-x: clip;
+  overscroll-behavior-x: none;
+}
