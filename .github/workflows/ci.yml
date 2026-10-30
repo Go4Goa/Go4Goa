@@ -16,6 +16,30 @@ concurrency:
   group: qa-${{ github.event.pull_request.number || github.ref }}
   cancel-in-progress: true
 jobs:
+  announce:
+    runs-on: ubuntu-latest
+    timeout-minutes: 3
+    permissions:
+      statuses: write
+      pull-requests: read
+    outputs:
+      head: ${{ steps.status.outputs.head }}
+    steps:
+      - uses: actions/github-script@60a0d83039c74a4aee543508d2ffcb1c3799cdea9 # v7
+        id: status
+        with:
+          script: |
+            // Trusted metadata only: no candidate checkout or code execution.
+            const requested=context.payload.inputs?.pr_number;
+            if(requested&&!/^[1-9][0-9]*$/.test(requested))throw new Error('Invalid PR number');
+            const number=context.payload.pull_request?.number||(requested?Number(requested):null);
+            const pr=number?(await github.rest.pulls.get({...context.repo,pull_number:number})).data:null;
+            if(pr&&context.payload.pull_request&&pr.head.sha!==context.payload.pull_request.head.sha)throw new Error('Outdated run: PR head changed');
+            const sha=pr?.head.sha||context.sha;
+            core.setOutput('head',sha);
+            await github.rest.repos.createCommitStatus({...context.repo,sha,state:'pending',context:'cloud/qa',
+              description:'Trusted source gate, tests, build and rendered evidence pending',
+              target_url:`${context.serverUrl}/${context.repo.owner}/${context.repo.repo}/actions/runs/${context.runId}`});
   source-review:
     permissions:
       contents: read
@@ -62,7 +86,7 @@ jobs:
         with:
           node-version: 24
       - run: npm ci
-      - run: node --test .github/qa/source-gate.test.cjs .github/qa/accessibility.test.mjs
+      - run: node --test .github/qa/source-gate.test.cjs .github/qa/accessibility.test.mjs .github/qa/status-discovery.test.mjs
       - run: npm test
       - run: npm run test:integration
       - run: npm run build
@@ -144,3 +168,24 @@ jobs:
           path: evidence
           if-no-files-found: error
           retention-days: 14
+  result:
+    needs: [announce, source-review, verify, visual-evidence]
+    if: always() && needs.announce.outputs.head != ''
+    runs-on: ubuntu-latest
+    timeout-minutes: 3
+    permissions:
+      statuses: write
+    steps:
+      - uses: actions/github-script@60a0d83039c74a4aee543508d2ffcb1c3799cdea9 # v7
+        env:
+          HEAD_SHA: ${{ needs.announce.outputs.head }}
+          SOURCE_RESULT: ${{ needs.source-review.result }}
+          VERIFY_RESULT: ${{ needs.verify.result }}
+          VISUAL_RESULT: ${{ needs.visual-evidence.result }}
+        with:
+          script: |
+            const success=['SOURCE_RESULT','VERIFY_RESULT','VISUAL_RESULT'].every(key=>process.env[key]==='success');
+            await github.rest.repos.createCommitStatus({...context.repo,sha:process.env.HEAD_SHA,
+              state:success?'success':'failure',context:'cloud/qa',
+              description:success?'Tests and rendered artifacts ready; reviewer approval still required':'Source gate or required checks held/failed; inspect this run',
+              target_url:`${context.serverUrl}/${context.repo.owner}/${context.repo.repo}/actions/runs/${context.runId}`});
