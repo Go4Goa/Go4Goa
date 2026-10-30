@@ -1,0 +1,35 @@
+{
+  "schemaVersion": 1,
+  "recordedAt": "2026-10-30T05:10:00Z",
+  "event": "owner-authorized commissioning request",
+  "commissioningDecision": {
+    "path": "decisions/2026-10-30-cloud-commissioning-pr.json",
+    "immutableCommit": "f00aa964c1a08302ecfb5a4dd23271251d50cb22",
+    "pr": 18,
+    "head": "9f94794846ea92fab2006206f13b6bb46079bdca",
+    "base": "d6de86cf5df74e5261836db7d5028bb16d42dc54"
+  },
+  "sourceReview": {
+    "receipt": "reviews/pr-18.json",
+    "receiptCommit": "c04253208a23d570997e76b08562912e801b8883",
+    "status": "authorized-isolated-testing-only"
+  },
+  "observed": {
+    "prState": "open",
+    "integratedCandidate": "f782e578ca6cc506f269a983f0655659d0127af9",
+    "firstCheck": "No pull-request workflow runs and no combined statuses on either exact head or integrated candidate.",
+    "boundedRecheck": "After 30 seconds, still no pull-request workflow runs and no combined statuses on either exact head or integrated candidate."
+  },
+  "outcome": "held-before-test-execution",
+  "blocker": "The supported GitHub rerun control requires an existing workflow run ID. No trusted-base QA workflow run was created or exposed for PR #18, so the monitor cannot run current GitHub-hosted test/integration/build, obtain exact rendered artifacts, or safely proceed to merge/publish/live verification.",
+  "actionsNotTaken": [
+    "No workflow rerun because no run ID exists",
+    "No contributor or application code execution",
+    "No merge",
+    "No cloud-release update",
+    "No Vercel action",
+    "No update to commissioning decision completion",
+    "No GitHub comment, review, or collaborator message"
+  ],
+  "nextRequired": "A GitHub-hosted trusted-base QA workflow run for the exact current PR #18 head/base must exist and be accessible through the connected GitHub Actions controls. The monitor can then rerun/poll it, inspect its exact artifacts, and resume the remaining commissioning gates."
+}
