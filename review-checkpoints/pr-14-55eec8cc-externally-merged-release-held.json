@@ -1,0 +1,47 @@
+{
+  "schemaVersion": 1,
+  "recordedAt": "2026-10-30T04:13:00Z",
+  "event": {
+    "family": "github/pull_request",
+    "action": "closed",
+    "deliveryId": "6285e5a0-d415-11f1-95a9-3807ee480feb",
+    "eventType": "pull_request",
+    "actor": "ZakKrevitt",
+    "merged": true
+  },
+  "pullRequest": {
+    "number": 14,
+    "url": "https://github.com/actforgoa2026/Go4Goa/pull/14",
+    "author": "layalabs",
+    "head": "c12e2139abc92787badc97de81866313c1e512ac",
+    "base": "bc9ac77d2fb610a3fa470fddb5ec391a42b8db04",
+    "integratedBeforeMerge": "8a93bd3c053b72ae9ae7e245c25038c63d8dc72c",
+    "merged": "55eec8cca653806efb46276cc7b2cd9bd1de836b"
+  },
+  "priorCheckpoint": {
+    "commit": "d058c1182c76c7c695b7dcae12eb43f96a1480e5",
+    "disposition": "held-before-execution"
+  },
+  "observations": {
+    "sourceReceipt": "reviews/pr-14.json matched the pre-merge head and base but permits isolated CI only.",
+    "reviewEvidence": "No submitted PR review, PR comment, or review thread independently verified the claimed Zak design approval.",
+    "mergedCommitWorkflowRuns": "No pull-request workflow runs are associated with merged SHA 55eec8cca653806efb46276cc7b2cd9bd1de836b through the trusted lookup."
+  },
+  "outcome": "externally-merged-release-held",
+  "blockers": [
+    "The earlier hold's unverified claimed design exception for public leaderboard and shared-header scope remains unresolved.",
+    "Public leaderboard privacy, anti-abuse, and reversal-policy authority remains unresolved.",
+    "The complete required post-merge release gates have not been independently completed: exact merged-tree provenance, authoritative reviews, required cloud checks/artifacts, and live verification."
+  ],
+  "actionsNotTaken": [
+    "No cloud-release branch update",
+    "No Vercel publication or rollback",
+    "No contributor code execution",
+    "No GitHub comment, review, or collaborator message"
+  ],
+  "nextRequired": [
+    "Independently verifiable ZakKrevitt design authority for the exact merged scope",
+    "Resolved policy authority for public leaderboard data, anti-abuse, and reversals",
+    "Fresh verification of the exact merged commit before any release consideration"
+  ]
+}
