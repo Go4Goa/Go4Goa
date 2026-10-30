@@ -1,0 +1,119 @@
+{
+  "schemaVersion": 1,
+  "status": "verified",
+  "recordedAt": "2026-10-30T06:01:31.016Z",
+  "repository": "actforgoa2026/Go4Goa",
+  "commissioning": true,
+  "authorization": {
+    "decision": "decisions/2026-10-30-cloud-commissioning-pr.json",
+    "completionCommit": "b903aabbd50c4e98c1621e7f5525a819bbcb5b5e",
+    "scope": "One-off owner-authorized PR18 infrastructure commissioning only; normal unattended scope remains layalabs Reporting FEATURE/UX."
+  },
+  "pr": {
+    "number": 18,
+    "url": "https://github.com/actforgoa2026/Go4Goa/pull/18",
+    "author": {
+      "login": "ZakKrevitt",
+      "id": 282219764
+    },
+    "head": "8e70e77378b2a6312deaf41a8fcf00b384830a51",
+    "base": "d6de86cf5df74e5261836db7d5028bb16d42dc54",
+    "reviewedIntegrated": "236abd1265ca1d189443cb58349472faa0f9ed05",
+    "merged": "7d30c50463c965072a46d920f030d4bb1d974648"
+  },
+  "mergeVerification": {
+    "method": "merge",
+    "expectedHead": "8e70e77378b2a6312deaf41a8fcf00b384830a51",
+    "author": {
+      "login": "ZakKrevitt",
+      "id": 282219764
+    },
+    "graphEvidence": {
+      "baseToMerged": {
+        "aheadBy": 4,
+        "behindBy": 0
+      },
+      "headToMerged": {
+        "aheadBy": 1,
+        "behindBy": 0
+      },
+      "integratedTreeComparison": {
+        "filesChanged": 0
+      }
+    }
+  },
+  "checks": {
+    "bootstrap": {
+      "run": 41010217318,
+      "attempt": 1,
+      "artifact": 12957331346,
+      "artifactDigest": "sha256:3b00ae12be3434d83a4863284a7a4a28e3eaee05a4a742edebbe315c02015485",
+      "head": "8e70e77378b2a6312deaf41a8fcf00b384830a51",
+      "base": "d6de86cf5df74e5261836db7d5028bb16d42dc54",
+      "integrated": "236abd1265ca1d189443cb58349472faa0f9ed05",
+      "conclusion": "success"
+    },
+    "mergedMain": {
+      "run": 41010781531,
+      "attempt": 1,
+      "artifact": 12957134476,
+      "artifactDigest": "sha256:b76274e61a6abc1f575cfff97ad9b85c478d1d6b709aed283f2c8171181b89c8",
+      "head": "7d30c50463c965072a46d920f030d4bb1d974648",
+      "conclusion": "success"
+    },
+    "live": {
+      "run": 41011272232,
+      "attempt": 1,
+      "artifact": 12957757251,
+      "artifactDigest": "sha256:b3f97f789f9d6b0d60ea30459c38a51e58eb2048b2113e85359748df2b09e7c1",
+      "head": "7d30c50463c965072a46d920f030d4bb1d974648",
+      "conclusion": "success"
+    }
+  },
+  "visual": {
+    "pristineBaselineCandidatePairs": 54,
+    "widths": [
+      320,
+      390,
+      1440
+    ],
+    "changedPairs": 0,
+    "mapEvidence": "Loaded non-fallback MapLibre views inspected at every width in both corrected CI evidence and live evidence.",
+    "impeccable": "Context plus detector executed. Two inherited overused-font advisories in untouched meetup-poster.css were retained; no new visual finding.",
+    "uprightTypography": true,
+    "decorativeSideflagsAbsent": true
+  },
+  "deployment": {
+    "branch": "cloud-release",
+    "previous": "d6de86cf5df74e5261836db7d5028bb16d42dc54",
+    "released": "7d30c50463c965072a46d920f030d4bb1d974648",
+    "update": {
+      "expectedOld": "d6de86cf5df74e5261836db7d5028bb16d42dc54",
+      "force": false
+    },
+    "url": "https://go-goa-qa.vercel.app",
+    "immutableUrl": "https://go-goa-pm9vb5hz1-zakkrevitt-gmailcoms-projects.vercel.app",
+    "vercelStatus": "success"
+  },
+  "liveVerification": {
+    "healthCommit": "7d30c50463c965072a46d920f030d4bb1d974648",
+    "publicGuestNoSignIn": true,
+    "passwordOrLoginChallenge": false,
+    "privateAndTestAccountRestrictions": true,
+    "reportingPrivacyAndRetry": true,
+    "capturedViews": 33,
+    "liveMapsLoadedAt": [
+      320,
+      390,
+      1440
+    ]
+  },
+  "outcome": "Verified and released. The one-off commissioning exception is consumed; no broader author or release authority was granted.",
+  "actions": {
+    "githubCommentsOrReviewsPosted": false,
+    "collaboratorMessagesSent": false,
+    "localExecutorUsed": false,
+    "deviceHubUsed": false,
+    "secretsRecorded": false
+  }
+}
