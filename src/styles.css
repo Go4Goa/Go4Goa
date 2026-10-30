@@ -103,6 +103,9 @@ main { padding-bottom: calc(var(--bottom-nav-height, 53px) + 40px); }
 .photo-drop, .upload-preview, .hazard-note { border-radius: 16px; }
 .private-profile { margin-top: 0; align-items: flex-start; }
 .private-profile svg { margin-top: 2px; }
+.profile-session { display: flex; align-items: center; justify-content: space-between; gap: 16px; }
+.profile-session .private-profile { margin: 0; }
+.profile-sign-out { flex: none; }
 .profile-page .page-title { margin-bottom: 8px; }
 .contribution { margin-top: 28px; padding: 0; gap: 16px; }
 .points-symbol { border: 0; background: transparent; width: 32px; height: 40px; }
@@ -130,6 +133,7 @@ main { padding-bottom: calc(var(--bottom-nav-height, 53px) + 40px); }
   .category-choice { min-height: 88px; padding: 16px; }
   .category-choice .category-copy strong { font-size: 17px; }
   .profile-page .title-row h1 { font-size: 28px; }
+  .profile-sign-out { min-height: 44px; }
   .profile-tabs { margin-inline: 0; }
   .queue-item .incident-row .row-photo { width: 80px; }
   .sign-in.compact > h1 { font-size: 24px; }

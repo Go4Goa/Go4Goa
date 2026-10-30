@@ -18,6 +18,7 @@ export default function Profile() {
  const [tab,setTab]=useState('reports');
  const {data,error,loading,reload}=useData<ProfileData>(account?'/account':null);
  const {busy,error:actionError,run}=useAction();
+ const signOut=()=>run(async()=>{await api('/auth/logout',{method:'POST',body:'{}'});await refresh();});
  if(!ready)return <div className="page"><Loading/></div>;
  if(!account)return <div className="page narrow"><SignIn/></div>;
  if(location.pathname==='/profile/preferences')return <div className="page profile-preferences">
@@ -25,7 +26,7 @@ export default function Profile() {
   <AccountSettings onChanged={()=>{void refresh();reload();}}/>
   <footer className="profile-footer">
    {['moderator','admin'].includes(account.role)&&<ButtonLink variant="secondary" to="/admin"><ShieldCheck size={18}/>Moderation workspace</ButtonLink>}
-   {(!config?.qa||config.phoneVerification)&&<Button variant="ghost" loading={busy} onClick={()=>run(async()=>{await api('/auth/logout',{method:'POST',body:'{}'});await refresh();})}><LogOut size={17}/>Sign out</Button>}
+   {(!config?.qa||config.phoneVerification)&&<Button variant="ghost" loading={busy} onClick={signOut}><LogOut size={17}/>Sign out</Button>}
    <Link className="text-link small" to="/privacy">Privacy & account data</Link>
   </footer>
   <ErrorNotice message={actionError}/>
@@ -33,7 +34,11 @@ export default function Profile() {
  const events=tab==='organized'?data?.organized:tab==='bookmarked'?data?.bookmarked:tab==='attended'?data?.rsvps.filter(e=>e.checkedIn):data?.rsvps;
  return <div className="page profile-page">
   <PageTitle title={config?.qa?'Your activity':'@'+account.username}><ButtonLink variant="ghost" to="/profile/preferences" aria-label="Account preferences"><Settings size={21}/></ButtonLink></PageTitle>
-  <p className="private-profile"><ShieldCheck size={16}/>{config?.qa?(config.phoneVerification?'Your activity follows your verified phone account.':'Your activity stays with this browser.'):<>Only you can see this profile{account.demo?' · Test account':''}</>}</p>
+  <div className="profile-session">
+   <p className="private-profile"><ShieldCheck size={16}/>{config?.qa?(config.phoneVerification?'Your activity follows your verified phone account.':'Your activity stays with this browser.'):<>Only you can see this profile{account.demo?' · Test account':''}</>}</p>
+   {(!config?.qa||config.phoneVerification)&&<Button variant="ghost" className="profile-sign-out" loading={busy} onClick={signOut}><LogOut size={17}/>Sign out</Button>}
+  </div>
+  <ErrorNotice message={actionError}/>
   <div className="profile-tabs"><SegmentedControl label="Your activity" value={tab} onValueChange={setTab} options={[{value:'reports',label:'Reports'},{value:'upcoming',label:'Going'},{value:'attended',label:'Attended'},{value:'organized',label:'Organized'},{value:'bookmarked',label:'Bookmarked'}]}/></div>
   <ErrorNotice message={error}/>
   {loading?<Loading/>:tab==='reports'?data?.reports.length?data.reports.map(i=><IncidentRow key={i.id} incident={i}/>):<Empty title="Your first report starts here"><Link className="text-link" to="/report">Report an issue <ArrowRight size={17}/></Link></Empty>:events?.length?events.map(e=><div key={e.id}>{e.checkedIn&&tab==='attended'&&<p className="attendance-label"><Check size={15}/>Attendance confirmed</p>}<EventRow event={e}/></div>):<Empty title={tab==='bookmarked'?'Keep a good plan for later':tab==='attended'?'Your next action is out there':tab==='organized'?'Bring your neighbours together':'Find something to join'}><Link className="text-link" to={tab==='organized'?'/events/new':'/events'}>{tab==='organized'?<><Plus size={17}/>Create a meetup</>:tab==='bookmarked'?<><Bookmark size={17}/>Find a meetup to bookmark</>:<><CalendarDays size={17}/>Explore meetups</>}</Link></Empty>}
