@@ -398,10 +398,10 @@ function ProductDemo() {
         <span className="product-demo-label">Interactive demo</span>
       </div>
       <div
+        key={tab}
         id="feature-panel"
         role="tabpanel"
         aria-labelledby={`feature-tab-${tab}`}
-        data-lenis-prevent
         className={`product-panel product-panel-${tab}`}
       >
         {tab === 0 ? (
@@ -464,6 +464,8 @@ export default function App() {
       lenis = new Lenis({
         duration: 1.08,
         smoothWheel: true,
+        // Only consume wheel input inside previews while they can actually scroll.
+        allowNestedScroll: true,
         syncTouch: false,
         anchors: { offset: 0 },
       });
@@ -568,17 +570,18 @@ export default function App() {
             trigger: ".connection",
             pin: ".connection-stage",
             start: "top top",
-            end: "+=1800",
-            scrub: 1,
+            // Keep the handoff to about one screen of scroll, including short reading holds.
+            end: () =>
+              "+=" + gsap.utils.clamp(900, 1250, window.innerHeight * 1.35),
+            scrub: 0.35,
             invalidateOnRefresh: true,
           },
         });
-        tl.to(".connection-copy", { opacity: 1, duration: 0.22 })
-          .to(
-            ".connection-copy",
-            { y: -100, opacity: 0, filter: "blur(7px)", duration: 0.22 },
-            0.3,
-          )
+        tl.to(
+          ".connection-copy",
+          { y: -100, opacity: 0, filter: "blur(7px)", duration: 0.22 },
+          0.04,
+        )
           .to(
             charms,
             {
@@ -590,7 +593,7 @@ export default function App() {
               stagger: 0.025,
               ease: "power2.inOut",
             },
-            0.48,
+            0.22,
           )
           .fromTo(
             ".connection-product",
@@ -602,7 +605,7 @@ export default function App() {
               duration: 0.5,
               ease: "power2.inOut",
             },
-            0.42,
+            0.16,
           )
           .to(
             charms,
@@ -612,11 +615,11 @@ export default function App() {
               color: (i) => landings[i].color,
               duration: 0.3,
             },
-            0.78,
+            0.52,
           )
-          .to(targets, { opacity: 1, duration: 0.08 }, 1.12)
-          .to(charms, { opacity: 0, duration: 0.08 }, 1.12)
-          .to(".connection-product", { duration: 0.25 });
+          .to(targets, { opacity: 1, duration: 0.08 }, 0.86)
+          .to(charms, { opacity: 0, duration: 0.08 }, 0.86)
+          .to(".connection-product", { duration: 0.1 });
         gsap.to(".journey-track", {
           x: () =>
             -(
@@ -628,8 +631,15 @@ export default function App() {
             trigger: ".journey",
             pin: ".journey-stage",
             start: "top top",
-            end: () => "+=" + Math.max(1400, window.innerWidth * 1.4),
-            scrub: 1,
+            // Match the scroll budget to the actual horizontal distance.
+            end: () =>
+              "+=" +
+              Math.max(
+                900,
+                document.querySelector(".journey-track")!.scrollWidth -
+                  window.innerWidth,
+              ),
+            scrub: 0.35,
             invalidateOnRefresh: true,
           },
         });
@@ -678,7 +688,7 @@ export default function App() {
     const el = document.getElementById("explore");
     if (!el) return;
     const target = trigger
-      ? trigger.end - 160
+      ? trigger.end - 24
       : el.getBoundingClientRect().top + window.scrollY - 105;
     setMenu(false);
     history.replaceState(null, "", "#explore");
