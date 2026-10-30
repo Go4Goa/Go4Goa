@@ -1,0 +1,7 @@
+{
+  "head": "7013279faa8d0bc373c456c910725ef300c36053",
+  "base": "bda37e206b87886699a70f1cbbb604437d6c0951",
+  "sourceReviewed": true,
+  "reviewedAt": "2026-10-30T04:18:44.361Z",
+  "review": "Reviewed the complete six-line, single-file CSS diff requested by the owner. html and body receive overflow-x: clip and overscroll-behavior-x: none. No broad touch-action restriction or vertical scroll restriction is introduced; existing map and inner scroll-container gestures remain available. No dependencies, APIs, auth, migrations, workflows, provider configuration or content changed. Local production build, 48 unit tests, 18 isolated integration tests, 80 Chromium/WebKit route and viewport combinations, rendered mobile review and synthesized Chromium touch checks passed. Owner approved shipment in the current chat. Physical-device testing remains unverified."
+}
