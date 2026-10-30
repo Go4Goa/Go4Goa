@@ -12,7 +12,7 @@ for(let i=0;i<90;i++){
  await new Promise(r=>setTimeout(r,10000));
 }
 assert.equal(health?.release?.commit,sha,'Stable alias did not reach the expected commit');assert.equal(health.mode,'hosted-qa');
-for(const path of ['/','/report','/events','/resources','/directory','/api/health','/api/explore']){
+for(const path of ['/','/map','/report','/events','/resources','/directory','/api/health','/api/explore']){
  const response=await fetch(origin+path,{signal:AbortSignal.timeout(15000)});
  assert.equal(response.status,200,'Public access: '+path);assert.equal(response.redirected,false,'No login redirect: '+path);assert.equal(response.headers.get('www-authenticate'),null);
 }
@@ -37,8 +37,9 @@ try{
   const page=await context.newPage();
   async function settle(){await page.evaluate(()=>document.fonts.ready);await page.evaluate(()=>window.scrollTo(0,0));await page.waitForTimeout(300);}
 
-  for(const [path,name]of [['/report','report'],['/','map'],['/events','events'],['/profile','profile'],['/resources','resources'],['/resources/topics/waste','resource-topic'],['/directory','directory'],['/leaderboard','leaderboard']]){
+  for(const [path,name]of [['/','homepage'],['/report','report'],['/map','map'],['/events','events'],['/profile','profile'],['/resources','resources'],['/resources/topics/waste','resource-topic'],['/directory','directory'],['/leaderboard','leaderboard']]){
    await page.goto(origin+path);await page.locator('main h1').first().waitFor();
+   if(name==='homepage'){await page.getByRole('heading',{name:'Made for a better Goa.',exact:true}).waitFor();assert.equal(await page.getByRole('link',{name:'Explore the app',exact:true}).first().getAttribute('href'),'/map');await page.getByRole('tab',{name:'Map',exact:true}).waitFor();}
    if(name==='map'){await page.locator('.maplibregl-canvas').waitFor();await page.locator('.radar-map-loading').waitFor({state:'hidden',timeout:60000});assert.equal(await page.locator('.radar-map-failure').count(),0,'Live map provider must render');await page.getByRole('button',{name:/\d+ places? · View list/}).waitFor();}
    if(name==='events')await page.locator('.event-feed .event-row').first().waitFor();
    if(name==='leaderboard'){await page.getByRole('heading',{name:'Leaderboard',exact:true}).waitFor();for(const label of ['Reports','Meetups','Overall']){await page.getByRole('button',{name:label,exact:true}).click();await page.locator('.leaderboard-list,.leaderboard-empty').waitFor();}assert.equal(await page.getByLabel('Phone number',{exact:true}).count(),0);}
@@ -62,4 +63,4 @@ try{
  assert.equal(guestIds.size,3,'Every fresh browser gets its own guest identity');
 }finally{await browser.close();}
 await writeFile('test-results/live/provenance.json',JSON.stringify({sha,health,origin,captures,runId:process.env.GITHUB_RUN_ID},null,2));
-console.log('Live identity, public guest use without sign-in, restricted test accounts and 33 rendered views verified; manual rendered approval remains required.');
+console.log('Live identity, public guest use without sign-in, restricted test accounts and 36 rendered views verified; manual rendered approval remains required.');

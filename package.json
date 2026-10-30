@@ -16,7 +16,9 @@
     "worker": "node --import tsx --env-file-if-exists=.env server/worker.ts",
     "check": "tsc --noEmit",
     "test": "node --import tsx --env-file-if-exists=.env --test tests/*.test.ts",
-    "build": "npm run check && vite build",
+    "build": "npm run build:app && npm run build:homepage && node scripts/assemble-homepage.mjs",
+    "build:app": "npm run check && vite build",
+    "build:homepage": "npm ci --prefix homepage --ignore-scripts && npm run build --prefix homepage",
     "start": "node --import tsx --env-file-if-exists=.env server/index.ts",
     "test:integration": "node --import tsx --env-file-if-exists=.env scripts/test-integration.ts"
   },
