@@ -1,0 +1,30 @@
+{
+  "schemaVersion": 1,
+  "recordedAt": "2026-10-30T05:15:00Z",
+  "pr": 18,
+  "previousCheckpoint": "review-checkpoints/pr-18-9f947948-hosted-workflow-missing.json",
+  "discoveryFinding": {
+    "limitation": "github_fetch_commit_workflow_runs filters to pull_request and does not expose the repository's trusted pull_request_target QA runs.",
+    "reportedHistoricalRun": {
+      "runId": 41005919369,
+      "artifactId": 12956040103,
+      "head": "9f94794846ea92fab2006206f13b6bb46079bdca",
+      "base": "d6de86cf5df74e5261836db7d5028bb16d42dc54",
+      "integrated": "f782e578ca6cc506f269a983f0655659d0127af9",
+      "status": "User-supplied discovery context only; not used as independent release evidence in this run."
+    }
+  },
+  "currentDisposition": "publication-held",
+  "blockers": [
+    "PR18 trusted CI is being amended to publish discoverable cloud/qa pending/final commit statuses.",
+    "Await a new immutable exact PR/head/base/five-file commissioning binding after that amendment.",
+    "Do not use a manually supplied run ID as a permanent discovery mechanism or as independent completion evidence."
+  ],
+  "futureDiscoveryRule": "After the follow-up binding, use the cloud/qa commit-status target_url only to discover the current run, then independently verify its jobs/logs/artifacts/provenance and every normal gate.",
+  "actionsNotTaken": [
+    "No merge or publication",
+    "No cloud-release update",
+    "No local execution",
+    "No GitHub comment, review, or collaborator message"
+  ]
+}
