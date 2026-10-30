@@ -12,5 +12,6 @@ export async function audit(db: DB, actor: string | null, action: string, target
   await db.query('INSERT INTO audit_log(actor_id,action,target_id,before_state,after_state,reason) VALUES ($1,$2,$3,$4,$5,$6)', [actor,action,target,JSON.stringify(before),JSON.stringify(after),reason]);
 }
 export async function award(db: DB, user: string, reason: string, source: string, points: number) {
-  await db.query('INSERT INTO points_ledger(user_id,reason,source_id,points) VALUES ($1,$2,$3,$4) ON CONFLICT(user_id,reason,source_id) DO NOTHING', [user,reason,source,points]);
+  const result = await db.query('INSERT INTO points_ledger(user_id,reason,source_id,points) VALUES ($1,$2,$3,$4) ON CONFLICT(user_id,reason,source_id) DO NOTHING', [user,reason,source,points]);
+  return !!result.rowCount;
 }
