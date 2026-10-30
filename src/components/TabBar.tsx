@@ -1,12 +1,11 @@
 import { Link, useLocation } from 'react-router-dom';
-import { Map, Camera, CalendarDays, BookOpen, CircleUserRound } from 'lucide-react';
+import { Map, Camera, CalendarDays, CircleUserRound } from 'lucide-react';
 import './tab-bar.css';
 
 const tabs = [
-  { path: '/', label: 'Map', Icon: Map },
-  { path: '/report', label: 'Report', Icon: Camera },
   { path: '/events', label: 'Meetups', Icon: CalendarDays },
-  { path: '/resources', label: 'Resources', Icon: BookOpen },
+  { path: '/', label: 'Map', Icon: Map },
+  { path: '/report', label: 'Document', Icon: Camera },
   { path: '/profile', label: 'Profile', Icon: CircleUserRound },
 ] as const;
 
@@ -15,8 +14,6 @@ export default function TabBar() {
   const { pathname } = useLocation();
   const selected = pathname === '/report' ? '/report'
     : pathname.startsWith('/events') ? '/events'
-    : pathname === '/resources' || pathname.startsWith('/resources/') ? '/resources'
-    : pathname === '/directory' || pathname.startsWith('/directory/') ? '/resources'
     : pathname.startsWith('/profile/') || ['/profile', '/admin', '/privacy'].includes(pathname) ? '/profile'
     : pathname === '/' || pathname.startsWith('/reports/') ? '/' : null;
 
