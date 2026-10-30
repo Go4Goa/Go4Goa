@@ -43,8 +43,8 @@ Stop the release if one of these conditions is true:
 - A required CI job did not pass.
 - The database agent cannot make and verify a backup.
 - The migration state is inconsistent.
-- A required Vercel variable is missing from the Production target, or phone sign-in is enabled.
-- The candidate changes approved design, introduces a sign-in step, or omits newer approved live design.
+- A required Vercel variable is missing from the Production target, or phone sign-in is disabled.
+- The candidate changes approved design, introduces an unapproved sign-in step, or omits newer approved live design.
 - `cloud-release` changed after the release agent read it.
 - The deployed health response does not show the release commit.
 - The live verification workflow or a manual check fails.
@@ -268,7 +268,7 @@ Check the public feature flags:
 
 ```bash
 curl --fail --silent --show-error https://go-goa-qa.vercel.app/api/config | \
-  jq --exit-status '.qa == true and .demo == true and .phoneVerification == false'
+  jq --exit-status '.qa == true and .demo == true and .phoneVerification == true'
 ```
 
 Inspect the release workflow once Vercel finishes:
@@ -282,9 +282,9 @@ Require a successful `cloud/live-verification` status for the release commit. Do
 
 Verify these manual flows with fictional QA data:
 
-1. Open two fresh private browser contexts and confirm they receive separate guest residents without any sign-in form, phone step, password or Vercel login.
-2. Check Reporting, events, RSVP, bookmarks and profile without asking the visitor to sign in.
-3. Confirm a report draft survives navigation, upload failure and retry without a phone gate.
+1. Open two fresh private browser contexts and confirm they start signed out, display phone account creation on Profile, and can browse publicly without a site password or Vercel login.
+2. Check public Reporting and events, then verify authenticated RSVP, bookmarks and profile with the restricted fictional test account.
+3. Confirm a report draft survives navigation, upload failure and retry through the required phone sign-in step.
 4. Submit an approved synthetic test report with a fictional location and safe test photo. Record its ID and verify that retries do not duplicate it.
 5. Confirm pending/private reports and photos stay private to the creating session and authorized moderation, including across the two guest contexts. Preserve location precision and CSRF controls.
 6. Confirm moderation and public projections, and the approved AI behavior only if that provider has separate release authorization.

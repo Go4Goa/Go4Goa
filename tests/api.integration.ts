@@ -148,6 +148,50 @@ test('public preview guests are separate residents with private reports and no r
   }finally{Object.assign(config,previous);Object.assign(phoneVerificationCredentials,previousCredentials);}
 });
 
+test('phone signup retains single-use approval through username corrections and returning sign-in',async()=>{
+ const previous={phoneVerificationRequested:config.phoneVerificationRequested},credentials={...phoneVerificationCredentials};
+ const realFetch=globalThis.fetch;let checks=0;const approved=new Set<string>();
+ config.phoneVerificationRequested=true;
+ Object.assign(phoneVerificationCredentials,{credentialSid:'SK_test',credentialSecret:'secret',serviceSid:'VA_test'});
+ globalThis.fetch=async(input,init)=>{
+  if(!String(input).startsWith('https://verify.twilio.com/'))return realFetch(input,init);
+  const data=new URLSearchParams(String(init?.body)),phone=data.get('To')!;
+  if(String(input).endsWith('/Verifications')){approved.delete(phone);return Response.json({status:'pending'},{status:201});}
+  checks++;if(approved.has(phone))return Response.json({},{status:404});
+  if(data.get('Code')!=='123456')return Response.json({status:'pending'});
+  approved.add(phone);return Response.json({status:'approved'});
+ };
+ try{
+  async function request(phone:string){const r=await call('/api/auth/request-code','POST',{phone});assert.equal(r.status,200);return(await r.json()).challenge as string;}
+  const challenge=await request('+15005550101');
+  const verify=(code='123456',username?:string)=>call('/api/auth/verify-code','POST',{challenge,code,...(username?{username}:{})});
+  assert.equal((await verify('000000','phone_resident')).status,400,'wrong OTP never creates an account');
+  assert.equal((await verify()).status,400,'new accounts require a username after phone approval');
+  const providerChecks=checks;
+  assert.equal((await verify('000000','phone_resident')).status,400,'retained proof is bound to the approved code');
+  const taken=(await pool.query('SELECT username FROM profiles WHERE id=$1',[resident.id])).rows[0].username;
+  assert.equal((await verify('123456',taken)).status,409,'taken usernames can be corrected');
+  const created=await verify('123456','phone_resident');assert.equal(created.status,200);
+  assert.equal(checks,providerChecks,'username retries must not re-check consumed Twilio approval');
+  const cookie=created.headers.getSetCookie().map(v=>v.split(';')[0]).join('; ');
+  const account=(await(await call('/api/auth/me','GET',undefined,{id:'',cookie,csrf:''})).json()).account;
+  assert.equal(account.username,'phone_resident');assert.equal(account.verified,true);assert.equal(account.demo,false);
+  assert.equal(account.role,'resident');assert.equal(account.smsOptIn,false);assert.equal(account.emailOptIn,false);
+  assert.equal((await verify('123456','phone_resident')).status,400,'challenge cannot be replayed');
+  // A returning visit has a fresh rate-limit window; keep the signup limit intact.
+  await pool.query('DELETE FROM rate_limits');
+  const returning=await request('+15005550101');
+  const signedIn=await call('/api/auth/verify-code','POST',{challenge:returning,code:'123456'});
+  assert.equal(signedIn.status,200,'returning accounts do not need a username');
+  const returningCookie=signedIn.headers.getSetCookie().map(v=>v.split(';')[0]).join('; ');
+  assert.equal((await(await call('/api/auth/me','GET',undefined,{id:'',cookie:returningCookie,csrf:''})).json()).account.id,account.id);
+  const expiring=await request('+15005550102');
+  assert.equal((await call('/api/auth/verify-code','POST',{challenge:expiring,code:'123456'})).status,400);
+  await pool.query(`UPDATE verification_challenges SET expires_at=now()-interval '1 second' WHERE id=$1`,[expiring]);
+  assert.equal((await call('/api/auth/verify-code','POST',{challenge:expiring,code:'123456',username:'expired_phone'})).status,400,'approval cannot extend expiry');
+ }finally{globalThis.fetch=realFetch;Object.assign(config,previous);Object.assign(phoneVerificationCredentials,credentials);}
+});
+
 test('photo report stays private until reviewed, retry is idempotent and points cannot be duplicated or edited',async()=>{
   const photo=await sharp({create:{width:100,height:80,channels:3,background:'#667744'}}).jpeg().toBuffer();
   const draft={category:'trash',description:'Private home landmark',locationLabel:'Private home landmark',

@@ -118,6 +118,7 @@ main { padding-bottom: calc(var(--bottom-nav-height, 53px) + 40px); }
 .sign-in > svg { margin-bottom: 12px; }
 .sign-in > p { margin-block: 8px 28px; }
 .sign-in .form-stack { gap: 24px; }
+.sign-in input { font-size: 16px; }
 .event-review > .event-row { padding: 0; border: 0; }
 .privacy-page h2 { margin: var(--section-gap) 0 12px; }
 @media (max-width: 760px) {

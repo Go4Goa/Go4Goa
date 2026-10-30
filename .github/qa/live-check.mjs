@@ -22,15 +22,16 @@ for(const role of ['resident','organizer','moderator']){
 }
 assert.equal((await fetch(origin+'/api/auth/team-access')).status,404,'No manual team sign-in route');
 assert.equal((await fetch(origin+'/api/account')).status,401,'Private account data requires its browser session');
-const publicConfig=await(await fetch(origin+'/api/config')).json();assert.equal(publicConfig.phoneVerification,false,'Guest QA must not require phone verification');
+const publicConfig=await(await fetch(origin+'/api/config')).json();assert.equal(publicConfig.phoneVerification,true,'Phone account creation must stay enabled');
+assert.equal((await fetch(origin+'/api/auth/guest',{method:'POST',headers:{origin,'content-type':'application/json'},body:'{}'})).status,404,'Automatic guest creation is disabled');
 for(const metric of ['overall','reports','meetups']){const r=await fetch(origin+'/api/leaderboard?metric='+metric);assert.equal(r.status,200);const data=await r.json();assert.equal(data.metric,metric);assert.ok(data.entries.length<=100);}
 const browser=await chromium.launch({headless:true});const captures=[];
 try{
- const guestIds=new Set();
+
  {
   const context=await browser.newContext({viewport:{width:390,height:844},serviceWorkers:'block'});const page=await context.newPage();let failConfig=true;
   await page.route(origin+'/api/config',async route=>{if(failConfig){failConfig=false;await route.fulfill({status:503,contentType:'application/json',body:JSON.stringify({error:'Temporary configuration failure.'})});}else await route.continue();});
-  await page.goto(origin+'/profile');await page.getByRole('heading',{name:'Your session couldn’t start.',exact:true}).waitFor();await page.getByRole('button',{name:'Try again',exact:true}).click();await page.locator('.private-profile').waitFor();assert.equal(await page.getByLabel('Phone number',{exact:true}).count(),0);await context.close();
+  await page.goto(origin+'/profile');await page.getByRole('heading',{name:'Your session couldn’t start.',exact:true}).waitFor();await page.getByRole('button',{name:'Try again',exact:true}).click();await page.getByLabel('Phone number',{exact:true}).waitFor();assert.equal((await(await context.request.get(origin+'/api/auth/me')).json()).account,null);await context.close();
  }
  for(const width of [320,390,1440]){
   const context=await browser.newContext({viewport:{width,height:width===1440?1000:844},reducedMotion:'reduce',serviceWorkers:'block'});
@@ -44,11 +45,27 @@ try{
    if(name==='events')await page.locator('.event-feed .event-row').first().waitFor();
    if(name==='leaderboard'){await page.getByRole('heading',{name:'Leaderboard',exact:true}).waitFor();for(const label of ['Reports','Meetups','Overall']){await page.getByRole('button',{name:label,exact:true}).click();await page.locator('.leaderboard-list,.leaderboard-empty').waitFor();}assert.equal(await page.getByLabel('Phone number',{exact:true}).count(),0);}
    if(name==='directory')await page.locator('.directory-results').waitFor();
-   if(name==='profile'){await page.locator('.private-profile').waitFor();assert.equal(await page.getByText('Sign out',{exact:true}).count(),0);assert.equal(await page.getByLabel('Phone number',{exact:true}).count(),0);const who=await(await context.request.get(origin+'/api/auth/me')).json();assert.equal(who.account.role,'resident');assert.match(who.account.username,/^guest_/);guestIds.add(who.account.id);assert.equal((await context.request.get(origin+'/api/admin/incidents')).status(),403,'Guests cannot moderate');await page.reload();await page.locator('.private-profile').waitFor();assert.equal((await(await context.request.get(origin+'/api/auth/me')).json()).account.id,who.account.id,'Reload reuses this browser identity');await page.goto(origin+'/profile/preferences');await page.getByRole('heading',{name:'Preferences',exact:true}).waitFor();assert.equal(await page.getByText('Sign out',{exact:true}).count(),0);assert.equal(await page.getByLabel('Email address',{exact:true}).count(),0);await settle();const preferences=`${width}-preferences.png`;await page.screenshot({path:'test-results/live/'+preferences,fullPage:true,animations:'disabled'});captures.push(preferences);await page.goto(origin+'/profile');await page.locator('.private-profile').waitFor();}
+   if(name==='profile'){
+    await page.getByLabel('Phone number',{exact:true}).waitFor();
+    assert.equal(await page.getByRole('button',{name:'Send verification code',exact:true}).isEnabled(),true);
+    assert.equal((await(await context.request.get(origin+'/api/auth/me')).json()).account,null,'Fresh browsers start signed out');
+    await page.reload();await page.getByLabel('Phone number',{exact:true}).waitFor();
+    assert.equal((await(await context.request.get(origin+'/api/auth/me')).json()).account,null,'Reload must not create a guest');
+   }
    await settle();
    const bad=await page.evaluate(()=>[...document.querySelectorAll('body *')].filter(e=>{const r=e.getBoundingClientRect();return r.width&&r.height&&/italic|oblique/.test(getComputedStyle(e).fontStyle);}).map(e=>e.tagName));assert.deepEqual(bad,[],'Live typography');
    const file=`${width}-${name}.png`;await page.screenshot({path:'test-results/live/'+file,fullPage:true,animations:'disabled'});captures.push(file);
   }
+  // Only the existing restricted fictional persona is used for automated writes.
+  // These checks never request or deliver an SMS.
+  const login=await context.request.post(origin+'/api/auth/demo',{headers:{authorization,origin},data:{role:'resident'}});assert.equal(login.status(),200);
+  await page.goto(origin+'/profile/preferences');await page.getByRole('heading',{name:'Preferences',exact:true}).waitFor();
+  await page.getByRole('button',{name:'Sign out',exact:true}).waitFor();
+  assert.equal(await page.getByLabel('Email address',{exact:true}).count(),0);
+  await settle();const preferences=`${width}-preferences.png`;await page.screenshot({path:'test-results/live/'+preferences,fullPage:true,animations:'disabled'});captures.push(preferences);
+  await page.getByRole('button',{name:'Sign out',exact:true}).click();await page.getByLabel('Phone number',{exact:true}).waitFor();
+  assert.equal((await(await context.request.get(origin+'/api/auth/me')).json()).account,null,'Sign out clears the session without creating a guest');
+  assert.equal((await context.request.post(origin+'/api/auth/demo',{headers:{authorization,origin},data:{role:'resident'}})).status(),200);
   await page.goto(origin+'/events/new');await page.getByRole('button',{name:'Meetup name: Untitled meetup',exact:true}).waitFor();
   await page.getByText('Customize graphic',{exact:true}).click();await page.getByRole('button',{name:'Ocean',exact:true}).click();await page.getByRole('button',{name:'Waves',exact:true}).click();
   await settle();
@@ -60,7 +77,7 @@ try{
   const detail=`${width}-meetup-detail.png`;await page.screenshot({path:'test-results/live/'+detail,fullPage:true,animations:'disabled'});captures.push(detail);
   await context.close();
  }
- assert.equal(guestIds.size,3,'Every fresh browser gets its own guest identity');
+
 }finally{await browser.close();}
 await writeFile('test-results/live/provenance.json',JSON.stringify({sha,health,origin,captures,runId:process.env.GITHUB_RUN_ID},null,2));
-console.log('Live identity, public guest use without sign-in, restricted test accounts and 36 rendered views verified; manual rendered approval remains required.');
+console.log('Live identity, public browsing, phone sign-up entry, sign-out, restricted test accounts and rendered views verified; manual rendered approval remains required.');
