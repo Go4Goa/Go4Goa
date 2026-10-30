@@ -1,0 +1,27 @@
+{
+  "schemaVersion": 1,
+  "recordedAt": "2026-10-30T04:57:07.606Z",
+  "owner": {
+    "login": "ZakKrevitt",
+    "id": 282219764
+  },
+  "source": "Direct human instructions in Codex chat 01a1878b-c4be-74d1-85a4-4f10d7c0882f, relayed to the existing cloud monitor at the user's explicit request.",
+  "approval": {
+    "pr": 14,
+    "reviewedHead": "c12e2139abc92787badc97de81866313c1e512ac",
+    "header": "Approved shared header leaderboard link and environment label placement.",
+    "rankings": "Public contribution rankings approved, superseding the earlier no-gamified-rankings rule for this feature.",
+    "fix": "Category-specific leaders must be selected before LIMIT 100; patch, merge and release authorized.",
+    "quote": "1 and 2 are fine to put through, ranking is fine; 3. ok just make the fix as needed; patch and fix then ship",
+    "releaseEvidence": "releases/2026-10-30-pr14-leaderboard.json"
+  },
+  "currentDirection": {
+    "quote": "ok fix the Vercel permissions and sync my approvals to the cloud monitor, then test it end to end. his PRs should get checked and shipped with my mac off, preserving my design and keeping sign ins off",
+    "authorization": "Reconcile these approvals into the existing hosted automation and test its review-through-release workflow.",
+    "design": "Zachary retains design authority. Preserve current approved main and live design, including subsequent owner-approved changes. This PR14 exception is not permission for new redesigns.",
+    "access": "Public guest use with no passwords, sign-in/out, phone/email onboarding or manual team login. Keep private-data, CSRF and role boundaries.",
+    "deployment": "Use the existing authorized connected owner identity for reviewed GitHub merge commits. Preserve contributor commits and attribution. No fabricated authors, extra Vercel token, plan upgrade or paid seat authorized.",
+    "scope": "Future unattended releases remain limited to safe Reporting FEATURE/UX by layalabs. A single owner-authored infrastructure commissioning PR may exercise the end-to-end cloud path; bind its exact PR/head/base in a separate record before execution."
+  },
+  "supersedes": "PR14 holds based solely on absent owner approval or the old ranking prohibition. Other concrete findings still require review. Do not keep rediscovering the old prohibition after verifying this owner instruction and the release evidence."
+}
