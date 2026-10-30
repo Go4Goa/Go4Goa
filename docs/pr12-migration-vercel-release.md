@@ -20,7 +20,7 @@ This procedure is for fictional QA data. It does not approve a public resident l
 
 These SHAs describe PR #12, not a permanently pinned deployment target. Before every release, inspect current `main`, the live health response, the latest release record and Zachary's current design decisions. Select and record the exact reviewed current-main commit as `TARGET_RELEASE` and the current release branch as `CURRENT_RELEASE`. Include all approved live design. If either ref changes after review, stop and re-evaluate the new commits. Merging this runbook does not itself authorize a deployment.
 
-The owner's current instruction is no sign-ins anywhere in this public QA site. Keep automatic guest access, no site password and no Vercel login. Keep `GO_GOA_PHONE_VERIFICATION=false`; the presence of provider credentials does not authorize enabling it.
+The owner enabled phone sign-in on 30 October 2026. Keep public browsing open without a site password or Vercel login. Keep `GO_GOA_PHONE_VERIFICATION=true` with the approved restricted Twilio Verify credentials.
 
 ## Ownership
 
@@ -133,10 +133,10 @@ Confirm these settings in the Vercel Production target:
 | Variable | Required setting |
 |---|---|
 | `GO_GOA_QA` | `true`, retaining the existing isolated QA environment |
-| `GO_GOA_PHONE_VERIFICATION` | `false`, preserving the owner's no-sign-in instruction |
+| `GO_GOA_PHONE_VERIFICATION` | `true`, preserving the owner's phone sign-in instruction |
 | `GO_GOA_AI_REVIEW` | Preserve the separately approved state; do not enable a provider as part of this runbook merge |
 
-Twilio credentials are not required for the guest workflow. Do not add an SMS test, phone verification step or login requirement. Do not remove private-session, CSRF or moderator authorization controls.
+Twilio Verify credentials are required for phone sign-in. Do not remove private-session, CSRF or moderator authorization controls.
 
 If AI review has separate current authorization, verify its model, workspace, credentials and privacy behavior before activating it. Otherwise leave it disabled and test the manual moderation path. Never send resident data to an unapproved provider.
 
@@ -291,7 +291,7 @@ Verify these manual flows with fictional QA data:
 7. Compare mobile and desktop design to the approved baseline. Check upright type, existing tokens/components and absence of decorative sideflags.
 8. Close the synthetic report after verification through the supported moderation action.
 
-Use fictional QA data only. Never send real SMS or email, use real residents, seed a production database, or copy production secrets into test environments. API success alone does not establish the complete rendered guest workflow.
+Use fictional QA data only. Automated release checks must not send SMS or email. Do not seed a production database or copy production secrets into test environments. API success alone does not establish the rendered phone sign-in workflow.
 
 ## 8. Failure and rollback
 
@@ -303,7 +303,7 @@ If a live check fails, promote the previous verified Vercel deployment. Do not f
 
 Keep migration 009 in place during an application rollback. The old application does not use the additive `ai_reviews` table.
 
-Keep phone verification disabled throughout release and rollback. If separately authorized AI review fails, disable it through the approved incident procedure. Variable changes need a new deployment; verify guest access again afterward.
+Keep phone verification enabled throughout release and rollback. If separately authorized AI review fails, disable it through the approved incident procedure. Variable changes need a new deployment; verify phone sign-in again afterward.
 
 ## 9. Release record
 
@@ -317,7 +317,7 @@ Record these items before the release closes:
 - The Vercel deployment ID and immutable URL.
 - The deployed Git commit from `/api/health`.
 - The `cloud/live-verification` run and artifact.
-- Evidence that phone verification is disabled and guest sessions require no sign-in.
+- Evidence that phone verification is enabled and fresh browsers start signed out.
 - The synthetic report ID, moderation result and any separately approved AI result.
 - The approved live baseline, mobile/desktop visual evidence and design review outcome.
 - All failed or incomplete checks.
