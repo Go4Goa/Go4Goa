@@ -1,0 +1,32 @@
+{
+  "schemaVersion": 1,
+  "recordedAt": "2026-10-29T18:29:45Z",
+  "event": {
+    "deliveryId": "5be6e370-d401-11f1-96c7-e88230f586c2",
+    "action": "synchronize"
+  },
+  "pr": {
+    "number": 14,
+    "url": "https://github.com/actforgoa2026/Go4Goa/pull/14",
+    "author": "layalabs",
+    "authorId": 261854875,
+    "head": "c122a120f159fd83a43b2c6d2b130f1a3fd169c4",
+    "base": "7bb20af99fb432984a66e7be60619886f8eb4a36",
+    "integrated": "2945a11b5e333ae34f8d3e5720189939bf26b525"
+  },
+  "outcome": "held-before-execution",
+  "supersedes": "review-checkpoints/pr-14-bd92cf21-held.json",
+  "blockers": [
+    "Contributor changes PRODUCT.md to remove the owner-approved ban on gamified rankings.",
+    "Public leaderboard and header/nav redesign require explicit current owner design authority and resolved public-data, anti-abuse, and reversal decisions.",
+    "No review by ZakKrevitt exists for this exact current head.",
+    "reviews/pr-14.json is absent on automation/source-review; the trusted source gate therefore has not authorized any execution."
+  ],
+  "actionsNotTaken": [
+    "No code execution or test rerun",
+    "No receipt",
+    "No merge or cloud-release update",
+    "No deployment",
+    "No GitHub comments, reviews, or collaborator messages"
+  ]
+}
