@@ -5,7 +5,7 @@ import type { Server } from 'node:http';
 import sharp from 'sharp';
 import { createApp } from '../server/app.ts';
 import { pool } from '../server/db.ts';
-import { config } from '../server/config.ts';
+import { config,phoneVerificationCredentials } from '../server/config.ts';
 import { hash } from '../server/security.ts';
 import { syncResources } from '../server/actforgoa.ts';
 import { queueUpdate } from '../server/events.ts';
@@ -86,7 +86,7 @@ test('public leaderboard counts only verified points from active accounts',async
 });
 
 test('public preview guests are separate residents with private reports and no role escalation',async()=>{
-  const previous={qa:config.qa,phoneVerificationRequested:config.phoneVerificationRequested};config.qa=true;config.phoneVerificationRequested=false;
+  const previous={qa:config.qa,phoneVerificationRequested:config.phoneVerificationRequested},previousCredentials={...phoneVerificationCredentials};config.qa=true;config.phoneVerificationRequested=false;
   try {
     assert.equal((await call('/api/auth/guest','POST',{role:'moderator'})).status,400);
     assert.equal((await call('/api/auth/guest','POST',{},undefined,{origin:'https://attacker.example'})).status,403);
@@ -110,8 +110,12 @@ test('public preview guests are separate residents with private reports and no r
     assert.equal((await call('/api/incidents/'+id)).status,404);
     assert.equal((await call('/api/auth/preferences','PATCH',{sms:false,email:false},one,{'x-csrf-token':''})).status,403);
     config.phoneVerificationRequested=true;
-    const blocked=await call('/api/incidents','POST',form(),two,{'idempotency-key':randomUUID()});assert.equal(blocked.status,403);assert.match(await blocked.text(),/Verify your phone/);
-  }finally{Object.assign(config,previous);}
+    Object.assign(phoneVerificationCredentials,{credentialSid:'SK_test',credentialSecret:'secret',serviceSid:'VA_test'});
+    const signedOut=await call('/api/auth/me','GET',undefined,one);assert.equal((await signedOut.json() as any).account,null,'existing QA guests must return to phone sign-in');
+    const testPersona=await call('/api/auth/me','GET',undefined,resident);assert.equal((await testPersona.json() as any).account.id,resident.id,'restricted QA test personas remain available');
+    assert.equal((await call('/api/auth/guest','POST',{})).status,404,'phone-enabled QA must start signed out');
+    const blocked=await call('/api/incidents','POST',form(),two,{'idempotency-key':randomUUID()});assert.equal(blocked.status,401);assert.match(await blocked.text(),/Sign in/);
+  }finally{Object.assign(config,previous);Object.assign(phoneVerificationCredentials,previousCredentials);}
 });
 
 test('photo report stays private until reviewed, retry is idempotent and points cannot be duplicated or edited',async()=>{

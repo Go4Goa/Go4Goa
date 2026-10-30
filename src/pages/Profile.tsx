@@ -25,7 +25,7 @@ export default function Profile() {
   <AccountSettings onChanged={()=>{void refresh();reload();}}/>
   <footer className="profile-footer">
    {['moderator','admin'].includes(account.role)&&<ButtonLink variant="secondary" to="/admin"><ShieldCheck size={18}/>Moderation workspace</ButtonLink>}
-   {!config?.qa&&<Button variant="ghost" loading={busy} onClick={()=>run(async()=>{await api('/auth/logout',{method:'POST',body:'{}'});await refresh();})}><LogOut size={17}/>Sign out</Button>}
+   {(!config?.qa||config.phoneVerification)&&<Button variant="ghost" loading={busy} onClick={()=>run(async()=>{await api('/auth/logout',{method:'POST',body:'{}'});await refresh();})}><LogOut size={17}/>Sign out</Button>}
    <Link className="text-link small" to="/privacy">Privacy & account data</Link>
   </footer>
   <ErrorNotice message={actionError}/>

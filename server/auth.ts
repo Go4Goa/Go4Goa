@@ -13,8 +13,8 @@ declare global { namespace Express { interface Request { account?: Account } } }
 export const auth = Router();
 const phoneSchema=z.string().regex(/^\+[1-9]\d{7,14}$/,'Include a country code, for example +91.');
 const usernameSchema=z.string().trim().toLowerCase().regex(/^[a-z][a-z0-9_]{2,23}$/,'Use 3–24 lowercase letters, numbers or underscores.').refine(v=>!['admin','moderator','go_goa','actforgoa','support','deleted'].includes(v),'Choose another username.');
-export const loadAccount: RequestHandler=async(req,_res,next)=>{
- try {const token=req.cookies?.go_goa_session; if(typeof token==='string') {const {rows}=await pool.query(`SELECT u.id,p.username,u.role,u.phone_verified,u.email_verified,u.sms_opt_in,u.email_opt_in,u.demo,s.csrf FROM sessions s JOIN users_private u ON u.id=s.user_id JOIN profiles p ON p.id=u.id WHERE s.token_hash=$1 AND s.expires_at>now() AND u.deleted_at IS NULL`,[hash(token)]);const r=rows[0];if(r)req.account={id:r.id,username:r.username,role:r.role,verified:r.phone_verified,emailVerified:r.email_verified,smsOptIn:r.sms_opt_in,emailOptIn:r.email_opt_in,demo:r.demo,csrf:r.csrf};}next();}catch(e){next(e);}
+export const loadAccount: RequestHandler=async(req,res,next)=>{
+ try {const token=req.cookies?.go_goa_session; if(typeof token==='string') {const {rows}=await pool.query(`SELECT u.id,p.username,u.role,u.phone_verified,u.email_verified,u.sms_opt_in,u.email_opt_in,u.demo,s.csrf FROM sessions s JOIN users_private u ON u.id=s.user_id JOIN profiles p ON p.id=u.id WHERE s.token_hash=$1 AND s.expires_at>now() AND u.deleted_at IS NULL`,[hash(token)]);const r=rows[0];if(r?.demo&&r.username.startsWith('guest_')&&config.qa&&phoneVerificationEnabled(config.phoneVerificationRequested,phoneVerificationCredentials)){await pool.query('DELETE FROM sessions WHERE token_hash=$1',[hash(token)]);res.clearCookie('go_goa_session',{path:'/'});}else if(r)req.account={id:r.id,username:r.username,role:r.role,verified:r.phone_verified,emailVerified:r.email_verified,smsOptIn:r.sms_opt_in,emailOptIn:r.email_opt_in,demo:r.demo,csrf:r.csrf};}next();}catch(e){next(e);}
 };
 export const requireAccount: RequestHandler=(req,_res,next)=>{ if(!req.account)return next(Object.assign(new Error('Sign in to continue.'),{status:401})); if(!['GET','HEAD'].includes(req.method)&&!equal(String(req.headers['x-csrf-token']||''),req.account.csrf))return next(Object.assign(new Error('Refresh the page and try again.'),{status:403}));next(); };
 export const requireModerator: RequestHandler=(req,res,next)=>requireAccount(req,res,e=>{if(e)return next(e);if(!['moderator','admin'].includes(req.account!.role))return next(Object.assign(new Error('Moderator access is required.'),{status:403}));next();});
@@ -24,9 +24,9 @@ async function verifyApi(path:'Verifications'|'VerificationCheck',data:Record<st
  return requestTwilioVerification(phoneVerificationCredentials,path,data);
 }
 auth.get('/me',(req,res)=>res.json({account:req.account||null}));
-// Each public-preview visitor gets a separate resident identity without signing in.
+// Guest-only QA gives each visitor a separate resident identity.
 auth.post('/guest',async(req,res)=>{
- if(!config.qa)fail(404,'Not found.');
+ if(!config.qa||phoneVerificationEnabled(config.phoneVerificationRequested,phoneVerificationCredentials))fail(404,'Not found.');
  z.object({}).strict().parse(req.body||{});
  if(req.account){res.json({ok:true});return;}
  await rate('guest:'+clientIp(req),40,3600);
