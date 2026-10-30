@@ -91,7 +91,7 @@ try {
     await page.getByRole('button',{name:'Save meetup name',exact:true}).click();
     await page.getByText('Customize graphic',{exact:true}).click();
     await page.getByRole('button',{name:'Ocean',exact:true}).click();await page.getByRole('button',{name:'Waves',exact:true}).click();
-    await page.getByRole('link',{name:'Resources',exact:true}).click();await page.goBack();
+    await page.getByRole('navigation',{name:'Main navigation'}).getByRole('link',{name:'Map',exact:true}).click();await page.goBack();
     await page.getByRole('heading',{name:'Fictional recovered meetup',exact:true}).waitFor();
     await page.reload();await page.getByRole('heading',{name:'Fictional recovered meetup',exact:true}).waitFor();
     assert.equal(await page.locator('.event-preview-poster').getAttribute('data-poster-color'),'ocean');
