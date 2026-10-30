@@ -1,0 +1,54 @@
+{
+  "schemaVersion": 1,
+  "recordedAt": "2026-10-30T06:38:07.418Z",
+  "authority": {
+    "owner": "ZakKrevitt",
+    "source": "Direct human instruction in the owning local release chat, relayed in this authorized monitor update.",
+    "instruction": "Remove the Resources tab; keep Resources out of the navigation; keep sign-ins off."
+  },
+  "navigation": {
+    "primaryDestinations": [
+      "Meetups",
+      "Map",
+      "Document",
+      "Profile"
+    ],
+    "prohibited": [
+      "Resources primary navigation tab",
+      "Resources dock item",
+      "Resources header workaround"
+    ],
+    "retainedRoutes": [
+      "Resources pages/routes",
+      "Directory pages/routes"
+    ],
+    "retainedAccess": "Existing contextual links may continue to lead to Resources and Directory."
+  },
+  "access": {
+    "automaticSeparateGuestSessions": true,
+    "phoneVerification": false,
+    "prohibited": [
+      "sign-in UI",
+      "sign-out UI",
+      "phone/email onboarding",
+      "password protection",
+      "Vercel login challenge",
+      "manual team-login route"
+    ],
+    "preserved": [
+      "private-data separation",
+      "CSRF",
+      "moderator restrictions",
+      "protected automated-QA credentials"
+    ]
+  },
+  "enforcement": "Hold any future PR that adds a Resources navigation item or prohibited sign-in/access feature, even if checks pass, until Zachary explicitly changes this owner decision.",
+  "pr19": {
+    "title": "Restore the Resources tab",
+    "state": "closed",
+    "merged": false,
+    "head": "471cdf40a10b3c753a0eeb0bb72091f554ac33b4",
+    "cancelledProposal": true
+  },
+  "scope": "Standing monitor instruction only; does not authorize a merge, deployment, new monitor, external message or weakening of any existing gate."
+}
