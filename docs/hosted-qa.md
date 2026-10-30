@@ -4,15 +4,15 @@ URL: https://go-goa-qa.vercel.app
 
 This is an isolated testing environment. It uses its own Neon Postgres/PostGIS database and a private Vercel Blob store. It contains fictional personas and example records. Use sample photos and places only. SMS notifications and email delivery are disabled in hosted QA.
 
-For the PR #14 release, preserve the owner’s no-sign-in requirement: keep `GO_GOA_PHONE_VERIFICATION=false`, automatic guest sessions, and public browsing without a site password or Vercel login.
+The owner authorized live phone account creation on 30 October 2026, superseding the earlier guest-only access decision. Keep `GO_GOA_PHONE_VERIFICATION=true` with the existing Twilio Verify credentials. Public browsing remains open without a site password or Vercel login.
 
 ## Give the Reporting QA partner access
 
 Share the URL directly. On 29 October 2026 Zachary explicitly authorized public browsing without a site password or Vercel login. No GitHub access or Vercel membership is needed to view the site.
 
-The preview creates a separate guest resident automatically in each browser. Private sessions keep each visitor’s activity separate. Clearing cookies removes access to that guest activity.
+A visitor can create an account or sign in from Profile using an SMS verification code. New accounts choose a public username. Private sessions keep each visitor’s activity separate; signing in again restores the verified account. Earlier browser-only guest activity is not automatically assigned to a phone account.
 
-Guests can submit reports, create meetups, RSVP and use bookmarks without signing in. Shared seeded personas remain available only to authorized automated QA through the encrypted test-account API.
+Visitors can browse publicly. Submitting reports, creating meetups, RSVP and bookmarks require a phone-verified account. Shared seeded personas remain available only to authorized automated QA through the encrypted test-account API.
 
 Follow [Reporting QA handoff](reporting-qa-handoff.md). Report issues with the tested URL and commit, browser, steps and scrubbed screenshots. Do not put the QA password, cookies, personal information or provider keys into issues.
 
@@ -34,7 +34,7 @@ Vercel's `production` target here means the stable URL of the dedicated QA proje
 ## Isolation and access
 
 - Public routes and public API projections return 200 without credentials, login redirects or WWW-Authenticate challenges. Vercel login protection is disabled for this project.
-- Automatic guest creation creates only separate resident identities. Shared seeded test-account creation requires the encrypted QA credential and returns 403 without it. Private APIs still require an authorized session. The credential is never bundled in client code.
+- Automatic guest creation is disabled while phone verification is enabled. Old browser-only guest sessions are signed out. Shared seeded test-account creation requires the encrypted QA credential and returns 403 without it. Private APIs still require an authorized session. The credential is never bundled in client code.
 - Preview responses remain unindexed. Opaque HttpOnly sessions, CSRF controls and private/public projections remain enforced.
 - Photos are stored privately and served only through the report authorization checks.
 - Test accounts do not send live messages. No background notification worker is deployed for QA.
