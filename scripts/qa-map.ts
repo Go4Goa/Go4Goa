@@ -19,7 +19,7 @@ try {
     const page = await context.newPage(); page.setDefaultTimeout(15000); page.on('pageerror', error => errors.push(error.message));
     // Keep this visual fixture stable while the user creates local meetups.
     await page.route('**/api/explore?**', async route => { const response = await route.fetch(); if (!response.ok()) { await route.fulfill({ response }); return; } const data = await response.json(); data.items = data.items.filter((item: {example: boolean}) => item.example); await route.fulfill({ response, json: data }); });
-    await page.goto(base); await settled(page);
+    await page.goto(base + '/map'); await settled(page);
     expect(await page.evaluate(() => document.documentElement.scrollWidth)).toBe(width);
     expect(await page.locator('.radar-marker, .radar-cluster').count()).toBeGreaterThan(0);
     for (const button of await page.locator('.radar-types button').all()) {
@@ -91,7 +91,7 @@ try {
   const context = await browser.newContext({ viewport: { width: 390, height: 844 }, reducedMotion: 'reduce' });
   const page = await context.newPage(); page.setDefaultTimeout(15000); page.on('pageerror', error => errors.push(error.message));
   await page.addInitScript("Object.defineProperty(navigator, 'geolocation', { value: { getCurrentPosition: function(ok, fail) { fail({ code: 1 }); } } });");
-  await page.goto(base); await settled(page); await page.getByRole('button', { name: 'Use my location', exact: true }).click();
+  await page.goto(base + '/map'); await settled(page); await page.getByRole('button', { name: 'Use my location', exact: true }).click();
   await expect(page.getByRole('alert')).toContainText('Location could not be shared'); checks.push('location permission denial recovers');
   await page.route('**/api/explore?**', route => route.fulfill({ status: 503, contentType: 'application/json', body: JSON.stringify({ error: 'Activity unavailable. Please retry.' }) }));
   await page.reload(); await expect(page.getByRole('alert')).toContainText('Activity unavailable'); await page.getByRole('button', { name: /View list/ }).click();
