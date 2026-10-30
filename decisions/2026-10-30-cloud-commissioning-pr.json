@@ -1,0 +1,26 @@
+{
+  "schemaVersion": 1,
+  "recordedAt": "2026-10-30T05:00:13.161Z",
+  "ownerAuthorization": "User explicitly authorized fixing the Vercel release identity, syncing approvals and testing the complete workflow in the cloud on 30 October 2026.",
+  "pr": 18,
+  "url": "https://github.com/actforgoa2026/Go4Goa/pull/18",
+  "author": {
+    "login": "ZakKrevitt",
+    "id": 282219764
+  },
+  "head": "9f94794846ea92fab2006206f13b6bb46079bdca",
+  "base": "d6de86cf5df74e5261836db7d5028bb16d42dc54",
+  "files": [
+    "CONTRIBUTING.md",
+    "PRODUCT.md",
+    "docs/cloud-pr-workflow.md",
+    "docs/qa-status.md",
+    "docs/reporting-qa-handoff.md"
+  ],
+  "scope": "Documentation-only commissioning of genuine owner GitHub merge identity, approval reconciliation and public guest access requirements; application code, workflows, dependencies, migrations, credentials, design and billing unchanged.",
+  "allowedActions": "Existing hosted monitor may inspect, run required cloud checks, download and view artifacts, merge with expected head and merge_method=merge through the authenticated owner, verify merge author/parents/tree, advance cloud-release with expected old SHA and force=false, then verify exact Vercel/live status and rendered live evidence and write final records.",
+  "requirements": "Current main, PR head and approved design/access state must remain current. All normal source/CI/design/privacy/release gates apply. If head or base changes, re-review; this binding must be renewed before release. Normal unattended author scope remains layalabs only after this single commissioning PR.",
+  "completion": "pending",
+  "localExecutor": "No local execution or local release worker will merge, publish or perform required checks for this commissioning run. Local tools are used for source preparation and read-only observation only.",
+  "rollback": "On failure stop releases; do not blindly reverse migrations or overwrite newer approved deployments."
+}
