@@ -88,11 +88,9 @@ export default function FieldMap({ items = noItems, point, center, selected, onS
     if (!m || !markers) return;
     if (!pickMode && items.length && !initiallyFramed.current) {
       initiallyFramed.current = true;
-      if (m.getSize().y < 550) {
-        m.fitBounds(L.latLngBounds(items.map(item => [item.point.lat, item.point.lng])), {
-          paddingTopLeft: [32, 90], paddingBottomRight: [68, 100], maxZoom: 13, animate: false,
-        });
-      }
+      m.fitBounds(L.latLngBounds(items.map(item => [item.point.lat, item.point.lng])), {
+        paddingTopLeft: [32, 90], paddingBottomRight: [68, 100], maxZoom: 13, animate: false,
+      });
     }
     const index = new Supercluster<{ id: string }>({ radius: 52, maxZoom: 12 }).load(items.map(item => ({
       type: 'Feature', geometry: { type: 'Point', coordinates: [item.point.lng, item.point.lat] }, properties: { id: item.id },
@@ -165,7 +163,7 @@ export default function FieldMap({ items = noItems, point, center, selected, onS
   useEffect(() => {
     const m = map.current;
     // The map already starts at initialPoint. Re-centering on mount would undo
-    // the short-screen fitBounds once the layout frame runs.
+    // the initial all-item fitBounds once the layout frame runs.
     if (!pickMode && !selected && center === previousCenter.current) return;
     previousCenter.current = center;
     const target = pickMode ? point : selected ? itemsRef.current.find(item => item.id === selected)?.point : center;
