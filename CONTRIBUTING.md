@@ -18,7 +18,7 @@ This ownership is a coordination convention, not an enforced GitHub permission r
 3. Create a branch, for example `git switch -c qa/reporting-photo-retry`. Keep work focused on that issue.
 4. Run the relevant checks. For code changes run `npm test`, `npm run test:integration` and `npm run build`. For reporting changes, repeat the corresponding manual test cases in the handoff.
 5. Commit and push the branch. Open a pull request into `main`, link the issue and state the checks actually run.
-6. Ask the other collaborator to review. Agree before merging; use squash merge. Pull updated `main` before the next branch.
+6. Ask the other collaborator to review. Agree before merging. Approved cloud releases use a normal GitHub merge commit through Zachary's connected account, with the reviewed head SHA checked. This preserves contributor attribution and gives Vercel the authorized release identity; see `docs/cloud-pr-workflow.md`. Pull updated `main` before the next branch.
 
 Do not push daily work directly to `main`, force-push `main`, merge your own unreviewed changes, or commit generated data and local secrets. The initial baseline is a single bootstrap commit because the repository was empty.
 

@@ -14,7 +14,7 @@ Goa residents reporting civic problems and joining local action, community meetu
 Make photo-based trash and infrastructure reports visible safely, connect them to practical source-backed resources, and organize public civic events.
 
 ## Operating Context
-A map is the operational center, with an accessible list. Reports move through moderation before publication. Meetups publish immediately for signed-in creators, with a dedicated page and share link; organizer approval is not required. Phone verification establishes a private account; public identity is a unique pseudonymous username. All event dates display in Asia/Kolkata.
+A map is the operational center, with an accessible list. Reports move through moderation before publication. Meetups publish immediately for their creators, with a dedicated page and share link; organizer approval is not required. The current shared QA site is public and automatically gives each browser a separate resident guest session. Do not add passwords, sign-in/out screens, phone/email onboarding or a manual team login. Private data, CSRF and role restrictions remain required. Public identity is pseudonymous. Phone verification remains disabled unless Zachary explicitly changes this decision. All event dates display in Asia/Kolkata.
 
 ## Capabilities and Constraints
 The supplied brief governs reporting, exact/blurred location, moderation, events, capacity, calendar export, attendance, consent-based notifications, immutable points, resources, offline states and account controls. Never claim an upload succeeded before server acceptance. Separate private and public data. Never modify the reference repositories. Never use Device Hub without explicit approval for that occasion.
