@@ -1,0 +1,34 @@
+{
+  "schemaVersion": 1,
+  "recordedAt": "2026-10-29T18:43:17Z",
+  "event": {
+    "deliveryId": "ded85400-d3fa-11f1-8eda-f928a6aefcc5",
+    "action": "synchronize",
+    "pullRequest": 14
+  },
+  "pr": {
+    "url": "https://github.com/actforgoa2026/Go4Goa/pull/14",
+    "author": "layalabs",
+    "authorId": 261854875,
+    "head": "d44bf52cbcec33899c6b3a284cd54b8a47167283",
+    "base": "c8982c195edfabf97be6c7f8a6ab38a75499185f",
+    "integrated": "114422be1920d98142eee5cb9ed1305c6bdbe6e5"
+  },
+  "outcome": "held-before-execution",
+  "blockers": [
+    "The contributor changes PRODUCT.md to remove the owner-approved prohibition on gamified rankings. A contributor PR cannot supersede owner design authority.",
+    "The public leaderboard adds public aggregation of civic contribution data and anti-abuse, reversal, privacy, and design-policy risks. This is outside delegated safe Reporting FEATURE/UX work.",
+    "The shared header/navigation change is a cross-surface design change without a current owner-approved design decision.",
+    "No exact current source-review receipt exists at automation/source-review:reviews/pr-14.json; therefore the trusted source gate is unsatisfied and contributor code must not execute.",
+    "The PR reports two failing integration tests; its self-reported local validation cannot satisfy required current trusted checks."
+  ],
+  "actionsTaken": [
+    "Fetched current PR metadata, full patch, current head, reviews, receipt status, and main/cloud-release refs.",
+    "Did not create a source-review receipt, rerun workflows, execute contributor code, merge, update cloud-release, deploy, post comments, or contact collaborators."
+  ],
+  "references": {
+    "main": "c8982c195edfabf97be6c7f8a6ab38a75499185f",
+    "cloudRelease": "26515cdc5a2cdcd08137c2738d1fbf283a8bba60",
+    "previousHold": "https://github.com/actforgoa2026/Go4Goa/blob/678fc8ddd2730392b007219a91a6cef89e1ff4b5/review-checkpoints/pr-14-517c6e802189-held.json"
+  }
+}
