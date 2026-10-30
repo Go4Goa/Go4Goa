@@ -40,9 +40,13 @@ try {
  for(const width of evidence.widths){
   const context=await browser.newContext({viewport:{width,height:width===1440?1000:844},reducedMotion:'reduce',locale:'en-GB',timezoneId:'Asia/Kolkata',serviceWorkers:'block'});
   await context.route('https://tile.openstreetmap.org/**',r=>r.fulfill({contentType:'image/png',body:tile}));
-  await context.route('https://tiles.openfreemap.org/**',r=>r.request().url().endsWith('/planet')?r.fulfill({json:{tilejson:'3.0.0',tiles:['https://tiles.openfreemap.org/fixture/{z}/{x}/{y}.pbf'],minzoom:0,maxzoom:14,vector_layers:[]}}):r.fulfill({contentType:'application/x-protobuf',body:Buffer.alloc(0)}));
+  await context.route('https://tiles.openfreemap.org/**',r=>r.request().url().endsWith('/planet')?r.fulfill({json:{tilejson:'3.0.0',tiles:['https://tiles.openfreemap.org/fixture/{z}/{x}/{y}.pbf'],minzoom:0,maxzoom:14,vector_layers:['park','water','transportation','place'].map(id=>({id,fields:{}}))}}):r.fulfill({contentType:'application/x-protobuf',body:Buffer.alloc(0)}));
   const page=await context.newPage();const errors=[];page.on('pageerror',e=>errors.push(e.message));
   async function capture(name){
+   if(await page.locator('.maplibregl-canvas').count()){
+    await page.locator('.radar-map-loading').waitFor({state:'hidden',timeout:15000});
+    assert.equal(await page.locator('.radar-map-failure').count(),0,'Map fixture must render without a fallback: '+name);
+   }
    await page.evaluate(()=>document.fonts.ready);await page.waitForTimeout(200);
    const scan=await page.evaluate(()=>{
     const visible=el=>{const r=el.getBoundingClientRect();return r.width>0&&r.height>0&&getComputedStyle(el).visibility!=='hidden';};
