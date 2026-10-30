@@ -14,8 +14,8 @@ const options=[
 
 export default function Leaderboard(){
   const [metric,setMetric]=useState<LeaderboardMetric>('overall');
-  const {data,error,loading}=useData<{entries:LeaderboardEntry[]}>('/leaderboard');
-  const entries=useMemo(()=>rankLeaderboard(data?.entries||[],metric),[data,metric]);
+  const {data,error,loading}=useData<{entries:LeaderboardEntry[];metric:LeaderboardMetric}>(`/leaderboard?metric=${metric}`);
+  const entries=useMemo(()=>rankLeaderboard(data?.metric===metric?data.entries:[],metric),[data,metric]);
   return <div className="page narrow leaderboard-page">
     <PageTitle title="Leaderboard" description="People helping Goa through verified reports and confirmed meetup attendance."/>
     <section className="leaderboard-intro" aria-label="How the leaderboard works">

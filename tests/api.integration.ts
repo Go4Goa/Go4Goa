@@ -85,6 +85,36 @@ test('public leaderboard counts only verified points from active accounts',async
   assert.ok(entries.every(entry=>!('id' in entry)&&!('phone' in entry)&&!('email' in entry)));
 });
 
+test('category leaders outside the overall top 100 are ranked before the limit',async()=>{
+  const regulars=Array.from({length:100},()=>randomUUID());
+  const reporter=await actor('resident'),attendee=await actor('resident');
+  await pool.query(`INSERT INTO users_private(id,role,demo) SELECT id,'resident',true FROM unnest($1::uuid[]) AS id`,[regulars]);
+  await pool.query(`INSERT INTO profiles(id,username) SELECT id,'rank_'||substr(replace(id::text,'-',''),1,16) FROM unnest($1::uuid[]) AS id`,[regulars]);
+  try {
+    // Each regular has 45 points, one report and one meetup. The category
+    // leaders have fewer total points but four reports / two meetups.
+    await pool.query(`INSERT INTO points_ledger(user_id,reason,source_id,points)
+      SELECT id,reason,id,points FROM unnest($1::uuid[]) AS id
+      CROSS JOIN (VALUES ('report_approved',10),('report_resolved',20),('event_attendance',15)) AS awards(reason,points)`,[regulars]);
+    await pool.query(`INSERT INTO points_ledger(user_id,reason,source_id,points)
+      SELECT $1,'report_approved',id,10 FROM unnest($2::uuid[]) AS id`,[reporter.id,Array.from({length:4},()=>randomUUID())]);
+    await pool.query(`INSERT INTO points_ledger(user_id,reason,source_id,points)
+      SELECT $1,'event_attendance',id,15 FROM unnest($2::uuid[]) AS id`,[attendee.id,Array.from({length:2},()=>randomUUID())]);
+    const username=(id:string)=>'qa_'+id.replaceAll('-','').slice(0,16);
+    for(const metric of ['overall','reports','meetups']){
+      const response=await call('/api/leaderboard?metric='+metric);assert.equal(response.status,200);
+      const result=await response.json();assert.equal(result.metric,metric);assert.equal(result.entries.length,100);
+      if(metric==='overall')assert.ok(result.entries.every((entry:any)=>entry.username!==username(reporter.id)&&entry.username!==username(attendee.id)));
+      if(metric==='reports'){assert.equal(result.entries[0].username,username(reporter.id));assert.equal(result.entries[0].reports,4);}
+      if(metric==='meetups'){assert.ok(result.entries.some((entry:any)=>entry.username===username(attendee.id)));assert.equal(result.entries[0].meetups,2);}
+    }
+    for(const metric of ['invalid','reports%20DESC','reports&metric=meetups'])assert.equal((await call('/api/leaderboard?metric='+metric)).status,400);
+  } finally {
+    const ids=[...regulars,reporter.id,attendee.id];
+    await pool.query('UPDATE users_private SET deleted_at=now() WHERE id=ANY($1::uuid[])',[ids]);
+  }
+});
+
 test('public preview guests are separate residents with private reports and no role escalation',async()=>{
   const previous={qa:config.qa,phoneVerificationRequested:config.phoneVerificationRequested},previousCredentials={...phoneVerificationCredentials};config.qa=true;config.phoneVerificationRequested=false;
   try {

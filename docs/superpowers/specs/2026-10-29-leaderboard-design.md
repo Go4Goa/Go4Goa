@@ -1,5 +1,9 @@
 # Public leaderboard design
 
+## Owner decision, 30 October 2026
+
+Zachary explicitly approved the global header link, environment label placement and public contribution rankings, superseding the earlier no-gamified-rankings guidance. The existing five-tab dock, design tokens and no-sign-in guest experience remain.
+
 ## Intent
 
 Give residents a public view of verified civic contributions. Show points, approved or resolved reports, and confirmed meetup attendance.
@@ -31,7 +35,7 @@ The selected approach uses a header link. The Shared QA label moves below the GO
 
 The server reads only immutable point awards for active accounts. The API returns public usernames and aggregate contribution values.
 
-The page opens with the overall ranking. A segmented control changes the ranking to reports or meetups without a new request.
+The page opens with the overall ranking. A segmented control requests the top 100 for overall points, reports or meetups. The server orders all eligible accounts by the selected metric before applying the limit.
 
 Competition ranking gives equal primary values the same rank. Stable secondary values set the display order for equal ranks.
 
