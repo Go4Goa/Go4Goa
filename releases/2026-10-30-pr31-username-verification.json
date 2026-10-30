@@ -1,0 +1,60 @@
+{
+  "approval": "ship i t",
+  "scope": "Normalize public usernames in phone sign-in and show format rules",
+  "reviewedHead": "c324dc5623524dc894137aead2a785f00fff7e1b",
+  "reviewedBase": "e5032ef730d2743d5235b40d2a049ba3cd8bcbfd",
+  "integrated": "904df13beab4f70a7e1ef32d5ff3972eb4ff8151",
+  "merge": "d348e8ef62ba5dbb39229830e4f065bbb560fad9",
+  "tree": "f8ac86d1f8814c174c826cd75643d1847bdd4c89",
+  "pullRequest": "https://github.com/Go4Goa/Go4Goa/pull/31",
+  "sourceReviewed": true,
+  "reviewedAt": "2026-10-30T09:01:23.376Z",
+  "review": "Only src/pages/SignIn.tsx changes: lowercase on input, handle keyboard attributes and explanatory description/title. Current-main account copy retained. No server authentication, provider, dependency, workflow, migration or credential changes. Browser API calls for regression are intercepted, so no SMS is sent.",
+  "local": {
+    "unitTests": 56,
+    "integrationTests": 23,
+    "productionBuild": "passed",
+    "usernameRegression": "passed",
+    "screenshots": [
+      320,
+      390,
+      1440
+    ]
+  },
+  "prChecks": {
+    "run": "https://github.com/Go4Goa/Go4Goa/actions/runs/41029653867",
+    "conclusion": "success",
+    "capturedPairs": 54,
+    "visualReview": "Sign-in draft images match baseline at every width. One differing 320-place capture shows existing skip-link focus position during unrelated report-location rendering; report code is unchanged. Targeted code-entry username screenshots reviewed locally at phone and desktop widths. No new overflow, italics or sideflags."
+  },
+  "releaseBefore": "e5032ef730d2743d5235b40d2a049ba3cd8bcbfd",
+  "releaseStatus": "verified",
+  "verifiedAt": "2026-10-30T09:12:05.173Z",
+  "mainChecks": {
+    "run": "https://github.com/Go4Goa/Go4Goa/actions/runs/41030283978",
+    "conclusion": "success",
+    "capturedPairs": 54,
+    "changedPairs": 0
+  },
+  "liveChecks": {
+    "run": "https://github.com/Go4Goa/Go4Goa/actions/runs/41030825110",
+    "conclusion": "success",
+    "captureCount": 36,
+    "targetedUsernameRegression": "passed with mocked provider requests; no SMS sent"
+  },
+  "deployment": {
+    "id": "dpl_7UxHaTWCmCispZyNKMY42nqxfP4o",
+    "url": "https://go-goa-1fqmr1yh2-zakkrevitt-gmailcoms-projects.vercel.app",
+    "stableUrl": "https://go-goa-qa.vercel.app",
+    "commit": "d348e8ef62ba5dbb39229830e4f065bbb560fad9"
+  },
+  "deploymentNotes": [
+    "Guarded cloud-release fast-forward succeeded through authenticated GitHub CLI updateRefs using beforeOid and force=false; connected GitHub integration rejected write operations.",
+    "No automatic Vercel deployment started. Authenticated Vercel CLI published the exact clean reviewed merge commit to the existing project.",
+    "Initial CLI deployment omitted VERCEL_GIT_COMMIT_SHA. Corrected with a deployment-scoped runtime variable set to the verified source HEAD; no persistent project variables or provider credentials changed."
+  ],
+  "migrations": "none",
+  "phoneVerification": true,
+  "syntheticReportClosed": "64b55b44-e107-465d-adb6-b5dfd6631808",
+  "liveRenderedReview": "Reviewed cloud phone-entry Profile at 320px and desktop, Reporting entry at 390px, and targeted verification-step screenshots at 320px, 390px and 1440px. Upright type, no sideflags or overflow on the changed form."
+}
