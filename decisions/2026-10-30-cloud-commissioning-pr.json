@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "recordedAt": "2026-10-30T05:36:18.893Z",
+  "recordedAt": "2026-10-30T05:45:42.159Z",
   "ownerAuthorization": "User explicitly authorized fixing the Vercel release identity, syncing approvals and testing the complete workflow in the cloud on 30 October 2026.",
   "pr": 18,
   "url": "https://github.com/actforgoa2026/Go4Goa/pull/18",
@@ -8,7 +8,7 @@
     "login": "ZakKrevitt",
     "id": 282219764
   },
-  "head": "975a3890dc7703286047f3fc5a3230fcbabe3e3e",
+  "head": "8e70e77378b2a6312deaf41a8fcf00b384830a51",
   "base": "d6de86cf5df74e5261836db7d5028bb16d42dc54",
   "files": [
     "CONTRIBUTING.md",
@@ -17,14 +17,15 @@
     "docs/qa-status.md",
     "docs/reporting-qa-handoff.md",
     ".github/workflows/ci.yml",
-    ".github/qa/status-discovery.test.mjs"
+    ".github/qa/status-discovery.test.mjs",
+    ".github/qa/capture.mjs"
   ],
-  "scope": "Infrastructure commissioning: correct release author identity and owner access documentation; add metadata-only trusted CI pending/final cloud/qa statuses and regression tests so the hosted GitHub connector can discover pull_request_target and main runs. Application code, dependencies, migrations, credentials, design and billing are unchanged.",
+  "scope": "Infrastructure commissioning: correct release author identity and owner access documentation; add metadata-only trusted CI pending/final cloud/qa statuses and regression tests so the hosted GitHub connector can discover pull_request_target and main runs. Application code, dependencies, migrations, credentials, design and billing are unchanged. The deterministic map fixture now declares its four source layers and capture rejects loading/failure states, applied equally to baseline and candidate.",
   "allowedActions": "Existing hosted monitor may inspect, run required cloud checks, download and view artifacts, merge with expected head and merge_method=merge through the authenticated owner, verify merge author/parents/tree, advance cloud-release with expected old SHA and force=false, then verify exact Vercel/live status and rendered live evidence and write final records.",
   "requirements": "Current main, PR head and approved design/access state must remain current. All normal source/CI/design/privacy/release gates apply. If head or base changes, re-review; this binding must be renewed before release. Normal unattended author scope remains layalabs only after this single commissioning PR.",
   "completion": "pending",
   "localExecutor": "No local execution or local release worker will merge, publish or perform required checks for this commissioning run. Local tools are used for source preparation and read-only observation only.",
   "rollback": "On failure stop releases; do not blindly reverse migrations or overwrite newer approved deployments.",
-  "previousHead": "9f94794846ea92fab2006206f13b6bb46079bdca",
-  "bootstrap": "The existing base CI cannot publish cloud/qa until this patch is merged. For this PR only, a GitHub run URL may be supplied as a discovery pointer; the hosted monitor must independently verify exact source/job/artifact provenance. The post-merge workflow must then be discovered through cloud/qa without a manually supplied run ID before any publication or completion. Never infer approval from a status."
+  "previousHead": "975a3890dc7703286047f3fc5a3230fcbabe3e3e",
+  "bootstrap": "For this exact commissioning head, the independently source-reviewed CI workflow may be dispatched on codex/cloud-release-commissioning with pr_number=18. The prepared workflow contains no application/provider secrets, uses ephemeral PostgreSQL and scoped metadata-only status jobs, and tests the current integrated candidate. This exercises the corrected trusted harness before merge. The hosted monitor must discover it through cloud/qa and independently verify exact source/job/log/artifact provenance; no manually supplied run ID is needed. The ordinary base workflow also continues to run. After merge, independently discover and require the new main QA run through cloud/qa before publication. Never infer approval from a status. This one-off bootstrap allowance expires with PR18."
 }
