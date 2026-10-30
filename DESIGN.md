@@ -18,6 +18,12 @@ colors:
   poster-plum: "#5b3659"
   poster-ink: "#262e2b"
   poster-sand: "#f0e5cd"
+  poster-coral: "#f6d2c2"
+  poster-mango: "#f3cf75"
+  poster-mint: "#cfe3d7"
+  poster-sky: "#d0e6ee"
+  poster-lilac: "#e3daf0"
+  poster-rose: "#f1d8df"
 typography:
   headline:
     fontFamily: "\"Helvetica Neue\", Helvetica, Arial, sans-serif"
@@ -387,7 +393,7 @@ White and softly tinted neutral surfaces keep information clear; action green an
 
 The sidecar's synthesized tonal ramps are swatch previews only, not additional production colors. Status variants retain their implementation-specific semantic colors and written state labels. Unused foundation accents are not part of this palette.
 
-Meetup posters offer six predefined palettes. Forest reuses civic green; Ocean, Clay, Plum, Ink and Sand use the scoped `poster-*` tokens. Forest, Ocean, Clay, Plum and Ink pair with white text; Sand pairs with civic-green text. These combinations are fixed choices for the graphic, with Forest and Solid as the unchanged default. Pattern ink is white at 8% opacity on the five dark palettes and civic green at 6% on Sand.
+Meetup posters offer twelve predefined palettes. Forest reuses civic green; Ocean, Clay, Plum, Ink, Sand, Coral, Mango, Mint, Sky, Lilac and Rose use the scoped `poster-*` tokens. The five dark palettes pair with white text; the seven light palettes pair with civic-green text. Forest and Solid remain the default. CSS pattern ink uses 8% opacity on dark palettes and 6% on light palettes. Vector illustrations use 14% foreground opacity, keeping poster text above 4.5:1 contrast across all twelve palettes.
 
 ## Typography
 
@@ -504,7 +510,7 @@ The accessible result list remains the alternative when tiles cannot load. Loadi
 
 `MeetupPoster` renders the same flat, square-edged graphic in the live creation preview and dedicated meetup page. It carries the activity, title, description, date and time in India Standard Time, public place, meeting instructions, capacity, recurrence and bring-along items. Its heading is h2 in the preview and h1 on the dedicated page. The selected palette controls text and background color; 18px outline icons and an 18px gap between detail rows preserve the existing preview treatment. The poster has no border, shadow or decorative side stripe.
 
-Customize graphic is collapsed above the creation preview until opened. Labeled Color and Background fieldsets offer Forest, Ocean, Clay, Plum, Ink and Sand, plus Solid, Dots, Grid and Waves. Color buttons have 64px minimum targets and 28px circular swatches, arranged in six columns or three at 380px and below. Background buttons use a two-column grid, 44px minimum targets and 28px by 24px swatches. Labels, check icons and `aria-pressed` communicate selection; the chosen background also receives an outline. The patterns are local CSS textures: Dots repeat every 18px, Grid every 28px and Waves every 64px by 44px. Solid has no texture.
+Customize graphic is collapsed above the creation preview until opened, with a small current-color swatch in its summary. Background color offers twelve named palettes in six columns; Graphic offers Solid, Dots, Grid, Waves, Leaves, Sunrise, Coast and Arches in four columns with 48px-high thumbnails. Within a picker narrower than 284px, these grids reduce to four and three columns respectively to preserve 44px touch targets. Color buttons retain 64px minimum height and 28px circular swatches. Labels, check icons and `aria-pressed` communicate selection; the selected graphic also receives an outline. Dots, Grid and Waves remain local CSS textures. Leaves, Sunrise, Coast and Arches use the same local vector artwork in the thumbnails and poster. Reset graphic restores Forest and Solid.
 
 Choices update the shared preview immediately and persist on every created occurrence. The existing graphic remains visible when customization is closed. On the dedicated page, Edit graphic exposes the same controls to people allowed to manage the meetup, with live preview, Cancel and Save graphic. Cancel restores the saved appearance. Saving disables edits while pending, reports errors inline and announces success after server acceptance; version checks reject stale edits. `shared/meetup-poster.ts` restricts persisted choices to the predefined palette and pattern names, with no arbitrary CSS or remote-image background input.
 

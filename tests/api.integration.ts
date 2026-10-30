@@ -234,14 +234,14 @@ test('recurring events submitted from the 4312 dev origin persist as one bounded
  const creator=await actor('resident');
  const day=new Date();day.setUTCDate(day.getUTCDate()+2);
  const date=day.toISOString().slice(0,10);
- const input={title:'Recurring QA cleanup',description:'Fictional meetup to verify series creation.',activity:'beach_cleanup',point:{lat:15.48,lng:73.81},locationLabel:'Miramar beach',meetup:'Meet at the public entrance',capacity:20,materials:'Water, Gloves',poster:{color:'plum',pattern:'grid'},startsAt:date+'T09:00:00+05:30',endsAt:date+'T11:00:00+05:30',recurrence:{frequency:'weekly',interval:1,occurrences:4}};
+ const input={title:'Recurring QA cleanup',description:'Fictional meetup to verify series creation.',activity:'beach_cleanup',point:{lat:15.48,lng:73.81},locationLabel:'Miramar beach',meetup:'Meet at the public entrance',capacity:20,materials:'Water, Gloves',poster:{color:'sky',pattern:'sunrise'},startsAt:date+'T09:00:00+05:30',endsAt:date+'T11:00:00+05:30',recurrence:{frequency:'weekly',interval:1,occurrences:4}};
  const response=await call('/api/events','POST',input,creator,{origin:'http://127.0.0.1:4312'});
  assert.equal(response.status,201,await response.clone().text());
  const result=await response.json() as {id:string;ids:string[];seriesId:string};
  assert.equal(result.ids.length,4);
  const rows=(await pool.query('SELECT * FROM events WHERE series_id=$1 ORDER BY series_index',[result.seriesId])).rows;
  assert.equal(rows.length,4);
- assert.ok(rows.every(row=>row.poster.color==='plum'&&row.poster.pattern==='grid'));
+ assert.ok(rows.every(row=>row.poster.color==='sky'&&row.poster.pattern==='sunrise'));
  assert.ok(rows.every(row=>row.status==='published'&&row.materials==='Water, Gloves'&&row.title===input.title));
  assert.deepEqual(rows.map(row=>row.series_index),[0,1,2,3]);
  assert.equal(rows[1].starts_at.getTime()-rows[0].starts_at.getTime(),7*86400000);
@@ -255,14 +255,15 @@ test('recurring events submitted from the 4312 dev origin persist as one bounded
 
 test('meetup graphics persist publicly and only their owner or moderator can update them',async()=>{
  const creator=await actor('resident');
- const input={title:'Graphic QA meetup',description:'A fictional meetup for poster persistence checks.',activity:'cleanup_walk',point:{lat:15.49,lng:73.82},locationLabel:'Panaji',meetup:'Meet beside the public gate',startsAt:new Date(Date.now()+86400000).toISOString(),endsAt:new Date(Date.now()+90000000).toISOString(),capacity:20,poster:{color:'ocean',pattern:'waves'}};
+ const input={title:'Graphic QA meetup',description:'A fictional meetup for poster persistence checks.',activity:'cleanup_walk',point:{lat:15.49,lng:73.82},locationLabel:'Panaji',meetup:'Meet beside the public gate',startsAt:new Date(Date.now()+86400000).toISOString(),endsAt:new Date(Date.now()+90000000).toISOString(),capacity:20,poster:{color:'coral',pattern:'leaves'}};
  const response=await call('/api/events','POST',input,creator);assert.equal(response.status,201,await response.clone().text());
  const {id}=await response.json() as {id:string};
  const initial=await (await call('/api/events/'+id)).json() as any;assert.deepEqual(initial.event.poster,input.poster);
- const update={version:initial.event.version,poster:{color:'sand',pattern:'dots'}};
+ const update={version:initial.event.version,poster:{color:'mint',pattern:'coast'}};
  assert.equal((await call('/api/events/'+id+'/graphic','PATCH',update)).status,401);
  assert.equal((await call('/api/events/'+id+'/graphic','PATCH',update,other)).status,403);
  assert.equal((await call('/api/events/'+id+'/graphic','PATCH',{...update,poster:{color:'url(untrusted)',pattern:'dots'}},creator)).status,400);
+ assert.equal((await call('/api/events/'+id+'/graphic','PATCH',{...update,poster:{color:'mint',pattern:'url(untrusted)'}},creator)).status,400);
  assert.equal((await call('/api/events/'+id+'/graphic','PATCH',update,creator)).status,200);
  const saved=await (await call('/api/events/'+id)).json() as any;assert.deepEqual(saved.event.poster,update.poster);assert.equal(saved.event.version,initial.event.version+1);
  assert.equal((await call('/api/events/'+id+'/graphic','PATCH',update,creator)).status,409);
