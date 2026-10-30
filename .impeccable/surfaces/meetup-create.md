@@ -44,6 +44,10 @@ The user removed the meetup review gate. Create meetup (or Create N meetups) now
 
 The user requested basic color, pattern and background choices. Customize graphic now exposes Forest, Ocean, Clay, Plum, Ink and Sand palettes plus Solid, Dots, Grid and Waves backgrounds. Contrast is controlled by each palette; arbitrary CSS and remote images are not accepted. Choices update the shared poster immediately and persist on every created occurrence. The default remains the original green solid poster. An owner can preview, cancel or save later changes through Edit graphic on the dedicated page; optimistic versions prevent overwriting concurrent changes. Controls remain collapsed until requested.
 
+## Expanded graphic choices, 30 October 2026
+
+Background color now adds Coral, Mango, Mint, Sky, Lilac and Rose, for twelve accessible palettes. Graphic adds Leaves, Sunrise, Coast and Arches, for eight styles. The new styles are restrained local vector illustrations shared by the live preview, published poster and chooser thumbnails. Controls retain the compact disclosure and upright typography; selected swatches, labels and checkmarks communicate state. Container-aware grids preserve 44px targets even in a narrow tablet sidebar. Reset graphic restores the existing Forest and Solid defaults. New choices persist through drafts, recurring creation and owner edits; existing saved choices remain valid. Local evidence is in `.impeccable/review/graphic-options/`, including desktop, tablet and phone captures, palette contrast and accessibility results.
+
 ## Release resilience fixes
 
 The account-scoped, report-scoped draft survives navigation and reload in this browser tab for up to 24 hours. It is cleared after successful publication and when signed out; unavailable browser storage does not prevent using the form. Validation retains the footer message and moves focus to the first missing field. Arc placeholder text uses its neutral-8 token to meet contrast on white. Layout, typography and component treatment remain as approved.

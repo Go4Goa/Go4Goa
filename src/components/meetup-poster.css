@@ -22,3 +22,14 @@
 [data-poster-pattern=dots] { background-image:radial-gradient(circle at 2px 2px,var(--poster-pattern-ink) 1.2px,transparent 1.7px); background-size:18px 18px; }
 [data-poster-pattern=grid] { background-image:linear-gradient(var(--poster-pattern-ink) 1px,transparent 1px),linear-gradient(90deg,var(--poster-pattern-ink) 1px,transparent 1px); background-size:28px 28px; }
 [data-poster-pattern=waves] { background-image:repeating-radial-gradient(ellipse at 0 50%,transparent 0 10px,var(--poster-pattern-ink) 11px 12px,transparent 13px 22px); background-size:64px 44px; }
+
+/* Illustration choices share the same artwork in previews and published meetups. */
+.event-preview-poster { position:relative; isolation:isolate; overflow:hidden; }
+.poster-artwork { position:absolute; inset:0; z-index:-1; width:100%; height:100%; color:var(--poster-foreground); opacity:.14; pointer-events:none; }
+[data-poster-color=coral] { --poster-background:#f6d2c2; }
+[data-poster-color=mango] { --poster-background:#f3cf75; }
+[data-poster-color=mint] { --poster-background:#cfe3d7; }
+[data-poster-color=sky] { --poster-background:#d0e6ee; }
+[data-poster-color=lilac] { --poster-background:#e3daf0; }
+[data-poster-color=rose] { --poster-background:#f1d8df; }
+:is([data-poster-color=coral],[data-poster-color=mango],[data-poster-color=mint],[data-poster-color=sky],[data-poster-color=lilac],[data-poster-color=rose]) { --poster-foreground:#193e32; --poster-pattern-ink:rgb(25 62 50 / 6%); }
