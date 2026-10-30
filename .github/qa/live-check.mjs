@@ -26,6 +26,11 @@ const publicConfig=await(await fetch(origin+'/api/config')).json();assert.equal(
 assert.equal((await fetch(origin+'/api/auth/guest',{method:'POST',headers:{origin,'content-type':'application/json'},body:'{}'})).status,404,'Phone-enabled QA must not create guests');
 const browser=await chromium.launch({headless:true});const captures=[];
 try{
+ {
+  const context=await browser.newContext({viewport:{width:390,height:844},serviceWorkers:'block'});const page=await context.newPage();let failConfig=true;
+  await page.route(origin+'/api/config',async route=>{if(failConfig){failConfig=false;await route.fulfill({status:503,contentType:'application/json',body:JSON.stringify({error:'Temporary configuration failure.'})});}else await route.continue();});
+  await page.goto(origin+'/profile');await page.getByRole('heading',{name:'Your session couldn’t start.',exact:true}).waitFor();await page.getByRole('button',{name:'Try again',exact:true}).click();await page.getByRole('heading',{name:'Your part in Goa.',exact:true}).waitFor();assert.equal(await page.getByLabel('Phone number',{exact:true}).count(),1,'Retry reloads current configuration');await context.close();
+ }
  let authenticatedContexts=0;
  for(const width of [320,390,1440]){
   const context=await browser.newContext({viewport:{width,height:width===1440?1000:844},reducedMotion:'reduce',serviceWorkers:'block'});
