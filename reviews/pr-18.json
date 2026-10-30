@@ -1,7 +1,18 @@
 {
-  "head": "975a3890dc7703286047f3fc5a3230fcbabe3e3e",
+  "schemaVersion": 1,
+  "pr": 18,
+  "url": "https://github.com/actforgoa2026/Go4Goa/pull/18",
+  "head": "8e70e77378b2a6312deaf41a8fcf00b384830a51",
   "base": "d6de86cf5df74e5261836db7d5028bb16d42dc54",
   "sourceReviewed": true,
-  "reviewedAt": "2026-10-30T05:40:00.000Z",
-  "review": "Independent source review for renewed owner-authorized commissioning PR #18. Full seven-file diff and changed trusted workflow/status-discovery regression test inspected against decisions/2026-10-30-cloud-commissioning-pr.json at a239094e2cc6355acc7fdbf482add77170268834: exact owner author, PR, head, base, and files match. .github/workflows/ci.yml adds two trusted metadata-only status jobs: announce has only statuses:write plus pull-requests:read and no checkout; result has only statuses:write and no checkout. Candidate source-review/verify/visual jobs retain read-only default permissions, persistent checkout credentials disabled, no application/provider secrets, and the existing disposable PostgreSQL service. The new test executes the exact inline scripts with API stubs and covers exact-head discovery, malformed/outdated inputs, manual/main paths, and non-success propagation. No application, dependency, migration, credential, billing, provider, visual design, or sign-in change. Governing product, design, public-guest access, workflow, and vendored Impeccable audit/critique instructions were read. This receipt authorizes isolated GitHub-hosted testing only. Exact artifact provenance and actual visual review, current pre-merge state, authenticated-owner merge identity/parents/tree, post-merge cloud/qa discovery, cloud-release guarded advancement, and live verification remain mandatory."
+  "reviewedAt": "2026-10-30T05:47:51.441Z",
+  "reviewer": "cloud release monitor",
+  "scope": "One-off owner-authorized infrastructure commissioning under decisions/2026-10-30-cloud-commissioning-pr.json at 743f4ac9a158935a3158a385eea341a82082b7dc. Exact eight-file change only.",
+  "substantiveReview": [
+    "Read the entire current ci.yml and status-discovery regression test. announce/result run actions/github-script with trusted metadata only; they do not check out candidate code. announce is limited to pull-requests:read and statuses:write; result is limited to statuses:write. Candidate verification and visual jobs use read-only checkout credentials and no provider/application secrets.",
+    "Read the full capture harness change. The corrected deterministic OpenFreeMap TileJSON fixture supplies empty fictional PBFs plus the four required vector source-layer declarations: park, water, transportation and place. At each capture, a present MapLibre canvas requires .radar-map-loading to become hidden and .radar-map-failure to remain absent. The same harness and fixture run for baseline and integrated candidate.",
+    "The workflow retains an ephemeral PostgreSQL service, loopback-only disposable schema, npm ci, unit/accessibility/status regression tests, integration tests and build. The change adds no app dependency, migration, credential, product behaviour, design surface or external execution authority.",
+    "This receipt permits isolated GitHub-hosted testing only. It does not waive independent artifact review, loaded-map evidence, design/no-sign-in/privacy checks, guarded merge, post-merge discovery or live verification."
+  ],
+  "expiresAt": "2026-10-31T05:47:51.441Z"
 }
