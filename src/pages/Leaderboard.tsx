@@ -27,7 +27,7 @@ export default function Leaderboard(){
     </div>
     {loading?<Loading/>:<><ErrorNotice message={error}/>{!error&&!entries.length?<div className="leaderboard-empty"><Leaf size={30}/><h2>No contributions yet</h2><p>The first verified report or confirmed meetup attendance will appear here.</p></div>:<ol className="leaderboard-list" aria-label={`${options.find(option=>option.value===metric)?.label} leaderboard`}>
       {entries.map(entry=><li key={entry.username} className="leaderboard-row">
-        <span className="leaderboard-rank" aria-label={`Rank ${entry.rank}`}>{entry.rank}</span>
+        <span className={entry.rank===1?'leaderboard-rank leading':'leaderboard-rank'} aria-label={`Rank ${entry.rank}`}>{entry.rank}</span>
         <div className="leaderboard-person"><strong>{entry.username}</strong><span>{entry.totalPoints} contribution points</span></div>
         <dl className="leaderboard-stats">
           <div className={metric==='reports'?'selected':undefined}><dt><Flag size={15}/>Reports</dt><dd>{entry.reports}</dd></div>
