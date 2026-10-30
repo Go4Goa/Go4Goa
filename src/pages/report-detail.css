@@ -1,0 +1,26 @@
+.report-detail-layout { grid-template-areas: "evidence actions" "evidence related"; row-gap: 32px; }
+.report-evidence { grid-area: evidence; }
+.report-actions { grid-area: actions; min-width: 0; }
+.report-related { grid-area: related; min-width: 0; }
+.report-actions h2, .report-related h2 { font-size: 22px; }
+.report-actions-intro { margin-top: 8px; color: var(--muted); font-size: 14px; }
+.report-action-primary { margin-top: 20px; }
+.report-action-primary .button-link { display: flex; width: 100%; white-space: normal; height: auto; min-height: 48px; text-align: center; }
+.report-action-primary p, .report-action-list p { margin-top: 8px; color: var(--muted); font-size: 14px; line-height: 1.6; }
+.report-action-list { list-style: none; margin: 20px 0 0; padding: 0; }
+.report-action-list li { padding-block: 14px; border-top: 1px solid var(--line); }
+.report-action-link { display: flex; align-items: center; justify-content: space-between; gap: 16px; min-height: 44px; font-size: 16px; font-weight: 500; }
+.report-action-link:hover { text-decoration: underline; text-underline-offset: 4px; }
+.report-action-link svg, .report-action-primary svg { flex-shrink: 0; }
+.report-action-note { margin-top: 12px; }
+.report-action-source { margin-top: 12px; color: var(--muted); font-size: 12px; }
+.report-action-source a { display: inline-flex; align-items: center; gap: 4px; min-height: 32px; text-decoration: underline; text-underline-offset: 3px; }
+.report-action-source span { display: block; }
+.report-related > section + section { margin-top: 32px; }
+.report-related .resource-row .row-heading { font-size: 17px; }
+.report-related .resource-row p { font-size: 14px; }
+@media (max-width: 760px) {
+  .report-detail-layout { display: grid; grid-template-columns: minmax(0, 1fr); grid-template-areas: "actions" "evidence" "related"; gap: 32px; }
+  .report-evidence { padding-top: 28px; border-top: 1px solid var(--line); }
+  .report-detail .detail-photo { margin-inline: 0; }
+}
