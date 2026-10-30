@@ -5,8 +5,9 @@ export type FeedCategory = 'meetups' | 'reports' | 'news' | 'resources';
 export type FeedFilter = 'all' | FeedCategory;
 export interface FeedPhoto { src: string; alt: string; credit: string; source?: string }
 export interface Gallery {
-  id: string; title: string; description: string; location: string;
-  label: string; date?: string; photos: FeedPhoto[]; href: string; action: string;
+  id: string; title: string; description?: string; location: string;
+  label: string; date?: string; photos: FeedPhoto[]; href?: string; action?: string;
+  featured?: boolean; portrait?: boolean;
 }
 export interface Reading {
   id: string; title: string; description: string; source: string;
@@ -46,6 +47,17 @@ export type FeedItem =
   | { id: string; category: 'news' | 'resources'; kind: 'reading'; reading: Reading };
 
 const teriSource = 'https://teriin.org/event/teris-impactful-clean-drives-and-sustainability-event';
+
+export const communityGalleries: Gallery[] = [
+  {
+    id: 'riva-resort-beach-cleanup', title: 'Riva Resort Beach Cleanup', label: 'Edge City',
+    location: 'Mandrem', date: '2026-10-31', featured: true, portrait: true,
+    photos: [
+      { src: '/home-community/riva-cleanup-volunteers.webp', alt: 'Two volunteers wearing gloves hold a cleanup bag on a wooden bridge beside palm trees.', credit: '' },
+      { src: '/home-community/riva-cleanup-shore.webp', alt: 'A volunteer wearing gloves collects litter beside the water near Riva Resort.', credit: '' },
+    ],
+  },
+];
 
 // Local design assets only. Never attach illustrative photos to actual meetup records.
 export const previewGalleries: Gallery[] = [
@@ -107,6 +119,7 @@ export const resources: Reading[] = [
 
 export function createFeedPool(activity: (Incident | CivicEvent)[], preview: boolean, now = Date.now()): FeedItem[] {
   return [
+    ...communityGalleries.map(gallery => ({ id: gallery.id, category: 'meetups' as const, kind: 'gallery' as const, gallery })),
     ...(preview ? previewGalleries.map(gallery => ({ id: gallery.id, category: 'meetups' as const, kind: 'gallery' as const, gallery })) : []),
     ...(preview ? previewMeetups.map(event => ({ id: event.id, category: 'meetups' as const, kind: 'event' as const, event })) : []),
     ...activity.flatMap((item): FeedItem[] => item.kind === 'incident'

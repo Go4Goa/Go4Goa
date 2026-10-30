@@ -26,6 +26,10 @@ Source evidence: `src/pages/Home.tsx`, `src/pages/home.css`, `src/feed/content.t
 
 The global DESIGN.md and its sidecar are preserved. Existing differences between their navigation/participation documentation remain outside this bounded extension; the five-destination dock above records the approved Home addition without refreshing unrelated system content.
 
+On 30 October 2026 the owner requested a stronger meetup CTA labelled “Join Meetup”. Meetup cards use the existing primary ButtonLink, with the shared action-green fill, white label and arrow, and a 48px minimum target. A 16px content wrapper gap separates it from host attribution. Button tokens and component styles remain unchanged; links keep their existing real or fictional-preview destinations.
+
+The owner supplied two community photos and the caption “Riva Resort Beach Cleanup · Edge City · Mandrem · 31/10/26”. This gallery leads the mixed and Meetups feeds, ahead of illustrative samples, with its title above the photos. Portrait photos use a 4:5 content window with a lower focal point; originals remain intact. The post is available outside demo mode and is distinct from labelled fictional galleries. No RSVP record or event time is invented for this photo post.
+
 ## Scope
 
 The owner approved shipping this update on 30 October 2026. News is a curated online snapshot researched 30 October 2026, with publication dates and original links. Local reports/meetups come from the existing public explore API. Photos are labelled sourced examples or AI-generated fictional scenes and are never attached to actual meetup records. Galleries and invented meetup previews are enabled only in configured demo/QA environments or local development. Future real meetup uploads and a continuously refreshed news ingestion service remain separate work. DESIGN.md and existing in-progress meetup edits remain owned by their current work.
