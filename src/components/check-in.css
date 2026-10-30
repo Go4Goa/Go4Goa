@@ -1,0 +1,37 @@
+.meetup-checkin { display: grid; gap: 16px; padding-block: 24px; }
+.meetup-checkin h3, .meetup-checkin p { margin: 0; }
+.checkin-count { color: var(--green); font-weight: 500; }
+.checkin-code { text-align: center; }
+.checkin-code img { display: block; width: min(100%, 320px); height: auto; margin: 0 auto 8px; }
+.checkin-code p + p { margin-top: 4px; }
+.meetup-checkin .button-row { flex-wrap: wrap; gap: 12px; }
+.checkin-link input { font-size: 14px; }
+.checkin-link .hint { margin-top: 12px; }
+.checkin-dialog { width: min(560px, calc(100% - 32px)); max-height: calc(100dvh - 32px); border: 1px solid var(--line); border-radius: 14px; padding: 24px; color: var(--foreground); background: var(--paper); }
+.checkin-dialog::backdrop { background: var(--paper); }
+.checkin-dialog-top { display: flex; align-items: center; justify-content: space-between; gap: 16px; }
+.checkin-dialog-top h2 { margin: 0; }
+.checkin-dialog > p { margin-top: 12px; }
+.checkin-dialog img { display: block; width: 100%; height: auto; }
+.checkin-event { padding-block: 8px 24px; border-bottom: 1px solid var(--line); }
+.checkin-event h2 { margin-bottom: 16px; overflow-wrap: anywhere; }
+.checkin-event p { display: flex; align-items: flex-start; gap: 10px; margin-top: 8px; }
+.checkin-event svg { flex: none; margin-top: 3px; }
+.checkin-confirm, .checkin-receipt { display: grid; justify-items: start; gap: 20px; padding-top: 28px; }
+.checkin-receipt > svg { color: var(--accent); }
+.checkin-confirm p, .checkin-receipt p, .checkin-receipt h2 { margin: 0; }
+.checkin-browser-note { margin-top: 32px; }
+.point-rules { margin-top: 16px; }
+.point-rules > div { display: flex; justify-content: space-between; gap: 16px; padding-block: 12px; border-bottom: 1px solid var(--line); }
+.point-rules dd { margin: 0; font-weight: 600; font-variant-numeric: tabular-nums; }
+.points-history .point-award-title { display: block; margin-top: 4px; color: var(--muted); font-size: 13px; }
+.points-history li > span { min-width: 0; overflow-wrap: anywhere; }
+.points-history li > strong { flex: none; }
+@media (max-width: 360px) {
+  .checkin-dialog { padding: 16px; }
+  .meetup-checkin .button-row > button { flex: 1 1 100%; }
+}
+
+.meetup-detail-actions { display: flex; align-items: center; flex-wrap: wrap; gap: 16px; }
+.meetup-detail-actions > a { min-height: 48px; }
+.meetup-checkin { scroll-margin-top: 24px; }

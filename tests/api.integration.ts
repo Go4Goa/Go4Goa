@@ -202,9 +202,9 @@ test('RSVP locking prevents oversubscription; check-in and bookmarks appear on t
   assert.equal(profile.points.filter((p:any)=>p.reason==='event_attendance'&&p.source_id===id).length,1);
   assert.match(await (await call('/api/events/'+id+'/calendar.ics')).text(),/BEGIN:VCALENDAR/);
   assert.equal(await queueUpdate(pool,id,'Test','No unconsented messages',randomUUID()),0);
-  await call('/api/events/'+id+'/rsvp','DELETE',undefined,winner);
+  assert.equal((await call('/api/events/'+id+'/rsvp','DELETE',undefined,winner)).status,409);
   const loser=winner===resident?other:resident;
-  assert.equal((await call('/api/events/'+id+'/rsvp','POST',{email:false,sms:false},loser)).status,200);
+  assert.equal((await call('/api/events/'+id+'/rsvp','POST',{email:false,sms:false},loser)).status,409);
   const published=await call('/api/events','POST',input,resident);
   assert.equal(published.status,201);
   const meetup=await published.json() as {id:string;status:string};
@@ -415,4 +415,85 @@ test('AI review holds reports whose label or text needs a person, even when the 
  assert.equal((await statusOf(named)).status,'new');assert.match((await aiRow(named))[0].reason,/location label contains personal information/);
  assert.equal((await pool.query('SELECT alt FROM media WHERE incident_id=$1',[named])).rows[0].alt,'Test photo','held reports keep their alt until a person reviews them');
  delete process.env.GO_GOA_AI_REVIEW;setJudge(null);
+});
+
+async function checkInEvent(capacity=10, startsOffset=-1800000, endsOffset=3600000) {
+ const id=randomUUID();
+ await pool.query(`INSERT INTO events(id,organizer_id,title,description,activity,public_lat,public_lng,location_label,meetup,starts_at,ends_at,capacity,status)
+ VALUES ($1,$2,'QR check-in test','Fictional integration meetup','cleanup_walk',15.5,73.8,'Fictional test location','Meet the test host',$3,$4,$5,'published')`,
+ [id,organizer.id,new Date(Date.now()+startsOffset),new Date(Date.now()+endsOffset),capacity]);return id;
+}
+async function openCheckIn(id:string) {
+ const opened=await call(`/api/events/${id}/check-in/session`,'POST',{},organizer);assert.equal(opened.status,200,await opened.clone().text());
+ const session=await (await call(`/api/events/${id}/check-in/session`,'GET',undefined,organizer)).json() as any;
+ assert.equal(session.active,true);assert.equal(new URL(session.url).search,'');
+ return {session,token:new URLSearchParams(new URL(session.url).hash.slice(1)).get('token')!};
+}
+test('QR check-in restricts host controls, keeps tokens private and requires explicit CSRF-protected confirmation',async()=>{
+ const id=await checkInEvent();
+ for(const method of ['GET','POST','DELETE']){
+  assert.equal((await call(`/api/events/${id}/check-in/session`,method,method==='GET'?undefined:{},other)).status,403);
+  assert.equal((await call(`/api/events/${id}/check-in/session`,method,method==='GET'?undefined:{})).status,401);
+ }
+ const {token,session}=await openCheckIn(id);
+ assert.ok(Date.parse(session.expiresAt)<=Date.now()+2*3600000);
+ const publicEvent=await (await call(`/api/events/${id}`)).text();assert.ok(!publicEvent.includes(token));assert.ok(!publicEvent.includes('token_hash'));
+ const before=await pool.query('SELECT * FROM rsvps WHERE event_id=$1',[id]);assert.equal(before.rowCount,0);
+ assert.equal((await call(`/api/events/${id}/check-in/preview`,'POST',{token},other)).status,200);
+ assert.equal((await pool.query('SELECT * FROM rsvps WHERE event_id=$1',[id])).rowCount,0,'preview never awards or creates an RSVP');
+ assert.equal((await call(`/api/events/${id}/check-in/claim`,'POST',{token},other,{'x-csrf-token':''})).status,403);
+ assert.equal((await call(`/api/events/${id}/check-in/claim`,'POST',{token},other,{origin:'https://attacker.example'})).status,403);
+ assert.equal((await call(`/api/events/${id}/check-in/claim`,'POST',{token:'x'.repeat(43)},other)).status,410);
+ assert.equal((await call(`/api/events/${id}/check-in/claim`,'POST',{token},organizer)).status,403);
+ assert.equal((await call(`/api/events/${id}/check-in/claim`,'POST',{token,userId:resident.id},other)).status,400);
+ const another=await checkInEvent();assert.equal((await call(`/api/events/${another}/check-in/claim`,'POST',{token},other)).status,410);
+});
+test('concurrent QR retries and manual attendance award exactly once and update the profile',async()=>{
+ const id=await checkInEvent(),person=await actor('resident'),{token}=await openCheckIn(id);
+ const replies=await Promise.all(Array.from({length:4},()=>call(`/api/events/${id}/check-in/claim`,'POST',{token},person)));
+ for(const response of replies)assert.equal(response.status,200);
+ const receipts=await Promise.all(replies.map(r=>r.json())) as any[];
+ assert.equal(receipts.reduce((sum,r)=>sum+r.awardedPoints,0),15);
+ assert.equal(receipts.filter(r=>r.alreadyCheckedIn).length,3);
+ assert.equal((await call(`/api/events/${id}/check-in`,'POST',{userId:person.id},organizer)).status,200);
+ const awards=(await pool.query("SELECT * FROM points_ledger WHERE source_id=$1 AND user_id=$2 AND reason='event_attendance'",[id,person.id])).rows;
+ assert.equal(awards.length,1);assert.equal(awards[0].points,15);
+ const rsvp=(await pool.query('SELECT * FROM rsvps WHERE event_id=$1 AND user_id=$2',[id,person.id])).rows[0];
+ assert.ok(rsvp.checked_in_at);assert.equal(rsvp.email_consent,false);assert.equal(rsvp.sms_consent,false);
+ assert.equal((await call(`/api/events/${id}/rsvp`,'DELETE',undefined,person)).status,409);
+ const profile=await (await call('/api/account','GET',undefined,person)).json() as any;
+ assert.equal(profile.totalPoints,15);assert.equal(profile.rsvps.find((e:any)=>e.id===id).checkedIn,true);
+ assert.equal(profile.points.find((p:any)=>p.source_id===id).title,'QR check-in test');
+ assert.equal((await pool.query("SELECT count(*)::int AS n FROM audit_log WHERE target_id=$1 AND action='rsvp.checked_in'",[id])).rows[0].n,1);
+});
+test('capacity is serialized for walk-ins; reserved attendees and moderator-confirmed hosts can attend',async()=>{
+ const id=await checkInEvent(1),people=await Promise.all([actor('resident'),actor('resident')]),{token}=await openCheckIn(id);
+ const statuses=await Promise.all(people.map(async person=>(await call(`/api/events/${id}/check-in/claim`,'POST',{token},person)).status));
+ assert.deepEqual(statuses.sort(),[200,409]);
+ const reserved=await checkInEvent(1),person=await actor('resident');
+ assert.equal((await call(`/api/events/${reserved}/rsvp`,'POST',{email:false,sms:false},person)).status,200);
+ const code=(await openCheckIn(reserved)).token;
+ assert.equal((await call(`/api/events/${reserved}/check-in/claim`,'POST',{token:code},person)).status,200);
+ const hostEvent=await checkInEvent(2);
+ assert.equal((await call(`/api/events/${hostEvent}/rsvp`,'POST',{email:false,sms:false},organizer)).status,200);
+ assert.equal((await call(`/api/events/${hostEvent}/check-in`,'POST',{userId:organizer.id},organizer)).status,400);
+ assert.equal((await call(`/api/events/${hostEvent}/check-in`,'POST',{userId:organizer.id},moderator)).status,200);
+});
+test('closing, rotating, expiration, rescheduling and cancellation invalidate QR codes',async()=>{
+ const early=await checkInEvent(10,7200000,10800000),late=await checkInEvent(10,-10800000,-7200000);
+ for(const id of [early,late])assert.equal((await call(`/api/events/${id}/check-in/session`,'POST',{},organizer)).status,409);
+ const id=await checkInEvent(),person=await actor('resident'),first=await openCheckIn(id),second=await openCheckIn(id);
+ assert.notEqual(first.token,second.token);
+ assert.equal((await call(`/api/events/${id}/check-in/claim`,'POST',{token:first.token},person)).status,410);
+ assert.equal((await call(`/api/events/${id}/check-in/session`,'DELETE',{},organizer)).status,200);
+ assert.equal((await call(`/api/events/${id}/check-in/claim`,'POST',{token:second.token},person)).status,410);
+ const third=await openCheckIn(id);await pool.query("UPDATE event_checkin_sessions SET expires_at=now()-interval '1 second' WHERE event_id=$1",[id]);
+ assert.equal((await call(`/api/events/${id}/check-in/claim`,'POST',{token:third.token},person)).status,410);
+ const fourth=await openCheckIn(id);
+ const e=(await (await call(`/api/events/${id}`)).json() as any).event;
+ assert.equal((await call(`/api/events/${id}`,'PATCH',{version:e.version,status:'published',startsAt:e.startsAt,endsAt:e.endsAt,reason:'Test reschedule revokes codes'},organizer)).status,200);
+ assert.equal((await call(`/api/events/${id}/check-in/claim`,'POST',{token:fourth.token},person)).status,410);
+ const fifth=await openCheckIn(id);
+ assert.equal((await call(`/api/events/${id}`,'PATCH',{version:e.version+1,status:'cancelled',startsAt:e.startsAt,endsAt:e.endsAt,reason:'Test cancellation revokes codes'},organizer)).status,200);
+ assert.equal((await call(`/api/events/${id}/check-in/claim`,'POST',{token:fifth.token},person)).status,409);
 });
