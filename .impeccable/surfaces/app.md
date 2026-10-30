@@ -62,3 +62,8 @@ The independent review returned `ship` with no material fixes, and source checks
 ## Navigation order, 30 October 2026
 
 The user specifies four bottom links, in order: Meetups, Map, Document and Profile. Document replaces the Report label while retaining the camera icon and `/report` route. Resources is removed from the dock; Resources and Directory routes remain intact with no unrelated dock item selected. The existing 560px row, 46px targets, typography, colors and safe-area behavior are preserved. The user approved this preview and authorized its production release on 30 October 2026.
+
+
+## Resources restoration, 30 October 2026
+
+The user requested restoring the Resources tab on the live site, superseding its removal in the earlier navigation revision. The dock now reads Meetups, Map, Document, Resources and Profile. Resources reuses the original book icon and `/resources` route; nested Resources and Directory routes keep it selected. Preserve the current compact styling, 560px row, 46px targets, upright labels, colors and safe-area behavior. No sign-in or other page changes are part of this restoration.

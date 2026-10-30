@@ -424,7 +424,7 @@ Search and the filter trigger occupy one 46px-high white row, up to 400px wide, 
 
 **The Map Owns Its Viewport Rule.** Keep the map's available height derived from its header and navigation, open results only on request, and account for overlay space when framing activity or focusing a selected place.
 
-The full-width bottom dock sits flush with the viewport. Four equal destinations occupy a centered row up to 560px wide. Each link is 46px tall, above the larger of the safe-area inset and 6px; a 1px structural rule separates navigation from content. General pages reserve the dock height plus 40px of bottom clearance. The portable tab-bar height token includes that rule and safe-area clearance.
+The full-width bottom dock sits flush with the viewport. Five equal destinations occupy a centered row up to 560px wide. Each link is 46px tall, above the larger of the safe-area inset and 6px; a 1px structural rule separates navigation from content. General pages reserve the dock height plus 40px of bottom clearance. The portable tab-bar height token includes that rule and safe-area clearance.
 
 Spacing follows the inherited 4px rhythm where practical. Open incident and resource rows use structural top borders and 20px to 24px vertical padding. Event rows use 24px vertical padding, medium titles and a 44px row-arrow target at every width; the first feed row keeps its open leading edge. Evidence thumbnails have rounded corners; current incident thumbnails are rectangular rather than a mandated square aspect ratio. Report detail images stay within the content column, with a 16px radius, and the report description is readable 18px body copy rather than a heading.
 
@@ -478,7 +478,7 @@ Resources and Directory list search share a pill-shaped search surface with rest
 
 ### Navigation
 
-The bottom dock has four destinations in this order: Meetups, Map, Document and Profile. Document opens the existing `/report` flow with its camera icon. Resources is no longer a dock destination; its page and Directory button remain available at their existing routes. Resources and Directory routes do not select an unrelated dock item. Current-page semantics use `aria-current="page"`; the label stays visible. Selection uses green icon and text tint with stronger label weight. Hover and press use a pale surface. Color transitions run for 150ms with ease-out and are removed for reduced motion. Increased contrast strengthens the divider and current-page underline; forced colors retain explicit selection.
+The bottom dock has five destinations in this order: Meetups, Map, Document, Resources and Profile. Document opens the existing `/report` flow with its camera icon. On 30 October 2026 Zachary requested restoring Resources, superseding its earlier removal. Resources opens `/resources` with its original book icon; Resources and Directory routes keep Resources selected. Current-page semantics use `aria-current="page"`; the label stays visible. Selection uses green icon and text tint with stronger label weight. Hover and press use a pale surface. Color transitions run for 150ms with ease-out and are removed for reduced motion. Increased contrast strengthens the divider and current-page underline; forced colors retain explicit selection.
 
 The sidecar navigation specimen uses the current dock in normal document flow so it can render inside the design panel. The app positions it at the viewport bottom.
 
