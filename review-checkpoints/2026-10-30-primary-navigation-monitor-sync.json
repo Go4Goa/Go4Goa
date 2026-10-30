@@ -1,0 +1,49 @@
+{
+  "schemaVersion": 1,
+  "status": "synchronized",
+  "recordedAt": "2026-10-30T06:38:07.418Z",
+  "repository": "actforgoa2026/Go4Goa",
+  "ownerDecisionPath": "decisions/2026-10-30-primary-navigation-no-resources.json",
+  "ownerDecisionProvenance": "Direct human authorization from Zachary in the owning local chat, relayed through the authorized hosted-monitor conversation.",
+  "automation": {
+    "id": "6ae33ac8da3c8191b8476185d4c8bb70",
+    "title": "Review Layalabs Reporting PRs",
+    "enabled": true,
+    "promptSha256": "2018c31e8a454a694935ca03f5e8d8db1bc0cb0d00a3789fbad1a7f332461ba0",
+    "canonicalPromptPath": "cloud-release-prompt.txt",
+    "canonicalPromptBlob": "4f465fd39123724f4c6f827f5bf4fe3bd0c368ce",
+    "eventScope": {
+      "repository": "actforgoa2026/Go4Goa",
+      "prAuthorLogin": "layalabs",
+      "prAuthorId": 261854875,
+      "commitUpdates": true,
+      "reviews": true,
+      "comments": true
+    }
+  },
+  "verifiedRequirements": {
+    "primaryNavigation": [
+      "Meetups",
+      "Map",
+      "Document",
+      "Profile"
+    ],
+    "resourcesExcludedFromPrimaryNavigation": true,
+    "contextualResourcesAndDirectoryRetained": true,
+    "publicGuestNoSignIn": true,
+    "phoneVerification": false,
+    "pr19CancelledProposal": true
+  },
+  "observedRepositoryState": {
+    "main": "e37a98c134f7b0a2da11c70ff1a63ed3be68d231",
+    "cloudRelease": "7d30c50463c965072a46d920f030d4bb1d974648",
+    "note": "This synchronization made no merge or deployment change. Main had advanced before this synchronization; cloud-release remained at the previous verified release."
+  },
+  "actions": {
+    "merged": false,
+    "published": false,
+    "githubCommentsOrReviewsPosted": false,
+    "collaboratorMessagesSent": false,
+    "localWorkerStarted": false
+  }
+}
