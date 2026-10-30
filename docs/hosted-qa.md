@@ -4,15 +4,15 @@ URL: https://go-goa-qa.vercel.app
 
 This is an isolated testing environment. It uses its own Neon Postgres/PostGIS database and a private Vercel Blob store. It contains fictional personas and example records. Use sample photos and places only. SMS notifications and email delivery are disabled in hosted QA.
 
-The owner enabled phone sign-in for this public QA site on 30 October 2026. Keep `GO_GOA_PHONE_VERIFICATION=true`. Keep public browsing open without a site password or Vercel login.
+For the PR #14 release, preserve the owner’s no-sign-in requirement: keep `GO_GOA_PHONE_VERIFICATION=false`, automatic guest sessions, and public browsing without a site password or Vercel login.
 
 ## Give the Reporting QA partner access
 
 Share the URL directly. On 29 October 2026 Zachary explicitly authorized public browsing without a site password or Vercel login. No GitHub access or Vercel membership is needed to view the site.
 
-The preview starts without an account. Visitors can browse public pages before sign-in. Profile and protected actions show the phone sign-in form.
+The preview creates a separate guest resident automatically in each browser. Private sessions keep each visitor’s activity separate. Clearing cookies removes access to that guest activity.
 
-A verified phone account can submit reports, create meetups, RSVP and use bookmarks. Shared seeded personas remain available only to authorized automated QA through the encrypted test-account API.
+Guests can submit reports, create meetups, RSVP and use bookmarks without signing in. Shared seeded personas remain available only to authorized automated QA through the encrypted test-account API.
 
 Follow [Reporting QA handoff](reporting-qa-handoff.md). Report issues with the tested URL and commit, browser, steps and scrubbed screenshots. Do not put the QA password, cookies, personal information or provider keys into issues.
 

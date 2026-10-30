@@ -9,7 +9,7 @@ Updated 30 October 2026. Publicly viewable QA is live at https://go-goa-qa.verce
 - Pseudonymous accounts, local demo roles, Twilio Verify integration, optional email verification, session/CSRF controls and rate limits.
 - Report moderation, image redaction/withholding, statuses, duplicate suggestions/merge, responsible body, resource matching and audit log.
 - Events, organizer approval, capacity-safe RSVP/cancellation, calendar export, check-in, bookmarks, updates and notification outbox.
-- Private profiles with reports, organized/attended/bookmarked events, immutable points, preferences, export and deletion.
+- Private profiles with reports, organized/attended/bookmarked events, immutable points, preferences, export and deletion. A public leaderboard shows pseudonymous totals for verified point awards.
 - Typed Act For Goa adapter, cached sync, provenance, stale-data handling and resources search.
 
 ## Verified for this baseline
@@ -31,7 +31,7 @@ Updated 30 October 2026. Publicly viewable QA is live at https://go-goa-qa.verce
 - Service worker and manifest build successfully; installation, offline lifecycle, updates and weak-network behavior need actual browser/device QA. Shell caching does not make private records or map tiles available offline.
 - Drafts are memory-only and clear when leaving Reporting. Automatic durable offline submission is not implemented.
 - Resource corrections currently support attaching matches; removal/exclusion and expanded matching rules remain follow-up work. Contact details are linked to authoritative source pages instead of republishing raw personal contact fields.
-- Points need operational anti-abuse review and a reversal policy before public launch. There are no cash rewards or public leaderboards.
+- Points and the public leaderboard need operational anti-abuse review and a reversal policy before public launch. Points have no cash value.
 - Account deletion removes primary contact/location/photo data and anonymizes the profile, but moderation audit history may retain previously recorded text. Retention, backup expiry and reliable object-deletion retries need a defined policy and production hardening. Do not use real personal data for QA.
 - Full security/accessibility review, production monitoring, provider limits, privacy operator details and escalation ownership remain release gates.
 

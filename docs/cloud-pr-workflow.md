@@ -2,6 +2,8 @@
 
 Status: the cloud handoff was verified at automation/release-records/handoff.json and the local worker is paused. On 29 October 2026 the owner explicitly authorized public guest use without any sign-in screen, site password or Vercel login. This access decision supersedes the previous outer-gate requirement; all design, review, privacy and release gates remain.
 
+For PR #14, Zachary explicitly approved public contribution rankings and the shared header link on 30 October 2026. This exception does not grant unattended authority to redesign other shared surfaces. Guest access remains required.
+
 ## Review boundary
 
 Only layalabs (numeric GitHub ID 261854875) is eligible for unattended Reporting FEATURE/UX releases. Zachary owns DESIGN throughout the app. Read current main, live release provenance and ZakKrevitt's relevant issues, PRs, comments and decisions before source review. Shared design, navigation, maps, typography, colors, spacing, icons and visual hierarchy are protected. A label, clean merge or green build never establishes design approval. Hold drafts, unresolved reviews, unrelated scope, schema/auth/security risks and design conflicts. Do not post GitHub comments or reviews.
