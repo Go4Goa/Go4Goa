@@ -1,0 +1,30 @@
+{
+  "schemaVersion": 1,
+  "recordedAt": "2026-10-29T18:21:30Z",
+  "event": {
+    "deliveryId": "37290640-d400-11f1-99b3-2773c68b1cbb",
+    "action": "synchronize"
+  },
+  "pr": {
+    "number": 14,
+    "url": "https://github.com/actforgoa2026/Go4Goa/pull/14",
+    "author": "layalabs",
+    "authorId": 261854875,
+    "head": "bd92cf21e15625d3798ab6f8d86ebb8eb4f00185",
+    "base": "024a6b0ac5ad20a2c06f0f145bbdf21b0a132111",
+    "integrated": "0df84d3e4c972e2fd3ae31ab4fcddb972652a683"
+  },
+  "outcome": "held-before-execution",
+  "supersedes": "review-checkpoints/pr-14-bae571fd-held.json",
+  "blockers": [
+    "The entire current PR still removes PRODUCT.md's prohibition on gamified rankings and makes public ranking a cross-surface product/design decision.",
+    "Public aggregation of contribution activity requires explicit owner approval and resolved privacy, anti-abuse, and reversal policy; none is present in cloud-accessible decisions or reviews.",
+    "No ZakKrevitt review exists for this head.",
+    "The exact source-review receipt reviews/pr-14.json does not exist, so trusted execution remains denied."
+  ],
+  "actionsNotTaken": [
+    "No code execution",
+    "No source receipt or workflow rerun",
+    "No merge, publication, deployment, comment, review, or collaborator message"
+  ]
+}
