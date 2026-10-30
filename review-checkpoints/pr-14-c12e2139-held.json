@@ -1,0 +1,53 @@
+{
+  "schemaVersion": 1,
+  "recordedAt": "2026-10-30T04:07:00Z",
+  "event": {
+    "family": "github/pull_request",
+    "action": "synchronize",
+    "deliveryId": "69cc7f00-d414-11f1-8e9d-b0ab07683775",
+    "eventType": "pull_request",
+    "actor": "ZakKrevitt"
+  },
+  "pullRequest": {
+    "number": 14,
+    "url": "https://github.com/actforgoa2026/Go4Goa/pull/14",
+    "author": "layalabs",
+    "head": "c12e2139abc92787badc97de81866313c1e512ac",
+    "base": "bc9ac77d2fb610a3fa470fddb5ec391a42b8db04",
+    "integrated": "8a93bd3c053b72ae9ae7e245c25038c63d8dc72c"
+  },
+  "sourceGate": {
+    "receiptPath": "reviews/pr-14.json",
+    "receiptCommit": "8752d6a4edcaccfed88dc45987d370afd377d12d",
+    "receiptMatchesHeadAndBase": true,
+    "sourceReviewed": true,
+    "reviewedAt": "2026-10-30T03:46:21.362Z",
+    "disposition": "Receipt is not authorization to merge or release; its embedded approval claim is not independently verified."
+  },
+  "reviewEvidence": {
+    "submittedReviews": 0,
+    "prComments": 0,
+    "inlineReviewThreads": 0,
+    "discoverableDesignIssues": 0,
+    "result": "No independently verifiable ZakKrevitt design decision or review supports the claimed exception."
+  },
+  "outcome": "held-before-execution",
+  "blockers": [
+    "The contributor changes PRODUCT.md to replace the established no-gamified-rankings policy and adds public leaderboard and shared-header/navigation work.",
+    "The claimed 30 October owner/design exception appears only in PR-controlled content and the source receipt; a requested reviewer or webhook actor is not a design approval.",
+    "Public pseudonymous rankings, contribution aggregates, anti-abuse controls, and reversal policy remain unresolved authority and privacy/operational scope.",
+    "The change is broader than safe Reporting FEATURE/UX."
+  ],
+  "actionsNotTaken": [
+    "No contributor code execution",
+    "No trusted workflow rerun",
+    "No merge",
+    "No cloud-release update or deployment",
+    "No GitHub comment, review, or collaborator message"
+  ],
+  "nextRequired": [
+    "An independently verifiable current ZakKrevitt design decision or review covering the leaderboard and shared-header scope",
+    "Resolved owner authority for public-data, anti-abuse, and reversal policy",
+    "Fresh review of the resulting exact head/base before any isolated testing"
+  ]
+}
