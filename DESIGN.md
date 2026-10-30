@@ -140,7 +140,7 @@ rounded:
   pill: "9999px"
   status: "4px"
   media: "14px"
-  participation: "24px"
+  participation: "0"
   map-media: "9px"
   map-type-chip: "8px"
   map-search-action: "0 13px 13px 0"
@@ -212,7 +212,7 @@ components:
     backgroundColor: "{colors.white}"
     textColor: "{colors.foreground}"
     rounded: "{rounded.participation}"
-    padding: "28px"
+    padding: "24px 0 0"
   segmented-control:
     backgroundColor: "transparent"
     textColor: "{colors.muted}"
@@ -428,7 +428,7 @@ The full-width bottom dock sits flush with the viewport. Four equal destinations
 
 Spacing follows the inherited 4px rhythm where practical. Open incident and resource rows use structural top borders and 20px to 24px vertical padding. Event rows use 24px vertical padding, medium titles and a 44px row-arrow target at every width; the first feed row keeps its open leading edge. Evidence thumbnails have rounded corners; current incident thumbnails are rectangular rather than a mandated square aspect ratio. Report detail images stay within the content column, with a 16px radius, and the report description is readable 18px body copy rather than a heading.
 
-The dedicated meetup page places the shared green poster beside the existing participation panel using the detail page's columns and a 48px gap. At 760px and below, the poster, host information, directions and participation section stack with a 32px column gap. Back and Share meetup actions sit above the content in a wrapping row. The poster's padding reduces to 24px at 900px and below; its minimum height remains 360px on the dedicated page. The creation preview keeps its existing 300px intermediate and 320px mobile minimum heights, and stacks below the editor at 700px. The composer uses a 48px desktop column gap, reducing to 36px at 900px and below, then a 40px stacked gap at 700px and below. Composer sections use 32px spacing, reducing to 28px at its stacking breakpoint.
+The dedicated meetup page places the shared green poster beside an open participation section using the detail page's columns and a 48px gap. At 760px and below, the poster, host information, directions and participation section stack with a 32px column gap. Back and Share meetup actions sit above the content in a wrapping row. The poster's padding reduces to 24px at 900px and below; its minimum height remains 360px on the dedicated page. The creation preview keeps its existing 300px intermediate and 320px mobile minimum heights, and stacks below the editor at 700px. The composer uses a 48px desktop column gap, reducing to 36px at 900px and below, then a 40px stacked gap at 700px and below. Composer sections use 32px spacing, reducing to 28px at its stacking breakpoint.
 
 Profile begins with the username and private-profile context, then activity tabs and their report or meetup results. Contribution points and history follow the results. Account settings occupy the separate preferences page, using the existing open sections and shared spacing. Sign-in fields use a 24px stack gap. Privacy headings use the responsive section-gap token with 12px between heading and body. These align the supporting account and reading flows with the primary app rhythm.
 
@@ -438,7 +438,7 @@ Open content sections stay on the white canvas. Soft offset shadows distinguish 
 
 ### Shadow Vocabulary
 
-- **Resting control:** `0 2px 5px rgb(22 37 29 / 5%), 0 7px 20px rgb(22 37 29 / 7%)`, used by primary actions, applicable secondary hover states, shared search surfaces, unselected report category choices and the desktop participation panel.
+- **Resting control:** `0 2px 5px rgb(22 37 29 / 5%), 0 7px 20px rgb(22 37 29 / 7%)`, used by primary actions, applicable secondary hover states, shared search surfaces, unselected report category choices.
 - **Floating panel:** `0 8px 28px rgb(22 37 29 / 13%)`, used by select menus and the map filter panel.
 - **Map utility control:** uses the resting-control shadow for zoom, location, View list and search-this-area.
 - **Map marker and cluster:** `0 2px 6px rgb(25 62 50 / 18%)`, used for compact square markers and circular count clusters. The draggable location pin uses `drop-shadow(0 3px 3px rgb(25 62 50 / 22%))`.
@@ -448,7 +448,7 @@ Open content sections stay on the white canvas. Soft offset shadows distinguish 
 
 ## Shapes
 
-Form controls use the control radius, while buttons use the pill radius. The map search/filter row has one rounded outline; its inner search and filter actions have no independent surface or shadow. Activity controls appear inside the temporary filter panel. Evidence thumbnails, calendar tiles and participation surfaces use the softer source-backed corner vocabulary. The mobile participation area becomes an open section with a top divider.
+Form controls use the control radius, while buttons use the pill radius. The map search/filter row has one rounded outline; its inner search and filter actions have no independent surface or shadow. Activity controls appear inside the temporary filter panel. Evidence thumbnails and calendar tiles use the softer source-backed corner vocabulary. Meetup participation is an open section with a structural top divider at every width.
 
 Map report markers remain square with rounded corners and show a photo or civic category icon. Event markers share that silhouette and show their month and date. Count clusters and resolved checks remain circular; the location picker uses a draggable pin. Status labels retain their compact source-specific corners. The full-width bottom dock has square edges.
 
@@ -466,7 +466,7 @@ Status labels use UIArc Badge with compact upright medium text and existing writ
 
 ### Cards / Containers
 
-Use open, horizontally separated rows for reports, resources and activity. A desktop participation panel is a bounded exception: white surface, rounded corners, resting shadow, 28px padding and an 18px content gap. On mobile it becomes an open section with a top rule and no shadow. Informational notices and receipts sit in the content flow without side stripes.
+Use open, horizontally separated rows for reports, resources and activity. Meetup participation uses an open section with a top rule, 24px top padding and no shadow at every width. Its 20px heading and availability sit 4px apart, with 16px between task groups. Join and the compact Save action share a wrapping row with 48px targets. Reminders and Add to calendar are closed by default and use 48px disclosure rows. Reminder choices remain explicit opt-ins before joining; after RSVP, the disclosure explains how to turn off channels through Account preferences. Cancel RSVP is a secondary action. Full, pending, cancelled and ended meetups retain their written states. The preferences link opens `/profile/preferences`. Informational notices and receipts sit in the content flow without side stripes.
 
 Report category choices remain functional selection buttons: icon beside a left-aligned title and supporting line, with 112px minimum height and 20px padding on desktop. At 760px and below, the two choices stack with a 12px gap, 88px minimum height and 16px padding. Unselected choices use the resting shadow; the chosen state removes it and keeps the existing selected treatment.
 
