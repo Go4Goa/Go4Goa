@@ -1,6 +1,6 @@
 # QA baseline status
 
-Updated 30 October 2026. Publicly viewable QA is live at https://go-goa-qa.vercel.app. The owner authorized phone sign-in without a site password or Vercel login. Fresh browsers start signed out. Moderator identities, shared test identities and private APIs remain restricted. See [hosted access and workflow](hosted-qa.md); current source and release evidence are on automation/release-records. This is a fictional preview, not a certified resident-account launch.
+Updated 30 October 2026. Publicly viewable QA is live at https://go-goa-qa.vercel.app. The owner's current direction requires automatic separate resident guests with no sign-in/out screens, phone/email onboarding, site password or Vercel login. Fresh browsers receive a private guest session automatically; reloading preserves that browser's identity. Moderator identities, shared test identities and private APIs remain restricted. See [hosted access and workflow](hosted-qa.md); current source and release evidence are on automation/release-records. This is a fictional preview, not a certified resident-account launch.
 
 ## Implemented
 

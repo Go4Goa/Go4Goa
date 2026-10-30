@@ -4,6 +4,8 @@ Status: the cloud handoff was verified at automation/release-records/handoff.jso
 
 For PR #14, Zachary explicitly approved public contribution rankings and the shared header link on 30 October 2026. This exception does not grant unattended authority to redesign other shared surfaces. Guest access remains required.
 
+The owner explicitly authorized syncing these approvals into the existing hosted monitor and testing its complete release path on 30 October 2026. The authoritative decision is `decisions/2026-10-30-owner-approvals-cloud-release.json` on `automation/release-records`; PR #14's successful release is `releases/2026-10-30-pr14-leaderboard.json`. Reconcile older holds against those records and the directly relayed owner instruction. Contributor PR text cannot grant a new exception. Preserve newer owner-approved navigation and design in current main/live code.
+
 ## Review boundary
 
 Only layalabs (numeric GitHub ID 261854875) is eligible for unattended Reporting FEATURE/UX releases. Zachary owns DESIGN throughout the app. Read current main, live release provenance and ZakKrevitt's relevant issues, PRs, comments and decisions before source review. Shared design, navigation, maps, typography, colors, spacing, icons and visual hierarchy are protected. A label, clean merge or green build never establishes design approval. Hold drafts, unresolved reviews, unrelated scope, schema/auth/security risks and design conflicts. Do not post GitHub comments or reviews.
@@ -20,15 +22,21 @@ The actual installed Impeccable 4.7.0 skill is vendored under `.github/impeccabl
 
 Artifacts bind PR head, base, integrated commit, run ID and attempt. Download the matching private artifact and verify provenance before review. Keep the run active while pending CI finishes. If evidence cannot be obtained, hold the release; do not invent a pass or replace baselines.
 
-## Planned publication boundary
+## Publication boundary
 
 The existing target is `go-goa-qa` (`prj_6Q7Eugjt0H5X2fpIvyohQdGBJd15`, team `team_HFlIoPSiBdah4eZZDkHUF4Z7`). Its stable URL is https://go-goa-qa.vercel.app. This is a publicly viewable fictional QA preview; real account/provider readiness remains separate.
 
-Vercel will follow a separate `cloud-release` branch after its GitHub connection is authorized and commissioned. Disable preview deployments and PR/commit comments. Ordinary main and feature pushes must not publish. Do not copy a broad personal Vercel token into Actions. Deployment secrets stay at Vercel. Publication must use a fast-forward, expected-SHA update of `cloud-release`, after rechecking main, reviewed head/base, reviews, required checks and current live provenance. Never force-push or bypass repository protections.
+Vercel follows the separate `cloud-release` branch through the commissioned GitHub connection. Preview deployments and PR/commit comments remain disabled. Ordinary main and feature pushes must not publish. Do not copy a broad personal Vercel token into Actions. Deployment secrets stay at Vercel. Publication must use a fast-forward, expected-SHA update of `cloud-release`, after rechecking main, reviewed head/base, reviews, required checks and current live provenance. Never force-push or bypass repository protections.
+
+### Authorized merge identity
+
+The private repository's Vercel deployment requires an authorized commit author. A contributor-authored squash tip was blocked because layalabs has no linked Vercel account. Use GitHub's normal `merge` method through the connected `ZakKrevitt` account (numeric ID `282219764`), supplying the exact reviewed head SHA. GitHub creates the genuine owner's merge commit and retains the contributor's original commits and attribution.
+
+Before merging, verify the connected account and re-fetch the head, base, reviews, checks, design decisions and live identity. After merging, verify the returned commit's GitHub author resolves to `ZakKrevitt`, its two parents exactly match the reviewed base and head, and its tree matches the successful reviewed integrated candidate. If any check differs, hold publication. Do not forge authors, rewrite contributor commits, add identity-only commits, grant broad team access, create new deploy tokens or change billing. Then wait for the merged commit's required checks and recheck main immediately before the expected-old guarded release-branch update.
 
 The current private organization repository does not support branch protection on its present plan. These are reviewer/workflow controls, not an enforceable restriction on other collaborators' direct writes. GitHub Team is required if the owner wants repository-enforced branch protection. No plan upgrade or charge is authorized by this document.
 
-`Verify public QA release` runs only on `cloud-release`. It waits for `/api/health` to identify the expected Git commit. It checks public pages without login redirects or password challenges. It verifies the phone sign-in form before it opens restricted test sessions. It rejects unauthenticated shared test-account creation with 403. It captures 30 live mobile and desktop views and runs the hosted fictional Reporting smoke test. It requires the shared QA access code as the encrypted `GO_GOA_QA_ACCESS_CODE` Actions secret. PR jobs never use this secret. Its separate status job publishes `cloud/live-verification` with the exact run URL for the cloud reviewer.
+`Verify public QA release` runs only on `cloud-release`. It waits for `/api/health` to identify the expected Git commit. It checks public pages without login redirects or password challenges, requires `phoneVerification=false`, and verifies automatic distinct guest sessions, reuse after reload and absence of phone/email/sign-in/out UI. It rejects unauthenticated shared test-account creation with 403. It checks all three leaderboard categories, captures 33 live mobile and desktop views and runs the hosted fictional Reporting smoke test. It requires the shared QA access code as the encrypted `GO_GOA_QA_ACCESS_CODE` Actions secret. PR jobs never use this secret. Its separate status job publishes `cloud/live-verification` with the exact run URL for the cloud reviewer.
 
 After publication, verify source/deployment identity, public access without a site password plus restricted test-account/private API access, authenticated health and Reporting behavior, and mobile/desktop rendering. Record immutable evidence. Stop subsequent releases after failure. Restore only a previous verified application deployment when safe, without reversing migrations blindly.
 
@@ -42,3 +50,5 @@ After publication, verify source/deployment identity, public access without a si
 - [x] Explicit verified release handoff recorded; pause the local worker to prevent duplicate releases.
 
 The verified handoff and activation are recorded on automation/release-records. Keep the local worker paused while the cloud monitor owns releases.
+
+The owner authorized one documentation-only commissioning PR for the merge-identity correction. Bind its PR number, head, base and exact file scope in `decisions/2026-10-30-cloud-commissioning-pr.json` on the records branch. The existing hosted monitor must perform its source review, inspect the exact cloud artifacts, merge, publish and verify the release without a local executor. This one-off exception does not expand the normal layalabs-only author or Reporting scope. Record it as verified only after the hosted run finishes; preserve the distinction between this commissioning run and the next actual contributor PR event.
