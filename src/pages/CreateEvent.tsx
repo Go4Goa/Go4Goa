@@ -51,7 +51,8 @@ function MeetupComposer({accountId}:{accountId:string}){
  const [titleDraft,setTitleDraft]=useState(draft?.title||'');
  const [description,setDescription]=useState(draft?.description||'');
  const [descriptionDraft,setDescriptionDraft]=useState(draft?.description||'');
- const [activity,setActivity]=useState<Activity>(draft?.activity||'beach_cleanup');
+ const requestedActivity=params.get('activity');
+ const [activity,setActivity]=useState<Activity>(draft?.activity||(activityIds.includes(requestedActivity as Activity)?requestedActivity as Activity:'beach_cleanup'));
  const [startDate,setStartDate]=useState<Date|undefined>(draft?.startDate?new Date(draft.startDate+'T12:00:00'):undefined);
  const [startTime,setStartTime]=useState(draft?.startTime||'09:00');
  const [duration,setDuration]=useState(draft?.duration||120);
