@@ -1,0 +1,75 @@
+{
+  "schemaVersion": 1,
+  "status": "verified",
+  "recordedAt": "2026-10-30T04:28:09.756Z",
+  "repository": "actforgoa2026/Go4Goa",
+  "pr": "https://github.com/actforgoa2026/Go4Goa/pull/17",
+  "authorization": {
+    "owner": "ZakKrevitt",
+    "direction": "Requested that mobile pages stop moving sideways and feel fixed like an app; explicitly instructed 'ship' after reviewing the implemented fix.",
+    "scope": "The six-line CSS horizontal containment change only."
+  },
+  "source": {
+    "head": "7013279faa8d0bc373c456c910725ef300c36053",
+    "base": "bda37e206b87886699a70f1cbbb604437d6c0951",
+    "integrated": "ae781c485899fcbc2ed859aa640cd1deb3581766",
+    "merged": "d6de86cf5df74e5261836db7d5028bb16d42dc54",
+    "released": "d6de86cf5df74e5261836db7d5028bb16d42dc54",
+    "tree": "7a047cc13952defc21dd14372511de65e3d50a21",
+    "sourceReceiptCommit": "024f20ec4f3c99ed80dc3caa3a268691320b246e",
+    "treeEquality": "The tested feature head and final squash merge have identical trees. cloud-release was advanced by an expected-old-SHA guarded fast-forward from the base commit."
+  },
+  "fix": "html/body clip horizontal document overflow and disable horizontal overscroll. Vertical scrolling, map pan and local scrolling controls remain available. No schema, authentication, provider, content or navigation changes.",
+  "checks": {
+    "unitTests": 48,
+    "isolatedIntegrationTests": 18,
+    "build": "passed",
+    "prQaRun": 41002143490,
+    "mainQaRun": 41002670143,
+    "liveRun": 41002721046,
+    "conclusion": "success",
+    "vercel": "success",
+    "liveVerification": "success"
+  },
+  "design": {
+    "impeccable": "Actual installed Impeccable skill/context/adapt/craft floor used; audited cloud evidence and source before release.",
+    "baselineCandidatePairs": 54,
+    "designArtifact": 12953838480,
+    "changedCapture": "Only 390-place.png differed. Inspection showed focused fixed elements and hover at different capture scroll positions; a normalized local before/after layout comparison confirmed identical geometry.",
+    "newOverflow": false,
+    "newSeriousAccessibilityFindings": false,
+    "localLayoutChecks": "80 Chromium/WebKit route, viewport and engine combinations at 320/390/844/1280px passed.",
+    "liveLayoutChecks": "20 checks across Chromium/WebKit at 320/390px passed.",
+    "touchEvidence": "Synthesized Chromium touch on the deployed site confirmed vertical scrolling, no page displacement after horizontal swipes in either direction, and independent map panning.",
+    "liveArtifact": 12954022248,
+    "liveCaptures": 33,
+    "liveViewsInspected": [
+      "320-report",
+      "390-profile",
+      "1440-events",
+      "additional Chromium 390 events and map drag",
+      "local Chromium/WebKit mobile before/after renders"
+    ],
+    "deviceHubUsed": false
+  },
+  "deployment": {
+    "project": "go-goa-qa",
+    "projectId": "prj_6Q7Eugjt0H5X2fpIvyohQdGBJd15",
+    "url": "https://go-goa-qa.vercel.app",
+    "immutableUrl": "https://go-goa-bbhwgdicx-zakkrevitt-gmailcoms-projects.vercel.app",
+    "target": "production",
+    "mode": "hosted-qa",
+    "phoneVerification": false
+  },
+  "local": {
+    "path": "/Users/zakkrevitt/code/GO-GOA",
+    "branch": "main",
+    "head": "d6de86cf5df74e5261836db7d5028bb16d42dc54",
+    "trackedState": "clean",
+    "evidence": ".impeccable/review/mobile-containment/"
+  },
+  "limitations": [
+    "Physical-phone testing remains unverified; browser evidence uses emulation and synthesized touch."
+  ],
+  "outcome": "PR17 merged, released to the established stable QA site, and verified live."
+}
