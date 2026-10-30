@@ -13,6 +13,8 @@ STORY: A host opens check-in, displays the QR and sees the count. A resident sca
 
 FIRST VIEWPORT: Host controls live at the beginning of Organizer tools; the open code is large and centered, followed by expiry and close controls. The attendee sees the meetup name, location, time, +15 and a single confirmation action. Profile keeps activity first and follows with legible point rules and linked award history.
 
+RESPONSIVE: The enlarged QR shrinks within the available dialog height, preserving its square image and quiet zone while keeping the title, close action, instructions and expiry visible in short windows.
+
 FORM: Code-led narrow extension, no seed required. Use the accepted +10 approved report, +20 resolved report, +15 confirmed attendance values. Preserve guest access and current navigation. No new identity flow.
 
 FINISH: unreviewed and undocumented is unfinished; this build ends with the finish review, the verdict, DESIGN.md, and every shipping raster carrying its provenance

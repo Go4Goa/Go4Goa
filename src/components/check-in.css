@@ -8,11 +8,13 @@
 .checkin-link input { font-size: 14px; }
 .checkin-link .hint { margin-top: 12px; }
 .checkin-dialog { width: min(560px, calc(100% - 32px)); max-height: calc(100dvh - 32px); border: 1px solid var(--line); border-radius: 14px; padding: 24px; color: var(--foreground); background: var(--paper); }
+.checkin-dialog[open] { display: flex; flex-direction: column; }
+.checkin-dialog > :not(img) { flex-shrink: 0; }
 .checkin-dialog::backdrop { background: var(--paper); }
 .checkin-dialog-top { display: flex; align-items: center; justify-content: space-between; gap: 16px; }
 .checkin-dialog-top h2 { margin: 0; }
 .checkin-dialog > p { margin-top: 12px; }
-.checkin-dialog img { display: block; width: 100%; height: auto; }
+.checkin-dialog img { display: block; width: 100%; height: auto; min-height: 0; object-fit: contain; }
 .checkin-event { padding-block: 8px 24px; border-bottom: 1px solid var(--line); }
 .checkin-event h2 { margin-bottom: 16px; overflow-wrap: anywhere; }
 .checkin-event p { display: flex; align-items: flex-start; gap: 10px; margin-top: 8px; }

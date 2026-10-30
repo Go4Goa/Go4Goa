@@ -12,6 +12,7 @@ The homepage introduces Go4Goa at `/`; the application map is at `/map`. The hom
 
 ## Start here
 
+- [Work history and proof of delivery](docs/work-history.md)
 - [Partner handoff: Reporting QA](docs/reporting-qa-handoff.md)
 - [Collaboration workflow and ownership](CONTRIBUTING.md)
 - [QA status and known limitations](docs/qa-status.md)
