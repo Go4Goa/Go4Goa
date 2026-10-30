@@ -23,9 +23,33 @@
   "scope": "Infrastructure commissioning: correct release author identity and owner access documentation; add metadata-only trusted CI pending/final cloud/qa statuses and regression tests so the hosted GitHub connector can discover pull_request_target and main runs. Application code, dependencies, migrations, credentials, design and billing are unchanged. The deterministic map fixture now declares its four source layers and capture rejects loading/failure states, applied equally to baseline and candidate.",
   "allowedActions": "Existing hosted monitor may inspect, run required cloud checks, download and view artifacts, merge with expected head and merge_method=merge through the authenticated owner, verify merge author/parents/tree, advance cloud-release with expected old SHA and force=false, then verify exact Vercel/live status and rendered live evidence and write final records.",
   "requirements": "Current main, PR head and approved design/access state must remain current. All normal source/CI/design/privacy/release gates apply. If head or base changes, re-review; this binding must be renewed before release. Normal unattended author scope remains layalabs only after this single commissioning PR.",
-  "completion": "pending",
+  "completion": "verified",
   "localExecutor": "No local execution or local release worker will merge, publish or perform required checks for this commissioning run. Local tools are used for source preparation and read-only observation only.",
   "rollback": "On failure stop releases; do not blindly reverse migrations or overwrite newer approved deployments.",
   "previousHead": "975a3890dc7703286047f3fc5a3230fcbabe3e3e",
-  "bootstrap": "For this exact commissioning head, the independently source-reviewed CI workflow may be dispatched on codex/cloud-release-commissioning with pr_number=18. The prepared workflow contains no application/provider secrets, uses ephemeral PostgreSQL and scoped metadata-only status jobs, and tests the current integrated candidate. This exercises the corrected trusted harness before merge. The hosted monitor must discover it through cloud/qa and independently verify exact source/job/log/artifact provenance; no manually supplied run ID is needed. The ordinary base workflow also continues to run. After merge, independently discover and require the new main QA run through cloud/qa before publication. Never infer approval from a status. This one-off bootstrap allowance expires with PR18."
+  "bootstrap": "For this exact commissioning head, the independently source-reviewed CI workflow may be dispatched on codex/cloud-release-commissioning with pr_number=18. The prepared workflow contains no application/provider secrets, uses ephemeral PostgreSQL and scoped metadata-only status jobs, and tests the current integrated candidate. This exercises the corrected trusted harness before merge. The hosted monitor must discover it through cloud/qa and independently verify exact source/job/log/artifact provenance; no manually supplied run ID is needed. The ordinary base workflow also continues to run. After merge, independently discover and require the new main QA run through cloud/qa before publication. Never infer approval from a status. This one-off bootstrap allowance expires with PR18.",
+  "completedAt": "2026-10-30T06:00:56.159Z",
+  "verifiedRelease": {
+    "merged": "7d30c50463c965072a46d920f030d4bb1d974648",
+    "cloudRelease": "7d30c50463c965072a46d920f030d4bb1d974648",
+    "deployment": "https://go-goa-pm9vb5hz1-zakkrevitt-gmailcoms-projects.vercel.app",
+    "stableUrl": "https://go-goa-qa.vercel.app",
+    "prRun": {
+      "id": 41010217318,
+      "artifact": 12957331346,
+      "attempt": 1,
+      "integrated": "236abd1265ca1d189443cb58349472faa0f9ed05"
+    },
+    "mainRun": {
+      "id": 41010781531,
+      "artifact": 12957134476,
+      "attempt": 1
+    },
+    "liveRun": {
+      "id": 41011272232,
+      "artifact": 12957757251,
+      "attempt": 1
+    },
+    "outcome": "Verified hosted commissioning release. The correction requires loaded, non-fallback MapLibre captures at 320, 390 and 1440 pixels; no application, design, sign-in, privacy, dependency, migration, credential or billing scope was added."
+  }
 }
