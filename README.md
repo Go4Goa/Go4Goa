@@ -6,6 +6,8 @@ A mobile-first civic PWA for reporting issues and organizing community action in
 
 Shared testing is available at https://go-goa-qa.vercel.app. Get the QA password from Zachary; see [hosted QA access and PR workflow](docs/hosted-qa.md).
 
+The homepage introduces Go4Goa at `/`; the application map is at `/map`. The homepage's report and meetup previews are fictional examples. See [homepage development and build notes](homepage/README.md) for its separate local preview.
+
  Reporting, maps, events, private profiles, moderation and a Node/Postgres API are implemented. Local demo accounts use fictional data. Real phone verification, message delivery, live provider services still need configuration and validation.
 
 ## Start here

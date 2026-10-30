@@ -3,10 +3,12 @@ import assert from 'node:assert/strict';
 import { createRequire } from 'node:module';
 import { resolve, join } from 'node:path';
 import { mkdir, writeFile } from 'node:fs/promises';
+import { existsSync } from 'node:fs';
 import { spawn, spawnSync } from 'node:child_process';
 import { randomUUID } from 'node:crypto';
 import { userInfo } from 'node:os';
 const root=resolve(process.argv[2]||'.'), output=resolve(process.argv[3]||'test-results/visual');
+const mapRoute=existsSync(join(root,'dist/app.html'))?'/map':'/';
 const require=createRequire(join(root,'package.json'));
 const {chromium}=require('@playwright/test'), AxeBuilder=require('@axe-core/playwright').default;
 const pg=require('pg'), sharp=require('sharp');
@@ -79,7 +81,7 @@ try {
   assert.equal(await page.getByAltText('Report photo ready to submit').count(),1);await capture('upload-failed');
   await page.getByRole('button',{name:'Submit for review'}).click();await page.waitForURL('**/reports/**');await db.query(`UPDATE "${schema}".incidents SET created_at='2026-10-28T10:00:00Z',updated_at='2026-10-28T10:00:00Z' WHERE example=false`);await page.reload();await page.waitForTimeout(500);await capture('submitted');
   evidence.checks.push({width,uploadFailureRetry:true,offlineGuard:true,draftAcrossSignIn:true,errors});assert.deepEqual(errors,[],'Browser runtime errors');
-  for(const [route,name]of [['/','map'],['/events','events'],['/profile','profile'],['/resources','resources'],['/resources/topics/waste','resource-topic'],['/directory','directory'],['/events/new','meetup-create']]){await page.goto(origin+route);await page.locator('main h1').first().waitFor();await page.waitForTimeout(300);await capture(name);
+  for(const [route,name]of [[mapRoute,'map'],['/events','events'],['/profile','profile'],['/resources','resources'],['/resources/topics/waste','resource-topic'],['/directory','directory'],['/events/new','meetup-create']]){await page.goto(origin+route);await page.locator('main h1').first().waitFor();await page.waitForTimeout(300);await capture(name);
    if(name==='meetup-create'&&await page.getByText('Customize graphic',{exact:true}).count()){
     const time=page.getByRole('combobox',{name:/Start time/});
     if(await time.count()){

@@ -4,7 +4,7 @@ import './tab-bar.css';
 
 const tabs = [
   { path: '/events', label: 'Meetups', Icon: CalendarDays },
-  { path: '/', label: 'Map', Icon: Map },
+  { path: '/map', label: 'Map', Icon: Map },
   { path: '/report', label: 'Document', Icon: Camera },
   { path: '/profile', label: 'Profile', Icon: CircleUserRound },
 ] as const;
@@ -15,7 +15,7 @@ export default function TabBar() {
   const selected = pathname === '/report' ? '/report'
     : pathname.startsWith('/events') ? '/events'
     : pathname.startsWith('/profile/') || ['/profile', '/admin', '/privacy'].includes(pathname) ? '/profile'
-    : pathname === '/' || pathname.startsWith('/reports/') ? '/' : null;
+    : pathname === '/map' || pathname.startsWith('/reports/') ? '/map' : null;
 
   return (
     <nav className="bottom-nav" aria-label="Main navigation">
