@@ -10,11 +10,11 @@ export function AppProvider({children}:{children:ReactNode}){
  const[account,setAccount]=useState<Account|null>(null),[config,setConfig]=useState<AppConfig|null>(null),[ready,setReady]=useState(false);
  const accountId=useRef<string|null>(null);
  function applyAccount(next:Account|null){if(!next||(accountId.current&&accountId.current!==next.id))clearMeetupDrafts();accountId.current=next?.id??null;setAccount(next);setCsrf(next?.csrf||'');}
- async function refresh(){let d=await api<{account:Account|null}>('/auth/me');if(!d.account&&config&&automaticGuestEnabled(config)){await startGuest();d=await api<{account:Account|null}>('/auth/me');}applyAccount(d.account);}
+ async function refresh(){const settings=await api<AppConfig>('/config');setConfig(settings);let d=await api<{account:Account|null}>('/auth/me');if(!d.account&&automaticGuestEnabled(settings)){await startGuest();d=await api<{account:Account|null}>('/auth/me');}applyAccount(d.account);}
  useEffect(()=>{
   async function initialize(){
-   const [session,settings]=await Promise.all([api<{account:Account|null}>('/auth/me'),api<AppConfig>('/config')]);
-   setConfig(settings);
+   const settings=await api<AppConfig>('/config');setConfig(settings);
+   const session=await api<{account:Account|null}>('/auth/me');
    // Skip account setup while reviewing the local UX with fictional seed data.
    const localPreview=import.meta.env.DEV&&settings.demo&&!settings.qa&&['127.0.0.1','localhost','[::1]'].includes(window.location.hostname);
    if(!session.account&&automaticGuestEnabled(settings)){
