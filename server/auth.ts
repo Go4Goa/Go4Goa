@@ -43,10 +43,21 @@ auth.post('/request-code',async(req,res)=>{
  const id=randomUUID();await pool.query(`INSERT INTO verification_challenges(id,kind,destination_hash,destination_cipher) VALUES ($1,'phone',$2,$3)`,[id,lookupHash(phone),seal(phone)]);res.json({challenge:id});
 });
 auth.post('/verify-code',async(req,res)=>{
+ if(!phoneVerificationEnabled(config.phoneVerificationRequested,phoneVerificationCredentials))fail(503,'Phone verification is not configured yet.');
  const v=z.object({challenge:z.uuid(),code:z.string().regex(/^\d{6}$/),username:usernameSchema.optional()}).strict().parse(req.body);await rate('otp-check-ip:'+clientIp(req),20,600);
  const {rows}=await pool.query(`SELECT * FROM verification_challenges WHERE id=$1 AND kind='phone' AND expires_at>now() AND consumed_at IS NULL`,[v.challenge]);const ch=rows[0];if(!ch)fail(400,'This code has expired. Request a new one.');await rate('otp-check:'+ch.destination_hash,5,600);
- const result=await verifyApi('VerificationCheck',{To:unseal<string>(ch.destination_cipher),Code:v.code});if(result.status!=='approved')fail(400,'That code was not accepted. Check it and try again.');
- const id=await tx(async db=>{const locked=await db.query('SELECT id FROM verification_challenges WHERE id=$1 AND consumed_at IS NULL FOR UPDATE',[v.challenge]);if(!locked.rowCount)fail(409,'This code has already been used.');const existing=(await db.query('SELECT id,deleted_at FROM users_private WHERE phone_hash=$1',[ch.destination_hash])).rows[0];let id=existing?.id;if(existing?.deleted_at)fail(403,'This account has been deleted.');if(!id){if(!v.username)fail(400,'Choose a public username to create your account.');const username=usernameSchema.parse(v.username);id=randomUUID();await db.query('INSERT INTO users_private(id,phone_hash,phone_cipher,phone_verified) VALUES ($1,$2,$3,true)',[id,ch.destination_hash,ch.destination_cipher]);await db.query('INSERT INTO profiles(id,username) VALUES ($1,$2)',[id,username]);await audit(db,id,'account.created',id,null,{username});}await db.query('UPDATE verification_challenges SET consumed_at=now() WHERE id=$1',[v.challenge]);return id as string;});await session(res,id);res.json({ok:true});
+ // Twilio approvals are single-use. Preserve proof for this code and challenge
+ // so a missing/taken username can be corrected within the original expiry.
+ const approvedCodeHash=lookupHash(v.code+v.challenge);
+ if(ch.code_hash){
+  if(!equal(ch.code_hash,approvedCodeHash))fail(400,'That code was not accepted. Check it and try again.');
+ }else{
+  const result=await verifyApi('VerificationCheck',{To:unseal<string>(ch.destination_cipher),Code:v.code});
+  if(result.status!=='approved')fail(400,'That code was not accepted. Check it and try again.');
+  const saved=await pool.query('UPDATE verification_challenges SET code_hash=$2 WHERE id=$1 AND consumed_at IS NULL AND expires_at>now()',[v.challenge,approvedCodeHash]);
+  if(!saved.rowCount)fail(400,'This code has expired. Request a new one.');
+ }
+ const id=await tx(async db=>{const locked=await db.query('SELECT id FROM verification_challenges WHERE id=$1 AND consumed_at IS NULL AND expires_at>now() FOR UPDATE',[v.challenge]);if(!locked.rowCount)fail(409,'This code has already been used.');const existing=(await db.query('SELECT id,deleted_at FROM users_private WHERE phone_hash=$1',[ch.destination_hash])).rows[0];let id=existing?.id;if(existing?.deleted_at)fail(403,'This account has been deleted.');if(!id){if(!v.username)fail(400,'Choose a public username to create your account.');const username=usernameSchema.parse(v.username);id=randomUUID();await db.query('INSERT INTO users_private(id,phone_hash,phone_cipher,phone_verified) VALUES ($1,$2,$3,true)',[id,ch.destination_hash,ch.destination_cipher]);await db.query('INSERT INTO profiles(id,username) VALUES ($1,$2)',[id,username]);await audit(db,id,'account.created',id,null,{username});}await db.query('UPDATE verification_challenges SET consumed_at=now() WHERE id=$1',[v.challenge]);return id as string;});await session(res,id);res.json({ok:true});
 });
 auth.post('/demo',async(req,res)=>{
  if(!config.demo||(!config.qa&&(config.production||!['127.0.0.1','::1','::ffff:127.0.0.1'].includes(req.socket.remoteAddress||''))))fail(404,'Not found.');

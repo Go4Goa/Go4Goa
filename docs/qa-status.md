@@ -1,6 +1,6 @@
 # QA baseline status
 
-Updated 30 October 2026. Publicly viewable QA is live at https://go-goa-qa.vercel.app. The owner's current direction requires automatic separate resident guests with no sign-in/out screens, phone/email onboarding, site password or Vercel login. Fresh browsers receive a private guest session automatically; reloading preserves that browser's identity. Moderator identities, shared test identities and private APIs remain restricted. See [hosted access and workflow](hosted-qa.md); current source and release evidence are on automation/release-records. This is a fictional preview, not a certified resident-account launch.
+Updated 30 October 2026. Public browsing remains open at https://go-goa-qa.vercel.app. The owner now authorizes phone-verified account creation with Twilio. Fresh browsers start signed out and account actions require verification. Moderator identities, shared test identities and private APIs remain restricted. SMS meetup notifications and email delivery remain disabled. See [hosted access and workflow](hosted-qa.md).
 
 ## Implemented
 
@@ -26,7 +26,7 @@ Updated 30 October 2026. Publicly viewable QA is live at https://go-goa-qa.verce
 
 - Partner: Reporting browser/device QA using `reporting-qa-handoff.md`. Automated tests do not cover every failure, duplicate-merge lifecycle, deletion or camera/browser combination.
 - Our team: general design, event creation and attendance browser QA.
-- Real Twilio Verify, Resend delivery, SMS delivery/opt-out and signed webhook validation need dedicated provider accounts, credentials and end-to-end testing. Local demo never sends notifications.
+- Twilio Verify uses the attached account; handset delivery requires a real recipient test. Resend delivery, SMS meetup delivery/opt-out and signed webhook validation still need end-to-end testing. Local demo never sends notifications.
 - QA HTTPS hosting, private photo storage and PostGIS are provisioned and verified. A separate public-launch environment, production map/geocoding/static previews and index/query load testing remain necessary.
 - Service worker and manifest build successfully; installation, offline lifecycle, updates and weak-network behavior need actual browser/device QA. Shell caching does not make private records or map tiles available offline.
 - Drafts are memory-only and clear when leaving Reporting. Automatic durable offline submission is not implemented.
@@ -37,4 +37,4 @@ Updated 30 October 2026. Publicly viewable QA is live at https://go-goa-qa.verce
 
 ## Roles and notifications
 
-Use separate browser profiles for resident, organizer and moderator tests. Local demo login remains restricted to non-production loopback. Hosted QA explicitly enables fictional test personas through a credential-restricted test-account endpoint; public browsing has no password; phone verification and live SMS/email delivery are disabled there. Do not tunnel a local demo server to the internet. Phone/email verification and notification consent are separate. Notification API acceptance is not proof of delivery; delivery is tracked through provider callbacks.
+Use separate browser profiles for resident, organizer and moderator tests. Local demo login remains restricted to non-production loopback. Hosted QA explicitly enables fictional test personas through a credential-restricted test-account endpoint; public browsing has no password; phone verification is enabled; automated tests never send verification SMS and live meetup SMS/email delivery remains disabled. Do not tunnel a local demo server to the internet. Phone/email verification and notification consent are separate. Notification API acceptance is not proof of delivery; delivery is tracked through provider callbacks.

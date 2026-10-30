@@ -4,11 +4,11 @@ A mobile-first civic PWA for reporting issues and organizing community action in
 
 **QA baseline, not a production release.**
 
-Shared testing is available at https://go-goa-qa.vercel.app with automatic guest access and no password or sign-in screen; see [hosted QA access and PR workflow](docs/hosted-qa.md).
+Shared testing is available at https://go-goa-qa.vercel.app. Public browsing needs no password. Account creation uses Twilio phone verification; see [hosted QA access and PR workflow](docs/hosted-qa.md).
 
 The homepage introduces Go4Goa at `/`; the application map is at `/map`. The homepage's report and meetup previews are fictional examples. See [homepage development and build notes](homepage/README.md) for its separate local preview.
 
- Reporting, maps, events, private profiles, moderation and a Node/Postgres API are implemented. Local demo accounts use fictional data. Real phone verification, message delivery, live provider services still need configuration and validation.
+ Reporting, maps, events, private profiles, moderation and a Node/Postgres API are implemented. Local demo accounts use fictional data. Phone account creation uses the existing Twilio Verify service. Meetup notification delivery remains a separate provider capability.
 
 ## Start here
 
