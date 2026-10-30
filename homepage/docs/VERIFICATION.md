@@ -40,3 +40,15 @@ The independent review and the fixes it requested are recorded in `REVIEW.md`. S
 ## Deliberate demo boundaries
 
 The glossy hero is an original raster render animated with transforms, rather than a physics-driven 3D scene. Map imagery comes from the existing local app with fictional seed data. Other interactive panels are local React demonstrations, and photographs from the ActForGoa archive are labeled as historical examples. No report, event registration, account, message, or notification is created. Device Hub was not opened or used.
+
+## Scroll pacing follow-up · 30 October 2026
+
+The user's direction is to retain all scroll animations while removing unresponsive stretches. The icon-to-toolbar handoff remains the focal sequence; its movement, measured destinations, blur, and crossfade are unchanged. Short reading holds bracket the sequence. Existing controls and reduced-motion behavior remain in place, with no new animation dependencies.
+
+Two causes were corrected: an initial no-op timeline hold plus a long final hold, and an unconditional `data-lenis-prevent` on every demo panel that trapped wheel gestures over non-scrolling previews. Lenis now detects actual nested scrolling, allowing longer panels to scroll internally and returning input to the page at their boundaries.
+
+At 1280×720, the product pin now uses 972px instead of 1800px; the initial hold is about 37px instead of 372px. The horizontal story uses its measured 1242px travel distance instead of 1792px. Both pins retain smoothing with a shorter 0.35-second catch-up. Demo links land after the icon handoff finishes.
+
+Browser checks at 1280×720 and 390×844 confirmed forward and reverse animation, the demo shortcut and focused tab, two desktop pins and no mobile pins, no horizontal document overflow, and pause/resume with all content visible. The Resources panel scrolled internally to its 136.5px limit before the next wheel gesture moved the page. No browser errors, italic/oblique text, or decorative side stripes were observed. Captures are under the ignored `.impeccable/review/scroll-pacing/` directory.
+
+The shared app header no longer displays “Shared QA” on any route. Local demo labeling and all environment/access/data settings are unchanged. The combined production build and all 50 unit tests pass.
