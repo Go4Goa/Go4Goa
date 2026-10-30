@@ -398,6 +398,7 @@ function ProductDemo() {
         <span className="product-demo-label">Interactive demo</span>
       </div>
       <div
+        key={tab}
         id="feature-panel"
         role="tabpanel"
         aria-labelledby={`feature-tab-${tab}`}

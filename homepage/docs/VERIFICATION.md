@@ -45,7 +45,7 @@ The glossy hero is an original raster render animated with transforms, rather th
 
 The user's direction is to retain all scroll animations while removing unresponsive stretches. The icon-to-toolbar handoff remains the focal sequence; its movement, measured destinations, blur, and crossfade are unchanged. Short reading holds bracket the sequence. Existing controls and reduced-motion behavior remain in place, with no new animation dependencies.
 
-Two causes were corrected: an initial no-op timeline hold plus a long final hold, and an unconditional `data-lenis-prevent` on every demo panel that trapped wheel gestures over non-scrolling previews. Lenis now detects actual nested scrolling, allowing longer panels to scroll internally and returning input to the page at their boundaries.
+Two causes were corrected: an initial no-op timeline hold plus a long final hold, and an unconditional `data-lenis-prevent` on every demo panel that trapped wheel gestures over non-scrolling previews. Lenis now detects actual nested scrolling, allowing longer panels to scroll internally and returning input to the page at their boundaries. Each selected panel mounts fresh so the library cannot reuse overflow measurements from the previous tab.
 
 At 1280×720, the product pin now uses 972px instead of 1800px; the initial hold is about 37px instead of 372px. The horizontal story uses its measured 1242px travel distance instead of 1792px. Both pins retain smoothing with a shorter 0.35-second catch-up. Demo links land after the icon handoff finishes.
 
