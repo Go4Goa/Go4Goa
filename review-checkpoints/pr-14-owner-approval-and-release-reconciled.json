@@ -1,0 +1,33 @@
+{
+  "schemaVersion": 1,
+  "recordedAt": "2026-10-30T05:00:00Z",
+  "subject": {
+    "pr": 14,
+    "merged": "55eec8cca653806efb46276cc7b2cd9bd1de836b"
+  },
+  "ownerAuthority": {
+    "record": "decisions/2026-10-30-owner-approvals-cloud-release.json",
+    "immutableCommit": "907a16ab6b4a847817b753f4f3e56d3a38917a65",
+    "owner": "ZakKrevitt",
+    "effect": "Supersedes PR14 hold reasons based solely on missing design approval or the prior no-gamified-rankings policy."
+  },
+  "verifiedRelease": {
+    "record": "releases/2026-10-30-pr14-leaderboard.json",
+    "released": "932e2dff597d6358819f40ad1b000a651d00554e",
+    "deployment": "dpl_F8K36XevNXePf7UfZgoXEEAde4j4",
+    "outcome": "Verified public-guest release; no sign-in UI or site-wide protection."
+  },
+  "supersededCheckpoints": [
+    "review-checkpoints/pr-14-517c6e802189-held.json",
+    "review-checkpoints/pr-14-d44bf52c-held.json",
+    "review-checkpoints/pr-14-bae571fd-held.json",
+    "review-checkpoints/pr-14-bd92cf21-held.json",
+    "review-checkpoints/pr-14-c122a120-held.json",
+    "review-checkpoints/pr-14-a4125213-held.json",
+    "review-checkpoints/pr-14-6b423588-held.json",
+    "review-checkpoints/pr-14-c12e2139-held.json",
+    "review-checkpoints/pr-14-55eec8cc-externally-merged-release-held.json"
+  ],
+  "disposition": "Historical records remain intact. Their missing-approval/no-ranking rationales are obsolete; they do not authorize unrelated future design, privacy, source, test, or release changes.",
+  "currentCommissioning": "Await exact owner-authored commissioning PR/head/base record in decisions/2026-10-30-cloud-commissioning-pr.json before release testing."
+}
