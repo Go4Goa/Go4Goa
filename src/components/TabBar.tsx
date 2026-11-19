@@ -1,8 +1,9 @@
 import { Link, useLocation } from 'react-router-dom';
-import { Map, Camera, CalendarDays, CircleUserRound } from 'lucide-react';
+import { House, Map, Camera, CalendarDays, CircleUserRound } from 'lucide-react';
 import './tab-bar.css';
 
 const tabs = [
+  { path: '/home', label: 'Home', Icon: House },
   { path: '/events', label: 'Meetups', Icon: CalendarDays },
   { path: '/map', label: 'Map', Icon: Map },
   { path: '/report', label: 'Document', Icon: Camera },
@@ -12,7 +13,8 @@ const tabs = [
 /** Local adaptation of Dizko's compact, flush mobile dock. */
 export default function TabBar() {
   const { pathname } = useLocation();
-  const selected = pathname === '/report' ? '/report'
+  const selected = pathname === '/home' || pathname.startsWith('/home/') ? '/home'
+    : pathname === '/report' ? '/report'
     : pathname.startsWith('/events') ? '/events'
     : pathname.startsWith('/profile/') || ['/profile', '/admin', '/privacy'].includes(pathname) ? '/profile'
     : pathname === '/map' || pathname.startsWith('/reports/') ? '/map' : null;
